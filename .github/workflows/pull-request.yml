@@ -32,18 +32,10 @@ jobs:
       - name: Build the Next.js site
         run: pnpm build
 
-      - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v3.0
-        with:
-          publish-dir: './out'
-          production-branch: main
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: '${{ github.event.pull_request.title }} Deploy Preview'
-          enable-pull-request-comment: true
-          enable-commit-comment: false
-          overwrites-pull-request-comment: true
-          github-deployment-description: 'Netlify Deploy Preview'
+      - name: Deploy to Netlify (CLI Preview)
+        id: deploy
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        timeout-minutes: 1
+        run: pnpm exec netlify deploy --build --message "${{ github.event.pull_request.title }} Deploy Preview"
+        timeout-minutes: 2
