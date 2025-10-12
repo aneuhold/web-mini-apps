@@ -123,41 +123,58 @@ export default function Page() {
           <p>No images added yet. Click "Add Images" to get started.</p>
         </div>
       ) : (
-        <div className={styles.imageGrid}>
-          {images.map((image) => (
-            <div key={image.id} className={styles.imageCard}>
-              <div className={styles.imageWrapper}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={image.url}
-                  alt={image.caption || 'Uploaded image'}
-                  className={styles.image}
-                />
-                <button
-                  onClick={() => {
-                    handleRemoveImage(image.id);
-                  }}
-                  className={styles.removeButton}
-                  type="button"
-                  aria-label="Remove image"
-                >
-                  ×
-                </button>
-              </div>
-              <input
-                type="text"
-                value={image.caption}
-                onChange={(e) => {
-                  handleCaptionChange(image.id, e.target.value);
-                }}
-                placeholder="Add a caption..."
-                className={styles.captionInput}
-                aria-label="Image caption"
-              />
+        <div className={styles.pagesContainer}>
+          {chunkArray(images, 4).map((pageImages, pageIndex) => (
+            <div key={pageIndex} className={styles.page}>
+              {pageImages.map((image) => (
+                <div key={image.id} className={styles.imageCard}>
+                  <div className={styles.imageWrapper}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={image.url}
+                      alt={image.caption || 'Uploaded image'}
+                      className={styles.image}
+                    />
+                    <button
+                      onClick={() => {
+                        handleRemoveImage(image.id);
+                      }}
+                      className={styles.removeButton}
+                      type="button"
+                      aria-label="Remove image"
+                    >
+                      ×
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    value={image.caption}
+                    onChange={(e) => {
+                      handleCaptionChange(image.id, e.target.value);
+                    }}
+                    placeholder="Add a caption..."
+                    className={styles.captionInput}
+                    aria-label="Image caption"
+                  />
+                </div>
+              ))}
             </div>
           ))}
         </div>
       )}
     </div>
   );
+}
+
+/**
+ * Helper function to chunk an array into groups of a specified size.
+ * @param array - The array to chunk
+ * @param size - The size of each chunk
+ */
+function chunkArray<T>(array: T[], size: number): T[][] {
+  const chunks: T[][] = [];
+  for (let i = 0; i < array.length; i += size) {
+    chunks.push(array.slice(i, i + size));
+  }
+  return chunks;
 }
