@@ -1,0 +1,38 @@
+.subtitle {
+  color: var(--color-text-secondary);
+}
+
+.hero {
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.heroButtons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: calc(var(--standard-spacing) * 4);
+}
+
+.svgLink {
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 24px;
+  width: 24px;
+}
+
+.svgLink:hover {
+  background-color: var(--color-primary-100);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--color-shadow);
+}
+
+.svgIcon {
+  width: 1em;
+  height: 1em;
+  color: var(--color-primary);
+  fill: currentColor;
+  font-size: 1.5rem;
+}

@@ -1,0 +1,71 @@
+name: 'Main Branch Actions'
+
+on:
+  push:
+    # Only initiate the workflow when the main branch is pushed to
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: 'Deploy'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PNPM
+        uses: pnpm/action-setup@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'pnpm'
+          cache-dependency-path: |
+            pnpm-lock.yaml
+            svelte/pnpm-lock.yaml
+            react/pnpm-lock.yaml
+
+      - name: Install dependencies (root, react, svelte)
+        run: pnpm run i
+
+      - name: Build the svelte site
+        run: pnpm svelte:build
+
+      - name: Build the react site
+        run: pnpm react:build
+
+      - name: Deploy to Netlify (Svelte)
+        uses: nwtgck/actions-netlify@v2.1
+        with:
+          publish-dir: './svelte/build'
+          production-branch: main
+          production-deploy: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: 'Main Branch Deploy (Svelte)'
+          enable-pull-request-comment: false
+          enable-commit-comment: false
+          overwrites-pull-request-comment: false
+          github-deployment-description: 'Netlify Deploy (Svelte)'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SVELTE_SITE_ID }}
+        timeout-minutes: 1
+
+      - name: Deploy to Netlify (React)
+        uses: nwtgck/actions-netlify@v2.1
+        with:
+          publish-dir: './react/out'
+          production-branch: main
+          production-deploy: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: 'Main Branch Deploy (React)'
+          enable-pull-request-comment: false
+          enable-commit-comment: false
+          overwrites-pull-request-comment: false
+          github-deployment-description: 'Netlify Deploy (React)'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_REACT_SITE_ID }}
+        timeout-minutes: 1

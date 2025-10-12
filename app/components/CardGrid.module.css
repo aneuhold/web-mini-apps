@@ -1,0 +1,7 @@
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  max-width: minmax(1100px, 1fr);
+  gap: calc(var(--standard-spacing) * 4);
+  padding: calc(var(--standard-spacing) * 4);
+}
