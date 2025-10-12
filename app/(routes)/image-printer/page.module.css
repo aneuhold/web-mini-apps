@@ -1,0 +1,146 @@
+/* Screen styles */
+.container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.fileInput {
+  display: none;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #666;
+}
+
+.imageGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.imageCard {
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  background: white;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 1rem;
+  background: #f5f5f5;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.removeButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.removeButton:hover {
+  background: #ff5252;
+  color: white;
+  border-color: #ff5252;
+}
+
+.captionInput {
+  width: 100%;
+}
+
+/* Print styles */
+@media print {
+  /* Hide all UI controls */
+  .header,
+  .controls,
+  .button,
+  .printButton,
+  .removeButton,
+  .emptyState {
+    display: none;
+  }
+
+  .container {
+    padding: 0;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  /* Print layout: 2x2 grid (4 images per page) */
+  .imageGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1rem;
+    margin: 0;
+    width: 100%;
+    height: 100vh;
+  }
+
+  .imageCard {
+    border: none;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    page-break-inside: avoid;
+  }
+
+  /* Force page break after every 4th image */
+  .imageCard:nth-child(4n) {
+    break-after: page;
+  }
+
+  .imageWrapper {
+    flex: 1;
+    background: none;
+  }
+
+  .image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .captionInput {
+    border: none;
+    padding: 0.25rem 0;
+    text-align: center;
+    font-size: 0.875rem;
+    background: none;
+    pointer-events: none;
+  }
+
+  /* Hide empty captions in print */
+  .captionInput[value=''] {
+    display: none;
+  }
+}

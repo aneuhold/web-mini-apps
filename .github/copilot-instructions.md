@@ -1,8 +1,7 @@
 # Overall Project Guidelines
 
-- Frontend project to act as a Portfolio for a Senior Software Engineer
+- Contains small web apps/utilities
 - Generally TypeScript source code with pnpm package management
-- A couple frameworks are used. Primarily SvelteKit, and Vitest for testing. But there's a secondary project using React and Next.js which should ideally have the same content as the primary SvelteKit project.
 - Avoid code duplication; reuse existing code when possible
 - Whenever running tests, always use the Vitest extension, and don't run the test command in the terminal
 
