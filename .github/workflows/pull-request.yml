@@ -37,5 +37,5 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        run: pnpm exec netlify deploy --build --message "${{ github.event.pull_request.title }} Deploy Preview"
+        run: pnpm exec netlify deploy --message "${{ github.event.pull_request.title }} Deploy Preview"
         timeout-minutes: 2
