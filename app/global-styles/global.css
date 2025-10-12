@@ -1,9 +1,17 @@
 /* Using paper css for now */
-
 @import url('https://unpkg.com/papercss/dist/paper.min.css') layer(external);
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* Reset some stuff for print so it looks more professional */
+@media print {
+  img,
+  input,
+  p {
+    all: revert-layer;
+  }
 }
