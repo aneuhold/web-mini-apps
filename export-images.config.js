@@ -14,7 +14,7 @@ const config = {
     jpeg: 90
   },
 
-  // Only generate the exact sizes we need for portfolio thumbnails
+  // Only generate the exact sizes we need for web mini apps thumbnails
   sizes: [300, 600],
 
   // Cache directory for faster rebuilds

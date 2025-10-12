@@ -1,13 +1,18 @@
 /* Using paper css for now */
 @import url('https://unpkg.com/papercss/dist/paper.min.css') layer(external);
 
-* {
+html,
+body {
   margin: 0;
   padding: 0;
+}
+
+* {
   box-sizing: border-box;
 }
 
-/* Reset some stuff for print so it looks more professional */
+/* Reset some stuff for print so it looks more professional. This doesn't work for some reason
+when deployed which is kind of annoying. */
 @media print {
   img,
   input,

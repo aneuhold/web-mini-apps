@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   output: 'export',
   // With next-export-optimize-images, we can use optimized images with static exports
   images: {
-    // Only the specific sizes we need for our portfolio thumbnails
+    // Only the specific sizes we need for our web mini apps thumbnails
     imageSizes: [300, 600],
     // Override default deviceSizes to prevent huge images
     deviceSizes: [300, 600],

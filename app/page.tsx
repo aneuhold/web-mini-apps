@@ -2,7 +2,7 @@ import Footer from '$components/Footer';
 import Link from 'next/link';
 
 /**
- * Main page component that renders the portfolio layout.
+ * Main page component that renders the web mini apps layout.
  * Combines the Hero section, Projects section, and Footer into a cohesive homepage.
  */
 export default function Page() {

@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --no-lint && next-export-optimize-images",
-    "preview": "pnpm run build && pnpm dlx serve out -l 3000",
+    "build": "rimraf out && next build --no-lint",
+    "preview": "pnpm run build && serve out",
     "start": "next start",
     "lint": "eslint ."
   },
@@ -24,6 +24,7 @@
     "@types/react-dom": "19.0.3",
     "eslint": "^9.36.0",
     "prettier": "^3.6.2",
+    "rimraf": "^6.0.1",
     "typescript": "^5.9.2"
   }
 }
