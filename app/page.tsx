@@ -1,6 +1,5 @@
 import Footer from '$components/Footer';
-import Hero from '$components/Hero';
-import Projects from '$components/Projects/Projects';
+import Link from 'next/link';
 
 /**
  * Main page component that renders the portfolio layout.
@@ -8,10 +7,15 @@ import Projects from '$components/Projects/Projects';
  */
 export default function Page() {
   return (
-    <main>
-      <Hero />
-      <Projects />
+    <>
+      <ul className="row flex-center">
+        <li>
+          <Link href="/image-printer" aria-label="Image printer app link">
+            Image Printer App
+          </Link>
+        </li>
+      </ul>
       <Footer />
-    </main>
+    </>
   );
 }

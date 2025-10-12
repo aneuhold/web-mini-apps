@@ -12,18 +12,11 @@ export default function Footer() {
         See the code for this website{' '}
         <Link
           linkText="here!"
-          url="https://github.com/aneuhold/portfolio"
-          ariaLabel="Portfolio GitHub Repo"
+          url="https://github.com/aneuhold/web-mini-apps"
+          ariaLabel="Web Mini Apps GitHub Repository"
         />
       </span>
-      <span className="subtitle-2">
-        Built with React & Next.js •{' '}
-        <Link
-          linkText="View SvelteKit version"
-          url="https://tonyneuhold.com"
-          ariaLabel="SvelteKit version of portfolio"
-        />
-      </span>
+      <span className="subtitle-2">Built with React & Next.js</span>
       <span className="subtitle-1">©{new Date().getFullYear()} Anton Neuhold</span>
     </footer>
   );
