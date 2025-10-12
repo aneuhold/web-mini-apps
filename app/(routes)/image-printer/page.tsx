@@ -25,7 +25,9 @@ export default function Page() {
         URL.revokeObjectURL(image.url);
       });
     };
-  }, [images]);
+    // It's like this on purpose.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /**
    * Handles file selection from the file input.

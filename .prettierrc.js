@@ -1,5 +1,5 @@
 /**
- * Base prettier config for the portfolio project.
+ * Base prettier config for the web mini apps project.
  *
  * This can be extended in another folder by requiring this file and spreading the config.
  *

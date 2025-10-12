@@ -22,52 +22,20 @@ jobs:
         with:
           node-version: 'lts/*'
           cache: 'pnpm'
-          cache-dependency-path: |
-            pnpm-lock.yaml
-            svelte/pnpm-lock.yaml
-            react/pnpm-lock.yaml
 
-      - name: Install dependencies (root, react, svelte)
-        run: pnpm run i
+      - name: Install dependencies
+        run: pnpm install
 
-      - name: Build the svelte site
-        run: pnpm svelte:build
+      - name: Lint
+        run: pnpm lint
 
-      - name: Build the react site
-        run: pnpm react:build
+      - name: Build the Next.js site
+        run: pnpm build
 
-      # Run tests after the builds are done
-      - name: Run tests
-        run: pnpm test
-
-      - name: Deploy to Netlify (Svelte)
-        uses: nwtgck/actions-netlify@v2.1
-        with:
-          publish-dir: './svelte/build'
-          production-branch: main
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: '${{ github.event.pull_request.title }} Deploy Preview'
-          enable-pull-request-comment: true
-          enable-commit-comment: false
-          overwrites-pull-request-comment: true
-          github-deployment-description: 'Netlify Deploy Preview (Svelte)'
+      - name: Deploy to Netlify (CLI Preview)
+        id: deploy
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SVELTE_SITE_ID }}
-        timeout-minutes: 1
-
-      - name: Deploy to Netlify (React)
-        uses: nwtgck/actions-netlify@v2.1
-        with:
-          publish-dir: './react/out'
-          production-branch: main
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: '${{ github.event.pull_request.title }} Deploy Preview (React)'
-          enable-pull-request-comment: true
-          enable-commit-comment: false
-          overwrites-pull-request-comment: true
-          github-deployment-description: 'Netlify Deploy Preview (React)'
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_REACT_SITE_ID }}
-        timeout-minutes: 1
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: pnpm exec netlify deploy --message "${{ github.event.pull_request.title }} Deploy Preview"
+        timeout-minutes: 2
