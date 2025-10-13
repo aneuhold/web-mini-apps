@@ -7,39 +7,49 @@
 
 .header {
   margin-bottom: 2rem;
-}
 
-.title {
-  font-size: 2rem;
-  margin-bottom: 1rem;
+  .title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  @media print {
+    display: none;
+  }
 }
 
 .controls {
   display: flex;
   gap: 1rem;
   margin-bottom: 2rem;
-}
 
-.fileInput {
-  display: none;
+  .fileInput {
+    display: none;
+  }
+
+  @media print {
+    display: none;
+  }
 }
 
 .emptyState {
   text-align: center;
   padding: 4rem 2rem;
   color: #666;
+
+  @media print {
+    display: none;
+  }
 }
 
-.pagesContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.page {
+.imageEditContainer {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
+
+  @media print {
+    display: none;
+  }
 }
 
 .imageCard {
@@ -51,95 +61,96 @@
 
 .imageWrapper {
   position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 3;
   margin-bottom: 1rem;
-  background: #f5f5f5;
-  border-radius: 4px;
-  overflow: hidden;
-}
 
-.image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
+  .image {
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+  }
 
-.removeButton {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  padding: 0.25rem 0.5rem;
-}
+  .removeButton {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.25rem 0.5rem;
 
-.removeButton:hover {
-  background: #ff5252;
-  color: white;
-  border-color: #ff5252;
+    &:hover {
+      background: #ff5252;
+      color: white;
+      border-color: #ff5252;
+    }
+  }
 }
 
 .captionInput {
   width: 100%;
 }
 
+/* Don't display pages container on screen */
+.pagesContainer {
+  display: none;
+}
+
 /* Print styles */
 @media print {
-  .header,
-  .controls,
-  .removeButton,
-  .emptyState {
-    display: none;
-  }
-
   .container {
     padding: 0;
     margin: 0;
+    max-width: unset;
   }
 
   .pagesContainer {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 0;
+
+    .page {
+      height: 100vh;
+      padding: 1rem;
+
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      justify-items: center;
+      gap: 2rem;
+
+      page-break-inside: avoid;
+    }
   }
 
-  .page {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+  .printImageCard {
+    position: relative;
+
+    /* Makes it so that the image container is always exactly the size available
+     to the card */
+    height: 100%;
     width: 100%;
-    height: 100vh;
-    page-break-inside: avoid;
-    gap: 1rem;
-  }
 
-  .imageCard {
-    border: none;
-    padding: 0.5rem;
-    display: flex;
-    flex-direction: column;
-  }
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+    gap: 0.5rem;
 
-  .imageWrapper {
-    flex: 1;
-    background: none;
-  }
+    .printImageContainer {
+      position: relative;
+      .printImage {
+        position: absolute;
+        inset: 0;
+        box-sizing: border-box;
 
-  .image {
-    border: 2px solid black;
-    box-sizing: border-box;
-    border-radius: 4px;
-  }
+        /* Take up the full space available to it */
+        width: 100%;
+        height: 100%;
 
-  .captionInput {
-    font-family: 'Times New Roman', serif;
-    border: none;
-    padding: 0.25rem 0;
-    text-align: center;
-    font-size: 0.875rem;
-    background: none;
-  }
+        aspect-ratio: 4/3;
+        object-fit: contain;
+        border-radius: 4px;
+        border: 2px solid black;
+      }
+    }
 
-  .captionInput[value=''] {
-    display: none;
+    .printCaption {
+      font-family: 'Times New Roman', serif;
+      display: block;
+      text-align: center;
+    }
   }
 }

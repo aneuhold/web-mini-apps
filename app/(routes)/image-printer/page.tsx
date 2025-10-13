@@ -125,44 +125,66 @@ export default function Page() {
           <p>No images added yet. Click "Add Images" to get started.</p>
         </div>
       ) : (
-        <div className={styles.pagesContainer}>
-          {chunkArray(images, 4).map((pageImages, pageIndex) => (
-            <div key={pageIndex} className={styles.page}>
-              {pageImages.map((image) => (
-                <div key={image.id} className={styles.imageCard}>
-                  <div className={styles.imageWrapper}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={image.url}
-                      alt={image.caption || 'Uploaded image'}
-                      className={styles.image}
-                    />
-                    <button
-                      onClick={() => {
-                        handleRemoveImage(image.id);
-                      }}
-                      className={styles.removeButton}
-                      type="button"
-                      aria-label="Remove image"
-                    >
-                      ×
-                    </button>
-                  </div>
-                  <input
-                    type="text"
-                    value={image.caption}
-                    onChange={(e) => {
-                      handleCaptionChange(image.id, e.target.value);
-                    }}
-                    placeholder="Add a caption..."
-                    className={styles.captionInput}
-                    aria-label="Image caption"
+        <>
+          {/* For the view where it is being edited */}
+          <div className={styles.imageEditContainer}>
+            {images.map((image) => (
+              <div key={image.id} className={styles.imageCard}>
+                <div className={styles.imageWrapper}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={image.url}
+                    alt={image.caption || 'Uploaded image'}
+                    className={styles.image}
                   />
+                  <button
+                    onClick={() => {
+                      handleRemoveImage(image.id);
+                    }}
+                    className={styles.removeButton}
+                    type="button"
+                    aria-label="Remove image"
+                  >
+                    ×
+                  </button>
                 </div>
-              ))}
-            </div>
-          ))}
-        </div>
+                <input
+                  type="text"
+                  value={image.caption}
+                  onChange={(e) => {
+                    handleCaptionChange(image.id, e.target.value);
+                  }}
+                  placeholder="Add a caption..."
+                  className={styles.captionInput}
+                  aria-label="Image caption"
+                />
+              </div>
+            ))}
+          </div>
+          {/* For the view where it is being shown in print */}
+          <div className={styles.pagesContainer}>
+            {chunkArray(images, 4).map((pageImages, pageIndex) => (
+              <div key={pageIndex} className={styles.page}>
+                {pageImages.map((image) => (
+                  <div key={image.id} className={styles.printImageCard}>
+                    <div className={styles.printImageContainer}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={image.url}
+                        alt={image.caption || 'Uploaded image'}
+                        className={styles.printImage}
+                      />
+                    </div>
+
+                    {image.caption ? (
+                      <span className={styles.printCaption}>{image.caption}</span>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
