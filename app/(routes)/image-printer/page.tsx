@@ -17,7 +17,9 @@ type ImageData = {
 export default function Page() {
   const [images, setImages] = useState<ImageData[]>([]);
   const [pageHeader, setPageHeader] = useState<string>('');
+  const [headerLogo, setHeaderLogo] = useState<{ file: File; url: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
 
   // Clean up blob URLs on unmount
   useEffect(() => {
@@ -25,6 +27,9 @@ export default function Page() {
       images.forEach((image) => {
         URL.revokeObjectURL(image.url);
       });
+      if (headerLogo) {
+        URL.revokeObjectURL(headerLogo.url);
+      }
     };
     // It's like this on purpose.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,11 +95,52 @@ export default function Page() {
     fileInputRef.current?.click();
   };
 
+  /**
+   * Handles logo file selection.
+   * @param event - The change event from the file input
+   */
+  const handleLogoSelect = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Clean up old logo URL if exists
+    if (headerLogo) {
+      URL.revokeObjectURL(headerLogo.url);
+    }
+
+    setHeaderLogo({
+      file,
+      url: URL.createObjectURL(file)
+    });
+
+    // Reset file input
+    if (logoInputRef.current) {
+      logoInputRef.current.value = '';
+    }
+  };
+
+  /**
+   * Removes the header logo.
+   */
+  const handleRemoveLogo = () => {
+    if (headerLogo) {
+      URL.revokeObjectURL(headerLogo.url);
+      setHeaderLogo(null);
+    }
+  };
+
+  /**
+   * Opens the logo file picker dialog.
+   */
+  const handleAddLogo = () => {
+    logoInputRef.current?.click();
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>Image Printer</h1>
-        <p>Upload images, add captions, and print them in a formatted layout (4 per page).</p>
+        <p>Upload images, add captions, and print them in a formatted layout.</p>
       </div>
 
       <div className={styles.controls}>
@@ -111,6 +157,38 @@ export default function Page() {
           <button onClick={handleAddImages} className={styles.button} type="button">
             Add Images
           </button>
+
+          <input
+            ref={logoInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleLogoSelect}
+            className={styles.fileInput}
+            aria-label="Select header logo"
+          />
+          {headerLogo ? (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={headerLogo.url}
+                alt="Header logo preview"
+                className={styles.logoPreviewImage}
+              />
+              <button
+                onClick={handleRemoveLogo}
+                className={styles.removeLogoButton}
+                type="button"
+                aria-label="Remove logo"
+                tabIndex={-1}
+              >
+                Remove Logo
+              </button>
+            </>
+          ) : (
+            <button onClick={handleAddLogo} className={styles.button} type="button">
+              Add Logo (Optional)
+            </button>
+          )}
 
           {images.length > 0 && (
             <button
@@ -165,6 +243,7 @@ export default function Page() {
                     className={styles.removeButton}
                     type="button"
                     aria-label="Remove image"
+                    tabIndex={-1}
                   >
                     ×
                   </button>
@@ -186,8 +265,18 @@ export default function Page() {
           <div className={styles.pagesContainer}>
             {chunkArray(images, 2).map((pageImages, pageIndex) => (
               <div key={pageIndex} className={styles.page}>
-                {pageHeader ? (
-                  <div className={`${styles.pageHeader} ${styles.printText}`}>{pageHeader}</div>
+                {pageHeader || headerLogo ? (
+                  <div className={`${styles.pageHeader} ${styles.printText}`}>
+                    {headerLogo && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={headerLogo.url}
+                        alt="Header logo"
+                        className={styles.headerLogoImage}
+                      />
+                    )}
+                    {pageHeader && <div className={styles.headerText}>{pageHeader}</div>}
+                  </div>
                 ) : (
                   /* Empty div in the case of nothing */
                   <div></div>

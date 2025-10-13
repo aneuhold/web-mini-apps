@@ -37,6 +37,14 @@
   @media print {
     display: none;
   }
+
+  .logoPreviewImage {
+    max-height: 100px;
+    object-fit: contain;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.5rem;
+  }
 }
 
 .headerInputContainer {
@@ -149,12 +157,26 @@
       /* Header for each page, including the logo if provided */
       .pageHeader {
         font-size: 1.2rem;
-        text-align: center;
         width: 100%;
         margin-bottom: 1rem;
 
         /* So new lines are preserved */
         white-space: pre-wrap;
+
+        /* Flexbox to align logo and text horizontally */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+
+        .headerLogoImage {
+          max-height: 150px;
+          object-fit: contain;
+        }
+
+        .headerText {
+          flex: 1;
+        }
       }
 
       /* Content area for images */
