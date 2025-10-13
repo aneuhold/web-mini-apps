@@ -16,6 +16,7 @@ type ImageData = {
  */
 export default function Page() {
   const [images, setImages] = useState<ImageData[]>([]);
+  const [pageHeader, setPageHeader] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Clean up blob URLs on unmount
@@ -109,6 +110,22 @@ export default function Page() {
         <button onClick={handleAddImages} className={styles.button} type="button">
           Add Images
         </button>
+        <div className={styles.headerInputContainer}>
+          <label htmlFor="pageHeader" className={styles.headerLabel}>
+            Page Header (optional):
+          </label>
+          <input
+            id="pageHeader"
+            type="text"
+            value={pageHeader}
+            onChange={(e) => {
+              setPageHeader(e.target.value);
+            }}
+            placeholder="Enter a header for each printed page..."
+            className={styles.headerInput}
+            aria-label="Page header"
+          />
+        </div>
         {images.length > 0 && (
           <button
             onClick={handlePrint}
@@ -165,6 +182,9 @@ export default function Page() {
           <div className={styles.pagesContainer}>
             {chunkArray(images, 4).map((pageImages, pageIndex) => (
               <div key={pageIndex} className={styles.page}>
+                {pageHeader && (
+                  <div className={`${styles.pageHeader} ${styles.printText}`}>{pageHeader}</div>
+                )}
                 {pageImages.map((image) => (
                   <div key={image.id} className={styles.printImageCard}>
                     <div className={styles.printImageContainer}>
@@ -177,7 +197,9 @@ export default function Page() {
                     </div>
 
                     {image.caption ? (
-                      <span className={styles.printCaption}>{image.caption}</span>
+                      <span className={`${styles.printCaption} ${styles.printText}`}>
+                        {image.caption}
+                      </span>
                     ) : null}
                   </div>
                 ))}

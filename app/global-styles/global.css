@@ -1,6 +1,10 @@
 /* Using paper css for now */
 @import url('https://unpkg.com/papercss/dist/paper.min.css') layer(external);
 
+html {
+  font-size: 16px;
+}
+
 html,
 body {
   margin: 0;

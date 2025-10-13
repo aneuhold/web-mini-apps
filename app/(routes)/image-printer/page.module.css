@@ -20,11 +20,32 @@
 
 .controls {
   display: flex;
+  flex-direction: row;
   gap: 1rem;
+  justify-content: space-between;
   margin-bottom: 2rem;
 
   .fileInput {
     display: none;
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+.headerInputContainer {
+  margin-bottom: 2rem;
+  width: 100%;
+
+  .headerLabel {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .headerInput {
+    width: 100%;
   }
 
   @media print {
@@ -99,6 +120,11 @@
     max-width: unset;
   }
 
+  .printText {
+    font-family: Arial, serif;
+    font-weight: bold;
+  }
+
   .pagesContainer {
     display: grid;
     grid-template-columns: 1fr;
@@ -109,10 +135,17 @@
 
       display: grid;
       grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 1fr 1fr;
       justify-items: center;
       gap: 2rem;
 
       page-break-inside: avoid;
+
+      .pageHeader {
+        grid-column: 1 / -1;
+        text-align: center;
+        width: 100%;
+      }
     }
   }
 
@@ -143,12 +176,10 @@
         aspect-ratio: 4/3;
         object-fit: contain;
         border-radius: 4px;
-        border: 2px solid black;
       }
     }
 
     .printCaption {
-      font-family: 'Times New Roman', serif;
       display: block;
       text-align: center;
     }
