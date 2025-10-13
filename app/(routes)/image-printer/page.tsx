@@ -10,6 +10,7 @@ import {
   savedHeaderLogoToFile,
   savedImageDataToFile
 } from './db';
+import { compressImage } from './imageProcessing';
 import styles from './page.module.css';
 
 type ImageData = {
@@ -118,14 +119,34 @@ export default function Page() {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
-    const newImages: ImageData[] = Array.from(files).map((file) => ({
-      id: `${Date.now()}-${Math.random()}`,
-      file,
-      url: URL.createObjectURL(file),
-      caption: ''
-    }));
+    // Compress images before adding them
+    const processImages = async () => {
+      const compressionPromises = Array.from(files).map(async (file) => {
+        try {
+          const compressedFile = await compressImage(file);
+          return {
+            id: `${Date.now()}-${Math.random()}`,
+            file: compressedFile,
+            url: URL.createObjectURL(compressedFile),
+            caption: ''
+          };
+        } catch (error) {
+          console.error('Failed to compress image:', error);
+          // Fall back to original file if compression fails
+          return {
+            id: `${Date.now()}-${Math.random()}`,
+            file,
+            url: URL.createObjectURL(file),
+            caption: ''
+          };
+        }
+      });
 
-    setImages((prev) => [...prev, ...newImages]);
+      const newImages = await Promise.all(compressionPromises);
+      setImages((prev) => [...prev, ...newImages]);
+    };
+
+    void processImages();
 
     // Reset file input
     if (fileInputRef.current) {
