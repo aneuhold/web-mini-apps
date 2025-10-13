@@ -98,25 +98,37 @@ export default function Page() {
       </div>
 
       <div className={styles.controls}>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handleFileSelect}
-          className={styles.fileInput}
-          aria-label="Select images to upload"
-        />
-        <button onClick={handleAddImages} className={styles.button} type="button">
-          Add Images
-        </button>
+        <div className={styles.controlButtons}>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFileSelect}
+            className={styles.fileInput}
+            aria-label="Select images to upload"
+          />
+          <button onClick={handleAddImages} className={styles.button} type="button">
+            Add Images
+          </button>
+
+          {images.length > 0 && (
+            <button
+              onClick={handlePrint}
+              className={`btn-secondary ${styles.printButton}`}
+              type="button"
+            >
+              Print ({images.length} {images.length === 1 ? 'image' : 'images'})
+            </button>
+          )}
+        </div>
+
         <div className={styles.headerInputContainer}>
           <label htmlFor="pageHeader" className={styles.headerLabel}>
             Page Header (optional):
           </label>
-          <input
+          <textarea
             id="pageHeader"
-            type="text"
             value={pageHeader}
             onChange={(e) => {
               setPageHeader(e.target.value);
@@ -124,17 +136,9 @@ export default function Page() {
             placeholder="Enter a header for each printed page..."
             className={styles.headerInput}
             aria-label="Page header"
+            spellCheck={true}
           />
         </div>
-        {images.length > 0 && (
-          <button
-            onClick={handlePrint}
-            className={`btn-secondary ${styles.printButton}`}
-            type="button"
-          >
-            Print ({images.length} {images.length === 1 ? 'image' : 'images'})
-          </button>
-        )}
       </div>
 
       {images.length === 0 ? (
@@ -180,29 +184,34 @@ export default function Page() {
           </div>
           {/* For the view where it is being shown in print */}
           <div className={styles.pagesContainer}>
-            {chunkArray(images, 4).map((pageImages, pageIndex) => (
+            {chunkArray(images, 2).map((pageImages, pageIndex) => (
               <div key={pageIndex} className={styles.page}>
-                {pageHeader && (
+                {pageHeader ? (
                   <div className={`${styles.pageHeader} ${styles.printText}`}>{pageHeader}</div>
+                ) : (
+                  /* Empty div in the case of nothing */
+                  <div></div>
                 )}
-                {pageImages.map((image) => (
-                  <div key={image.id} className={styles.printImageCard}>
-                    <div className={styles.printImageContainer}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={image.url}
-                        alt={image.caption || 'Uploaded image'}
-                        className={styles.printImage}
-                      />
-                    </div>
+                <div className={styles.pageContent}>
+                  {pageImages.map((image) => (
+                    <div key={image.id} className={styles.printImageCard}>
+                      <div className={styles.printImageContainer}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={image.url}
+                          alt={image.caption || 'Uploaded image'}
+                          className={styles.printImage}
+                        />
+                      </div>
 
-                    {image.caption ? (
-                      <span className={`${styles.printCaption} ${styles.printText}`}>
-                        {image.caption}
-                      </span>
-                    ) : null}
-                  </div>
-                ))}
+                      {image.caption ? (
+                        <span className={`${styles.printCaption} ${styles.printText}`}>
+                          {image.caption}
+                        </span>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
