@@ -263,7 +263,7 @@ export default function Page() {
           </div>
           {/* For the view where it is being shown in print */}
           <div className={styles.pagesContainer}>
-            {chunkArray(images, 2).map((pageImages, pageIndex) => (
+            {chunkArray(images, 2).map((pageImages, pageIndex, pages) => (
               <div key={pageIndex} className={styles.page}>
                 {pageHeader || headerLogo ? (
                   <div className={`${styles.pageHeader} ${styles.printText}`}>
@@ -300,6 +300,9 @@ export default function Page() {
                       ) : null}
                     </div>
                   ))}
+                </div>
+                <div className={`${styles.pageNumber} ${styles.printText}`}>
+                  {pageIndex + 1}/{pages.length}
                 </div>
               </div>
             ))}
