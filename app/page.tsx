@@ -1,5 +1,6 @@
 import Footer from '$components/Footer';
 import Link from 'next/link';
+import styles from './page.module.css';
 
 /**
  * Main page component that renders the web mini apps layout.
@@ -8,10 +9,15 @@ import Link from 'next/link';
 export default function Page() {
   return (
     <>
-      <ul className="row flex-center">
+      <ul className={styles.appList}>
         <li>
           <Link href="/image-printer" aria-label="Image printer app link">
             Image Printer App
+          </Link>
+        </li>
+        <li>
+          <Link href="/css-height-tester" aria-label="CSS height tester app link">
+            CSS Height Tester
           </Link>
         </li>
       </ul>
