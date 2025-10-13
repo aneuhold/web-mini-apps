@@ -1,6 +1,15 @@
 'use client';
 
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import {
+  clearData,
+  fileToSavedHeaderLogo,
+  fileToSavedImageData,
+  loadData,
+  saveData,
+  savedHeaderLogoToFile,
+  savedImageDataToFile
+} from './db';
 import styles from './page.module.css';
 
 type ImageData = {
@@ -20,6 +29,72 @@ export default function Page() {
   const [headerLogo, setHeaderLogo] = useState<{ file: File; url: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Load data from IndexedDB on mount
+  useEffect(() => {
+    const loadSavedData = async () => {
+      try {
+        const savedData = await loadData();
+        if (savedData) {
+          // Restore images
+          const restoredImages: ImageData[] = savedData.images.map((savedImage) => {
+            const file = savedImageDataToFile(savedImage);
+            return {
+              id: `${Date.now()}-${Math.random()}`,
+              file,
+              url: URL.createObjectURL(file),
+              caption: savedImage.caption
+            };
+          });
+          setImages(restoredImages);
+
+          // Restore page header
+          setPageHeader(savedData.pageHeader);
+
+          // Restore header logo
+          if (savedData.headerLogo) {
+            const file = savedHeaderLogoToFile(savedData.headerLogo);
+            setHeaderLogo({
+              file,
+              url: URL.createObjectURL(file)
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load saved data:', error);
+      } finally {
+        setIsLoaded(true);
+      }
+    };
+
+    void loadSavedData();
+  }, []);
+
+  // Save data to IndexedDB whenever images, pageHeader, or headerLogo changes
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    const saveCurrentData = async () => {
+      try {
+        const imagesToSave = await Promise.all(
+          images.map((image) => fileToSavedImageData(image.file, image.caption))
+        );
+
+        const logoToSave = headerLogo ? await fileToSavedHeaderLogo(headerLogo.file) : null;
+
+        await saveData({
+          images: imagesToSave,
+          pageHeader,
+          headerLogo: logoToSave
+        });
+      } catch (error) {
+        console.error('Failed to save data:', error);
+      }
+    };
+
+    void saveCurrentData();
+  }, [images, pageHeader, headerLogo, isLoaded]);
 
   // Clean up blob URLs on unmount
   useEffect(() => {
@@ -136,6 +211,33 @@ export default function Page() {
     logoInputRef.current?.click();
   };
 
+  /**
+   * Clears all data including images, header, and logo.
+   */
+  const handleClearData = () => {
+    if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+      // Clear images
+      images.forEach((image) => {
+        URL.revokeObjectURL(image.url);
+      });
+      setImages([]);
+
+      // Clear header
+      setPageHeader('');
+
+      // Clear logo
+      if (headerLogo) {
+        URL.revokeObjectURL(headerLogo.url);
+        setHeaderLogo(null);
+      }
+
+      // Clear from IndexedDB
+      void clearData().catch((error: unknown) => {
+        console.error('Failed to clear data:', error);
+      });
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -199,6 +301,15 @@ export default function Page() {
               Print ({images.length} {images.length === 1 ? 'image' : 'images'})
             </button>
           )}
+
+          <button
+            onClick={handleClearData}
+            className={styles.button}
+            type="button"
+            aria-label="Clear all data"
+          >
+            Clear All Data
+          </button>
         </div>
 
         <div className={styles.headerInputContainer}>
