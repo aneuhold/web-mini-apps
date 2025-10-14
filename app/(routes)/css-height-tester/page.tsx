@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import styles from './page.module.css';
 
 type ContentType = 'text' | 'image';
@@ -24,7 +24,7 @@ export default function Page() {
   const [constraints, setConstraints] = useState<CssConstraint[]>([
     { id: '1', name: 'Grid Layout', className: 'constrainByGrid', enabled: false },
     { id: '2', name: 'Flexbox Layout', className: 'constrainByFlex', enabled: false },
-    { id: '3', name: 'Max Height', className: 'constrainMaxHeight', enabled: false },
+    { id: '3', name: 'Max Height (200px)', className: 'constrainMaxHeight', enabled: false },
     { id: '4', name: 'Min Height', className: 'constrainMinHeight', enabled: false },
     { id: '5', name: 'Absolute Position', className: 'constrainByAbsolute', enabled: false }
   ]);
@@ -70,10 +70,12 @@ export default function Page() {
   };
 
   // Build class names for the container and content
-  const containerClasses = [
-    styles.exampleContainer,
-    ...constraints.filter((c) => c.enabled).map((c) => styles[c.className])
-  ].join(' ');
+  const containerClasses = useMemo<string>(() => {
+    return [
+      styles.exampleContainer,
+      ...constraints.filter((c) => c.enabled).map((c) => styles[c.className])
+    ].join(' ');
+  }, [constraints]);
 
   const contentClasses = [
     styles.exampleContent,
@@ -201,7 +203,7 @@ export default function Page() {
 
           {/* CSS Constraints */}
           <div className={styles.configSection}>
-            <label className={styles.label}>CSS Constraints (drag to reorder):</label>
+            <label className={styles.label}>CSS Constraints:</label>
             <div className={styles.constraintsList}>
               {constraints.map((constraint, index) => (
                 <div key={constraint.id} className={styles.constraintItem}>

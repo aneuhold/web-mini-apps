@@ -5,6 +5,7 @@ Some tiny static apps that are deployed to the web for utilities. These are thin
 ## Existing Tools
 
 - [image-printer](https://utils.tonyneuhold.com/image-printer)
+- [css-height-tester](https://utils.tonyneuhold.com/image-printer)
 
 ## Deployment Proces
 
