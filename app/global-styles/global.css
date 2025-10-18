@@ -1,8 +1,18 @@
-/* Using paper css for now */
-@import url('https://unpkg.com/papercss/dist/paper.min.css') layer(external);
+/**
+ * Note: PaperCSS is imported from a local file instead of a CDN URL.
+ * 
+ * As of 10/18/25 Turbopack (Next.js) currently has a bug where remote CSS imports
+ * lose their layer() and media query attributes. Local imports work correctly
+ * because Turbopack bundles them inline with proper @layer and @media wrappers.
+ * 
+ * Bug reports:
+ * - Lightning CSS: https://github.com/parcel-bundler/lightningcss/issues/1074
+ * - No bug report for Next.js at the moment. Just didn't have the motivation at the time 😅
+ */
+@import './paperCSS-v1.9.2.css' layer(external) not print;
 
 html {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 html,
@@ -13,14 +23,4 @@ body {
 
 * {
   box-sizing: border-box;
-}
-
-/* Reset some stuff for print so it looks more professional. This doesn't work for some reason
-when deployed which is kind of annoying. */
-@media print {
-  img,
-  input,
-  p {
-    all: revert-layer;
-  }
 }

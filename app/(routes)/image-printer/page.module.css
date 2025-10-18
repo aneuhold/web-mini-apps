@@ -170,7 +170,6 @@
         .headerLogoImage {
           max-height: 100px;
           object-fit: contain;
-          border: none;
         }
 
         .headerText {
@@ -204,10 +203,8 @@
     .printImageContainer {
       min-height: 0;
       .printImage {
-        border: none;
         box-sizing: border-box;
         height: 100%;
-
         aspect-ratio: 4/3;
         object-fit: contain;
         border-radius: 4px;
