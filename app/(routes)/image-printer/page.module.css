@@ -12,6 +12,10 @@
     font-size: 2rem;
     margin-bottom: 1rem;
   }
+
+  @media print {
+    display: none;
+  }
 }
 
 .controls {
@@ -28,6 +32,10 @@
     display: flex;
     flex-direction: row;
     gap: 1rem;
+  }
+
+  @media print {
+    display: none;
   }
 
   .logoPreviewImage {
@@ -53,18 +61,30 @@
     width: 100%;
     resize: vertical;
   }
+
+  @media print {
+    display: none;
+  }
 }
 
 .emptyState {
   text-align: center;
   padding: 4rem 2rem;
   color: #666;
+
+  @media print {
+    display: none;
+  }
 }
 
 .imageEditContainer {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
+
+  @media print {
+    display: none;
+  }
 }
 
 .imageCard {
@@ -106,23 +126,17 @@
   display: none;
 }
 
-/* Print mode styles - applied when printMode class is present on container */
-.printMode {
-  padding: 0;
-  margin: 0;
-  max-width: unset;
+/* Print styles */
+@media print {
+  .container {
+    padding: 0;
+    margin: 0;
+    max-width: unset;
+  }
 
   .printText {
     font-family: Arial, serif;
     font-weight: bold;
-  }
-
-  .header,
-  .controls,
-  .headerInputContainer,
-  .emptyState,
-  .imageEditContainer {
-    display: none;
   }
 
   .pagesContainer {
@@ -137,12 +151,15 @@
       grid-template-columns: 1fr;
       grid-template-rows: auto 1fr auto;
       justify-items: center;
-      break-inside: avoid;
+
+      page-break-inside: avoid;
 
       /* Header for each page, including the logo if provided */
       .pageHeader {
         width: 100%;
         margin-bottom: 1rem;
+
+        /* So new lines are preserved */
 
         /* Flexbox to align logo and text horizontally */
         display: flex;
@@ -173,6 +190,8 @@
   }
 
   .printImageCard {
+    /* Makes it so that the image container is always exactly the size available
+     to the card */
     min-height: 0;
 
     display: grid;
@@ -187,6 +206,7 @@
 
       .printImage {
         box-sizing: border-box;
+        /* Key fix: Use max dimensions instead of fixed height to break the circular dependency */
         max-width: 100%;
         max-height: 100%;
         width: auto;
