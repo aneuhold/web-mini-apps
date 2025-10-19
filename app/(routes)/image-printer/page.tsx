@@ -1,5 +1,6 @@
 'use client';
 
+import html2pdf from 'html2pdf.js';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import {
   clearData,
@@ -31,6 +32,27 @@ export default function Page() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isPrintMode, setIsPrintMode] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Listen for print media query changes and toggle print mode
+  useEffect(() => {
+    const printMediaQuery = window.matchMedia('print');
+
+    const handlePrintMediaChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      setIsPrintMode(e.matches);
+    };
+
+    // Initial check
+    handlePrintMediaChange(printMediaQuery);
+
+    // Listen for changes
+    printMediaQuery.addEventListener('change', handlePrintMediaChange);
+
+    return () => {
+      printMediaQuery.removeEventListener('change', handlePrintMediaChange);
+    };
+  }, []);
 
   // Load data from IndexedDB on mount
   useEffect(() => {
@@ -185,6 +207,33 @@ export default function Page() {
   };
 
   /**
+   * Downloads the current layout as a PDF using html2pdf.js.
+   */
+  const handleDownloadPDF = async () => {
+    const element = containerRef.current;
+    if (!element) {
+      console.error('Pages container not found');
+      return;
+    }
+
+    // Enable print mode to show print styles
+    setIsPrintMode(true);
+
+    try {
+      await html2pdf()
+        .set({
+          filename: `images-${new Date().toISOString().split('T')[0]}.pdf`,
+          jsPDF: { format: 'letter', orientation: 'portrait' }
+        })
+        .from(element)
+        .save();
+    } finally {
+      // Disable print mode after PDF generation (whether successful or not)
+      setIsPrintMode(false);
+    }
+  };
+
+  /**
    * Opens the file picker dialog.
    */
   const handleAddImages = () => {
@@ -260,7 +309,10 @@ export default function Page() {
   };
 
   return (
-    <div className={styles.container}>
+    <div
+      ref={containerRef}
+      className={`${styles.container} ${isPrintMode ? styles.printMode : ''}`}
+    >
       <div className={styles.header}>
         <h1 className={styles.title}>Image Printer</h1>
         <p>Upload images, add captions, and print them in a formatted layout.</p>
@@ -314,13 +366,24 @@ export default function Page() {
           )}
 
           {images.length > 0 && (
-            <button
-              onClick={handlePrint}
-              className={`btn-secondary ${styles.printButton}`}
-              type="button"
-            >
-              Print ({images.length} {images.length === 1 ? 'image' : 'images'})
-            </button>
+            <>
+              <button
+                onClick={handlePrint}
+                className={`btn-secondary ${styles.printButton}`}
+                type="button"
+              >
+                Print ({images.length} {images.length === 1 ? 'image' : 'images'})
+              </button>
+              <button
+                onClick={() => {
+                  void handleDownloadPDF();
+                }}
+                className={`btn-secondary ${styles.downloadButton}`}
+                type="button"
+              >
+                Download PDF
+              </button>
+            </>
           )}
 
           <button
