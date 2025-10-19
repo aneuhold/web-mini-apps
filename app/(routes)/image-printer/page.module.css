@@ -152,7 +152,7 @@
       grid-template-rows: auto 1fr auto;
       justify-items: center;
 
-      page-break-inside: avoid;
+      break-inside: avoid;
 
       /* Header for each page, including the logo if provided */
       .pageHeader {
