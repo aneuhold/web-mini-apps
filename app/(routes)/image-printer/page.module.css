@@ -152,7 +152,7 @@
       grid-template-rows: auto 1fr auto;
       justify-items: center;
 
-      page-break-inside: avoid;
+      break-inside: avoid;
 
       /* Header for each page, including the logo if provided */
       .pageHeader {
@@ -184,7 +184,6 @@
         grid-template-columns: 1fr;
         grid-template-rows: 1fr 1fr;
         gap: 2rem;
-
         min-height: 0;
       }
     }
@@ -202,9 +201,16 @@
 
     .printImageContainer {
       min-height: 0;
+      display: flex;
+      justify-content: center;
+
       .printImage {
         box-sizing: border-box;
-        height: 100%;
+        /* Key fix: Use max dimensions instead of fixed height to break the circular dependency */
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
         aspect-ratio: 4/3;
         object-fit: contain;
         border-radius: 4px;
