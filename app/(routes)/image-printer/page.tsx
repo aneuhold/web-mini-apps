@@ -265,7 +265,7 @@ export default function Page() {
         <h1 className={styles.title}>Image Printer</h1>
         <p>Upload images, add captions, and print them in a formatted layout.</p>
         <p>
-          <i>Note: Please use Chrome, Edge, or mobile Chrome for best results.</i>
+          <i>Note: Please use Chrome or Edge on Desktop / Laptop for best results.</i>
         </p>
       </div>
 
