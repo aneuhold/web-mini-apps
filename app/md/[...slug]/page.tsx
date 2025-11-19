@@ -39,6 +39,7 @@ export default async function MarkdownPage({ params }: PageProps) {
 /**
  * Generates static params for all markdown files.
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function generateStaticParams() {
   const contentDir = path.join(process.cwd(), 'content/md');
 
