@@ -12,6 +12,8 @@ This is an example markdown page.
 - _Italic text_
 - [Links](https://example.com)
 - Lists
+- test
+- test
 
 ### Code
 
@@ -22,7 +24,7 @@ console.log(greeting);
 
 ### Images
 
-![Placeholder Image](https://via.placeholder.com/150)
+![Placeholder Image](/images/image.png)
 
 To use local images, place them in the `public` folder and reference them with a leading slash.
 For example, if you have `public/my-image.png`, use:
