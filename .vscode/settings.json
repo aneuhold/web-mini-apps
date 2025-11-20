@@ -15,5 +15,9 @@
   "eslint.run": "onSave",
   "eslint.format.enable": true,
   // Below is super important for ESLint to run at all with Svelte
-  "eslint.validate": ["svelte", "javascript", "javascriptreact", "typescript", "typescriptreact"]
+  "eslint.validate": ["svelte", "javascript", "javascriptreact", "typescript", "typescriptreact"],
+  // Markdown image paste settings
+  "markdown.copyFiles.destination": {
+    "**/*": "/public/images/${fileName}"
+  }
 }
