@@ -20,6 +20,11 @@ export default function Page() {
             CSS Height Tester
           </Link>
         </li>
+        <li>
+          <Link href="/md" aria-label="Markdown pages app link">
+            Markdown Pages App
+          </Link>
+        </li>
       </ul>
       <Footer />
     </>

@@ -3,6 +3,7 @@ import matter from 'gray-matter';
 import { notFound } from 'next/navigation';
 import path from 'path';
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import styles from './page.module.css';
 
@@ -30,7 +31,9 @@ export default async function MarkdownPage({ params }: PageProps) {
   return (
     <div className={styles.container}>
       <div className={styles.markdown}>
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+          {content}
+        </ReactMarkdown>
       </div>
     </div>
   );
