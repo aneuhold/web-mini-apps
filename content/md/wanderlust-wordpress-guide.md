@@ -31,6 +31,13 @@
   ![alt text](/images/image-4.png)
 - The structure window on the right is your friend! That will be the easiest way to move things around between containers.
   ![Structure part](/images/image-5.png)
+- In order to change the way that containers looks as they border on other containers, click on the the container, then go to style
+  - ![Container then style](/images/image-7.png)
+  - Then click on the shape divider section and pick the one you like! It has top and bottom options. ![border options](/images/image-6.png)
+
+## Troubleshooting
+
+- If the page just isn't doing what you want it to as far as the containers, then try and publish the page and see what it does live. If it is doing something different than what you are seeing in the editor, then the editor's page might need to be refreshed.
 
 # For Any Future Development / Engineer That Works on the Site
 
