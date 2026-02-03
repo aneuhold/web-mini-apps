@@ -4,8 +4,21 @@
 - Generally TypeScript source code with pnpm package management
 - Avoid code duplication; reuse existing code when possible
 - Whenever running tests, always use the Vitest extension, and don't run the test command in the terminal
+- This is a Next.js project, so we are using React components and the file-based routing system
+
+## Adding new Projects
+
+Whenever creating a new project:
+
+- Make sure to add a helpful route name and add it to the `app/(routes)` directory with it's own folder
+- Add a link to it in the main `README.md` following the other examples there as far as domain name
+- Make sure to add a relative link to it in `app/page.tsx`
 
 # Code Style (TypeScript)
+
+## Components
+
+- Use common components when it makes sense to (see `app/components/`)
 
 ## Types & Functions
 
@@ -36,3 +49,8 @@
 
 - Use PascalCase for enum names and values
 - Use TypeScript `enum` (not `const enum` or `type`)
+
+# Code Style (CSS)
+
+- Use modern CSS syntax and features whenever possible, but primarily defer to the built-in styles of PaperCSS (see `app/global-styles/`).
+- Try to keep things generic

@@ -25,6 +25,11 @@ export default function Page() {
             Markdown Pages App
           </Link>
         </li>
+        <li>
+          <Link href="/design-patterns" aria-label="Design patterns flash cards app link">
+            Design Patterns Flash Cards
+          </Link>
+        </li>
       </ul>
       <Footer />
     </>
