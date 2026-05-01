@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TypeScript & ESLint: The Practical Payoff</title>
+
+  <!-- Fonts: Cormorant Garamond (display) + Source Serif 4 (body) -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===========================================
+       CSS CUSTOM PROPERTIES — PAPER & INK THEME
+       Change these to change the whole look
+       =========================================== */
+    :root {
+      /* Colors */
+      --bg-cream: #faf9f7;
+      --bg-cream-alt: #f5f3ee;
+      --text-primary: #1a1a1a;
+      --text-secondary: #555;
+      --text-muted: #888;
+      --accent-crimson: #c41e3a;
+      --accent-crimson-light: rgba(196, 30, 58, 0.08);
+      --accent-warm: #e8d4c0;
+      --rule-color: #1a1a1a;
+      --rule-light: #ddd;
+      --code-bg: #2d2d2d;
+      --code-text: #e8e4df;
+      --code-accent: #f0c674;
+      --code-keyword: #b294bb;
+      --code-string: #b5bd68;
+      --code-comment: #a9a9a9;
+      --code-type: #81a2be;
+
+      /* Typography — MUST use clamp() */
+      --font-display: 'Cormorant Garamond', serif;
+      --font-body: 'Source Serif 4', serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --title-size: clamp(2rem, 5.5vw, 4.5rem);
+      --h2-size: clamp(1.4rem, 3.5vw, 2.8rem);
+      --h3-size: clamp(1.1rem, 2vw, 1.5rem);
+      --body-size: clamp(0.8rem, 1.4vw, 1.1rem);
+      --small-size: clamp(0.65rem, 1vw, 0.85rem);
+      --code-size: clamp(0.6rem, 1vw, 0.82rem);
+
+      /* Spacing */
+      --slide-padding: clamp(2rem, 6vw, 6rem);
+      --content-gap: clamp(0.75rem, 2vw, 2rem);
+      --element-gap: clamp(0.3rem, 1vw, 1rem);
+
+      /* Animation */
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --duration-normal: 0.7s;
+    }
+
+    /* ===========================================
+       BASE STYLES
+       =========================================== */
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+
+    /* ===========================================
+       VIEWPORT FITTING: MANDATORY BASE STYLES
+       =========================================== */
+    html, body {
+      height: 100%;
+      overflow-x: hidden;
+    }
+    html {
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .slide-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-height: 100%;
+      overflow: hidden;
+      padding: var(--slide-padding);
+    }
+    .card, .container, .content-box {
+      max-width: min(90vw, 1000px);
+      max-height: min(80vh, 700px);
+    }
+    .feature-list, .bullet-list { gap: clamp(0.4rem, 1vh, 1rem); }
+    .feature-list li, .bullet-list li { font-size: var(--body-size); line-height: 1.4; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+      gap: clamp(0.5rem, 1.5vw, 1rem);
+    }
+    img, .image-container {
+      max-width: 100%;
+      max-height: min(50vh, 400px);
+      object-fit: contain;
+    }
+    @media (max-height: 700px) {
+      :root {
+        --slide-padding: clamp(1rem, 4vw, 3rem);
+        --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+        --title-size: clamp(1.5rem, 4.5vw, 3rem);
+        --h2-size: clamp(1.1rem, 3vw, 2rem);
+      }
+    }
+    @media (max-height: 600px) {
+      :root {
+        --slide-padding: clamp(0.75rem, 3vw, 2rem);
+        --content-gap: clamp(0.3rem, 1vw, 0.75rem);
+        --title-size: clamp(1.25rem, 4vw, 2.2rem);
+        --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+      }
+      .nav-dots, .keyboard-hint, .decorative { display: none; }
+    }
+    @media (max-height: 500px) {
+      :root {
+        --slide-padding: clamp(0.5rem, 2vw, 1rem);
+        --title-size: clamp(1rem, 3.5vw, 1.5rem);
+        --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
+        --body-size: clamp(0.65rem, 1vw, 0.85rem);
+      }
+    }
+    @media (max-width: 600px) {
+      :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+      .grid { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+
+    /* ===========================================
+       PAPER & INK — THEME STYLES
+       =========================================== */
+    body {
+      background: var(--bg-cream);
+      font-family: var(--font-body);
+      color: var(--text-primary);
+    }
+
+    /* --- Slide Base --- */
+    .slide {
+      background: var(--bg-cream);
+    }
+    .slide.alt-bg {
+      background: var(--bg-cream-alt);
+    }
+    .slide.dark-bg {
+      background: var(--code-bg);
+    }
+
+    /* --- Horizontal Rules (signature element) --- */
+    .rule-top, .rule-bottom {
+      position: absolute;
+      left: var(--slide-padding);
+      right: var(--slide-padding);
+      height: 1px;
+      background: var(--rule-light);
+    }
+    .rule-top { top: clamp(1.5rem, 4vw, 3.5rem); }
+    .rule-bottom { bottom: clamp(1.5rem, 4vw, 3.5rem); }
+
+    /* --- Crimson accent bar --- */
+    .accent-bar {
+      position: absolute;
+      left: var(--slide-padding);
+      top: clamp(1.5rem, 4vw, 3.5rem);
+      width: clamp(30px, 4vw, 60px);
+      height: 3px;
+      background: var(--accent-crimson);
+    }
+
+    /* --- Drop Cap (decorative) --- */
+    .drop-cap {
+      position: absolute;
+      left: var(--slide-padding);
+      top: clamp(2.5rem, 6vw, 5rem);
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 10vw, 9rem);
+      font-weight: 700;
+      color: var(--accent-crimson);
+      line-height: 0.85;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+
+    /* --- Slide Number --- */
+    .slide-number {
+      position: absolute;
+      bottom: clamp(1.5rem, 4vw, 3.5rem);
+      right: var(--slide-padding);
+      font-family: var(--font-body);
+      font-size: var(--small-size);
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* --- Typography --- */
+    h1 {
+      font-family: var(--font-display);
+      font-size: var(--title-size);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    h2 {
+      font-family: var(--font-display);
+      font-size: var(--h2-size);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+      margin-bottom: var(--content-gap);
+    }
+    h3 {
+      font-family: var(--font-display);
+      font-size: var(--h3-size);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    p, li {
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+    em { color: var(--accent-crimson); font-style: italic; }
+    strong { color: var(--text-primary); font-weight: 600; }
+
+    /* --- Pull Quote (signature element) --- */
+    .pull-quote {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 3vw, 2.2rem);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.35;
+      border-left: 3px solid var(--accent-crimson);
+      padding-left: clamp(1rem, 2vw, 2rem);
+      max-width: 700px;
+    }
+    .pull-quote .attribution {
+      display: block;
+      font-family: var(--font-body);
+      font-size: var(--small-size);
+      font-style: normal;
+      color: var(--text-muted);
+      margin-top: clamp(0.5rem, 1vw, 1rem);
+      letter-spacing: 0.05em;
+    }
+
+    /* --- Ornament Divider --- */
+    .ornament {
+      font-size: var(--small-size);
+      color: var(--text-muted);
+      letter-spacing: 0.4em;
+      text-align: center;
+    }
+
+    /* --- Code Blocks --- */
+    .code-block {
+      background: var(--code-bg);
+      border-radius: clamp(4px, 0.5vw, 8px);
+      padding: clamp(0.8rem, 1.5vw, 1.5rem);
+      font-family: var(--font-mono);
+      font-size: var(--code-size);
+      line-height: 1.6;
+      white-space: pre-wrap;
+      color: var(--code-text);
+      overflow: hidden;
+      max-height: min(55vh, 450px);
+      border-left: 3px solid var(--accent-crimson);
+    }
+    .code-block .keyword { color: var(--code-keyword); }
+    .code-block .type { color: var(--code-type); }
+    .code-block .string { color: var(--code-string); }
+    .code-block .comment { color: var(--code-comment); font-style: italic; }
+    .code-block .accent { color: var(--code-accent); }
+    .code-block .crimson { color: #cc6666; }
+    .code-block strong { color: inherit; font-weight: 600; }
+
+    /* --- Comparison Layout --- */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(1rem, 2vw, 2.5rem);
+      align-items: start;
+    }
+    @media (max-width: 700px) {
+      .compare { grid-template-columns: 1fr; }
+    }
+    .compare-panel h3 {
+      margin-bottom: clamp(0.3rem, 0.8vw, 0.6rem);
+      font-size: clamp(0.85rem, 1.3vw, 1.1rem);
+    }
+    .compare-label {
+      font-family: var(--font-mono);
+      font-size: var(--small-size);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: clamp(0.3rem, 0.5vw, 0.5rem);
+    }
+    .compare-label.good { color: var(--code-string); }
+    .compare-label.caution { color: var(--code-accent); }
+
+    /* --- Stats Grid --- */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(0.75rem, 1.5vw, 2rem);
+      text-align: center;
+    }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+    .stat-item .stat-number {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 700;
+      color: var(--accent-crimson);
+      line-height: 1;
+    }
+    .stat-item .stat-label {
+      font-family: var(--font-body);
+      font-size: var(--small-size);
+      color: var(--text-muted);
+      margin-top: clamp(0.2rem, 0.5vw, 0.5rem);
+      letter-spacing: 0.03em;
+    }
+
+    /* --- Bullet List --- */
+    .content-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.4rem, 1vh, 0.9rem);
+    }
+    .content-list li {
+      padding-left: clamp(1rem, 2vw, 1.8rem);
+      position: relative;
+    }
+    .content-list li::before {
+      content: '*';
+      position: absolute;
+      left: 0;
+      color: var(--accent-crimson);
+      font-weight: 600;
+    }
+
+    /* --- Tag/Badge --- */
+    .tag {
+      display: inline-block;
+      font-family: var(--font-body);
+      font-size: var(--small-size);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border: 1px solid var(--rule-light);
+      padding: clamp(0.2rem, 0.3vw, 0.3rem) clamp(0.5rem, 1vw, 1rem);
+      border-radius: 2px;
+    }
+
+    /* --- Progress Bar --- */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      background: var(--accent-crimson);
+      z-index: 1000;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    /* --- Nav Dots --- */
+    .nav-dots {
+      position: fixed;
+      right: clamp(0.75rem, 1.5vw, 1.5rem);
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(4px, 0.5vw, 8px);
+      z-index: 100;
+    }
+    .nav-dot {
+      width: clamp(5px, 0.5vw, 7px);
+      height: clamp(5px, 0.5vw, 7px);
+      border-radius: 50%;
+      background: var(--rule-light);
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+      padding: 0;
+    }
+    .nav-dot.active {
+      background: var(--accent-crimson);
+      transform: scale(1.4);
+    }
+
+    /* ===========================================
+       REVEAL ANIMATIONS
+       Triggered via .visible class on scroll
+       =========================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(25px);
+      transition: opacity var(--duration-normal) var(--ease-out-expo),
+                  transform var(--duration-normal) var(--ease-out-expo);
+    }
+    .slide.visible .reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal:nth-child(1) { transition-delay: 0.1s; }
+    .reveal:nth-child(2) { transition-delay: 0.2s; }
+    .reveal:nth-child(3) { transition-delay: 0.3s; }
+    .reveal:nth-child(4) { transition-delay: 0.4s; }
+    .reveal:nth-child(5) { transition-delay: 0.5s; }
+
+    /* Accent bar animation */
+    .slide.visible .accent-bar {
+      animation: ruleGrow 0.8s var(--ease-out-expo) 0.2s both;
+    }
+    @keyframes ruleGrow {
+      from { width: 0; }
+      to { width: clamp(30px, 4vw, 60px); }
+    }
+
+    /* Drop cap fade */
+    .slide.visible .drop-cap {
+      animation: fadeIn 1.2s ease-out 0.1s both;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 0.08; }
+    }
+
+    /* Keyboard hint */
+    .keyboard-hint {
+      position: fixed;
+      bottom: clamp(0.75rem, 1.5vw, 1.5rem);
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-body);
+      font-size: var(--small-size);
+      color: var(--text-muted);
+      opacity: 0.5;
+      letter-spacing: 0.05em;
+      transition: opacity 2s ease;
+      z-index: 50;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- Navigation Dots -->
+  <nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+
+  <!-- Keyboard hint (fades after first interaction) -->
+  <div class="keyboard-hint" id="keyboardHint">Arrow keys or scroll to navigate</div>
+
+
+  <!-- ===========================================
+       SLIDE 1: TITLE
+       =========================================== -->
+  <section class="slide" aria-label="Title slide">
+    <div class="rule-top"></div>
+    <div class="accent-bar"></div>
+    <div class="drop-cap">T</div>
+    <div class="slide-content" style="align-items: center; text-align: center;">
+      <h1 class="reveal">TypeScript & ESLint:<br><em>The Practical Payoff</em></h1>
+      <p class="reveal" style="margin-top: var(--content-gap); color: var(--text-muted); letter-spacing: 0.04em;">
+        Patterns from our codebase that actually help
+      </p>
+      <div class="reveal ornament" style="margin-top: var(--content-gap);">* * *</div>
+    </div>
+    <div class="rule-bottom"></div>
+  </section>
+
+
+  <!-- ===========================================
+       SLIDE 2: THE COMMON FEELING
+       =========================================== -->
+  <section class="slide alt-bg" aria-label="The common feeling">
+    <div class="rule-top"></div>
+    <div class="accent-bar"></div>
+    <div class="slide-content" style="align-items: center; text-align: center;">
+      <div class="pull-quote reveal" style="border-left: none; text-align: center; max-width: 600px;">
+        "I already know what I want to write.<br>Why is the compiler arguing with me?"
+      </div>
+      <p class="reveal" style="margin-top: var(--content-gap); color: var(--text-muted); font-style: italic;">
+        Sound familiar?
+      </p>
+    </div>
+    <div class="rule-bottom"></div>
+    <span class="slide-number">02</span>
+  </section>
+
+
+  <!-- ===========================================
+       SLIDE 3: THE REFRAME
+       =========================================== -->
+  <section class="slide" aria-label="The reframe">
+    <div class="rule-top"></div>
+    <div class="accent-bar"></div>
+    <div class="drop-cap">R</div>
+    <div class="slide-content">
+      <h2 class="reveal">What if the friction <em>is</em> the value?</h2>
+      <ul class="content-list reveal" style="margin-top: var(--content-gap); max-width: 650px;">
+        <li>The compiler isn't blocking you &mdash; it's asking you to <strong>design first</strong></li>
+        <li>Every type annotation is a decision you're making <em>before</em> it becomes a bug</li>
+        <li>ESLint rules aren't red tape &mdash; they're <strong>institutional memory</strong></li>
+      </ul>
+    </div>
+    <div class="rule-bottom"></div>
+    <span class="slide-number">03</span>
+  </section>
+
+
+  <!-- ===========================================
+       SLIDE 4: TYPES AS DESIGN
+       =========================================== -->
+  <section class="slide alt-bg" aria-label="Types as design thinking">
+    <div class="rule-top"></div>
+    <div class="accent-bar"></div>
+    <div class="slide-content">
+      <h2 class="reveal">Types are <em>design thinking</em></h2>
+      <p class="reveal" style="margin-top: var(--element-gap); max-width: 600px;">
+        When you define a type, you're answering: <strong>what shapes can this data take?</strong>
+        That question leads to better APIs, clearer contracts, and fewer surprises in production.
+      </p>
+      <div class="reveal" style="margin-top: var(--content-gap);">
+        <div class="code-block">
+<span class="keyword">enum</span> <span class="type">Channel</span> { Email = <span class="string">'email'</span>, Sms = <span class="string">'sms'</span>, Webhook = <span class="string">'webhook'</span> }
+
+<span class="keyword">type</span> <span class="type">Notification</span> =
+  | { channel: <span class="type">Channel.Email</span>; to: <span class="type">string</span>; subject: <span class="type">string</span> }
+  | { channel: <span class="type">Channel.Sms</span>; phone: <span class="type">string</span>; body: <span class="type">string</span> }
+  | { channel: <span class="type">Channel.Webhook</span>; url: <span class="type">string</span>; payload: <span class="type">object</span> };
+
+<span class="comment">// The compiler guarantees you handle every channel.</span>
+<span class="comment">// Add a new one? It flags every spot you need to update.</span>
+        </div>
+      </div>
+    </div>
+    <div class="rule-bottom"></div>
+    <span class="slide-number">04</span>
+  </section>
+
+
+  <!-- ===========================================
+       SLIDE 5: DISCRIMINATED UNIONS IN ACTION
+       =========================================== -->
+  <section class="slide" aria-label="Discriminated unions in action">
+    <div class="rule-top"></div>
+    <div class="accent-bar"></div>
+    <div class="slide-content">
+      <h2 class="reveal">One type, zero guesswork</h2>
+      <div class="compare reveal" style="margin-top: var(--content-gap);">
+        <div class="compare-panel">
+          <div class="compare-label caution">Without types</div>
+          <div class="code-block">
+<span class="keyword">function</span> <span class="accent">send</span>(channel: <span class="type">string</span>, config: <span class="type">any</span>) {
+  <span class="keyword">if</span> (channel === <span class="string">'email'</span>) {
+    <span class="comment">// config.to? config.email?</span>
+    <span class="comment">// config.recipient? Who knows.</span>
+    mailer.send(config.<span class="crimson">???</span>);
+  }
+}
+          </div>
+        </div>
+        <div class="compare-panel">
+          <div class="compare-label good">With discriminated unions</div>
+          <div class="code-block">
+<span class="keyword">function</span> <span class="accent">send</span>(notif: <span class="type">Notification</span>) {
+  <span class="keyword">switch</span> (notif.channel) {
+    <span class="keyword">case</span> Channel.<span class="accent">Email</span>:
+      <span class="comment">// TS knows: .to and .subject exist</span>
+      mailer.send(notif.<span class="accent">to</span>, notif.<span class="accent">subject</span>);
+    <span class="keyword">case</span> Channel.<span class="accent">Sms</span>:
+      <span class="comment">// TS knows: .phone and .body exist</span>
+      sms.send(notif.<span class="accent">phone</span>, notif.<span class="accent">body</span>);
+  }
+}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rule-bottom"></div>
+    <span class="slide-number">05</span>
+  </section>
+
+
+  <!-- ===========================================
+       SLIDE 6: ENUMS
+       =========================================== -->
+  <section class="slide alt-bg" aria-label="Enums">
+    <div class="rule-top"></div>
+    <div class="accent-bar"></div>
+    <div class="drop-cap">E</div>
+    <div class="slide-content">
+      <h2 class="reveal">Enums close the door on <em>invalid values</em></h2>
+      <p class="reveal" style="margin-top: var(--element-gap); max-width: 600px;">
+        A TypeScript enum defines exactly what's allowed. The compiler rejects everything else &mdash; including the typos you'd never catch in a plain string.
+      </p>
+      <div class="reveal" style="margin-top: var(--content-gap);">
+        <div class="code-block">
+<span class="keyword">enum</span> <span class="type">PaymentStatus</span> {
+  Pending = <span class="string">'Pending'</span>,
+  Approved = <span class="string">'Approved'</span>,
+  Declined = <span class="string">'Declined'</span>,
+}
+
+<span class="keyword">function</span> <span class="accent">processPayment</span>(status: <span class="type">PaymentStatus</span>) { ... }
+
+processPayment(PaymentStatus.<span class="accent">Approved</span>);   <span class="comment">// ✓ Compiles</span>
+processPayment(<span class="string">'Approvd'</span>);                <span class="comment">// ✗ Typo caught instantly</span>
+        </div>
+      </div>
+    </div>
+    <div class="rule-bottom"></div>
+    <span class="slide-number">06</span>
+  </section>
+
+
+  <!-- ===========================================
+       SLIDE 7: DTOs — TYPES + RUNTIME
+       =========================================== -->
+  <section class="slide" aria-label="DTOs with runtime validation">
+    <div class="rule-top"></div>
+    <div class="accent-bar"></div>
+    <div class="slide-content">
+      <h2 class="reveal">Types at build time.<br><em>Validation at runtime.</em></h2>
+      <div class="reveal" style="margin-top: var(--content-gap);">
+        <div class="code-block">
+<span class="keyword">export class</span> <span class="type">CreateApiKeyDto</span> {
+  @<span class="accent">IsString</span>()
+  @<span class="accent">MaxLength</span>(<span class="string">255</span>)
+  description: <span class="type">string</span>;
+
+  @<span class="accent">IsEnum</span>(ApiKeyTypeOptions)
+  type: <span class="type">ApiKeyType</span>;                <span class="comment">// ← compile-time</span>
+
+  @<span class="accent">ValidateIf</span>((o) => o.type === <span class="string">'external'</span>)
+  @<span class="accent">IsNotEmpty</span>({ message: <span class="string">'companyId required for external keys'</span> })
+  companyId?: <span class="type">string</span>;             <span class="comment">// ← runtime</span>
+}
+        </div>
+      </div>
+      <p class="reveal" style="margin-top: var(--element-gap); color: var(--text-muted); font-style: italic;">
+        TypeScript checks the shape. Decorators check the values. Both layers, one class.
+      </p>
+    </div>
+    <div class="rule-bottom"></div>
+    <span class="slide-number">07</span>
+  </section>
+
+
+  <!-- ===========================================
+       SLIDE 8: GENERICS — DEFINE THE CONTRACT
+       =========================================== -->
+  <section class="slide alt-bg" aria-label="Generics">
+    <div class="rule-top"></div>
+    <div class="accent-bar"></div>
+    <div class="slide-content">
+      <h2 class="reveal">Define the contract, <em>then the code</em></h2>
+      <div class="compare reveal" style="margin-top: var(--content-gap);">
+        <div class="compare-panel">
+          <div class="compare-label caution">The "just ship it" path</div>
+          <div class="code-block">
+<span class="comment">// Every endpoint invents its own shape</span>
+getProperties() → { data: [...], <span class="accent">count</span>: 100 }
+getCompanies()  → { <span class="crimson">items</span>: [...], <span class="crimson">total</span>: 50 }
+getUnits()      → { <span class="crimson">results</span>: [...], <span class="crimson">totalCount</span>: 75 }
+
+<span class="comment">// Consumers guess field names.</span>
+<span class="comment">// New endpoints drift further.</span>
+          </div>
+        </div>
+        <div class="compare-panel">
+          <div class="compare-label good">The "define the shape" path</div>
+          <div class="code-block">
+<span class="keyword">interface</span> <span class="type">PaginatedResponse</span>&lt;<span class="type">T</span>&gt; {
+  data: <span class="type">T</span>[];
+  meta: { page: <span class="type">number</span>; total: <span class="type">number</span> };
+}
+
+<span class="comment">// Same shape, full autocomplete.</span>
+<span class="comment">// Miss a field? Won't compile.</span>
+<span class="comment">// New endpoint? Contract's already defined.</span>
+          </div>
+        </div>
+      </div>
+      <p class="reveal" style="margin-top: var(--element-gap); color: var(--text-muted); font-style: italic;">
+        The generic doesn't just save typing &mdash; it prevents the kind of drift that makes APIs frustrating to consume.
+      </p>
+    </div>
+    <div class="rule-bottom"></div>
+    <span class="slide-number">08</span>
+  </section>
+
+
+  <!-- ===========================================
+       SLIDE 9: ESLint — BEYOND FORMATTING
+       =========================================== -->
+  <section class="slide" aria-label="ESLint beyond formatting">
+    <div class="rule-top"></div>
+    <div class="accent-bar"></div>
+    <div class="drop-cap">E</div>
+    <div class="slide-content" style="align-items: center; text-align: center;">
+      <h2 class="reveal">ESLint isn't about semicolons</h2>
+      <div class="pull-quote reveal" style="margin-top: var(--content-gap); border-left: none; text-align: center;">
+        It's about encoding the <em>hard-won lessons</em><br>your team has already learned
+      </div>
+      <p class="reveal" style="margin-top: var(--content-gap); color: var(--text-muted); max-width: 500px; text-align: center;">
+        Custom rules turn tribal knowledge into automated checks.
+        New devs get guardrails. Senior devs stop repeating themselves in code review.
+      </p>
+    </div>
+    <div class="rule-bottom"></div>
+    <span class="slide-number">09</span>
+  </section>
+
+
+  <!-- ===========================================
+       SLIDE 10: BASE CLASSES — ARCHITECTURE VIA TYPES
+       =========================================== -->
+  <section class="slide alt-bg" aria-label="Architecture through base classes">
+    <div class="rule-top"></div>
+    <div class="accent-bar"></div>
+    <div class="slide-content">
+      <h2 class="reveal">A base class <em>is</em> a guardrail</h2>
+      <p class="reveal" style="margin-top: var(--element-gap); max-width: 600px;">
+        You don't need extra tooling to enforce patterns. A well-typed abstract class with a generic constraint lets the compiler do the enforcement for you.
+      </p>
+      <div class="reveal" style="margin-top: var(--content-gap);">
+        <div class="code-block">
+<span class="keyword">abstract class</span> <span class="type">CrudService</span>&lt;<span class="type">T</span> <span class="keyword">extends</span> <span class="type">Model</span>&gt; {
+  <span class="keyword">abstract</span> <span class="accent">findAll</span>(filters: <span class="type">Partial</span>&lt;<span class="type">T</span>&gt;): <span class="type">Promise</span>&lt;<span class="type">T</span>[]&gt;;
+  <span class="keyword">abstract</span> <span class="accent">findById</span>(id: <span class="type">string</span>): <span class="type">Promise</span>&lt;<span class="type">T</span> | <span class="type">null</span>&gt;;
+  <span class="keyword">abstract</span> <span class="accent">create</span>(data: <span class="type">CreationAttributes</span>&lt;<span class="type">T</span>&gt;): <span class="type">Promise</span>&lt;<span class="type">T</span>&gt;;
+}
+
+<span class="comment">// Every service must implement the full contract.</span>
+<span class="comment">// Miss a method? Wrong return type? Won't compile.</span>
+<span class="keyword">class</span> <span class="type">PropertyService</span> <span class="keyword">extends</span> <span class="type">CrudService</span>&lt;<span class="type">Property</span>&gt; { ... }
+        </div>
+      </div>
+      <p class="reveal" style="margin-top: var(--element-gap); color: var(--text-muted); font-style: italic;">
+        New devs get guided by the compiler, not just by code review.
+      </p>
+    </div>
+    <div class="rule-bottom"></div>
+    <span class="slide-number">10</span>
+  </section>
+
+
+  <!-- ===========================================
+       SLIDE 11: CUSTOM RULE — IDEMPOTENT DDL
+       =========================================== -->
+  <section class="slide" aria-label="Custom rule: idempotent DDL">
+    <div class="rule-top"></div>
+    <div class="accent-bar"></div>
+    <div class="slide-content">
+      <h2 class="reveal">Custom rule: <em>safe migrations</em></h2>
+      <div class="reveal" style="margin-top: var(--content-gap);">
+        <div class="code-block">
+<span class="comment">// ESLint scans migration SQL and catches unsafe DDL:</span>
+
+<span class="crimson">CREATE TABLE</span> foo (...)           <span class="comment">// ← ERROR: use IF NOT EXISTS</span>
+<span class="crimson">DROP INDEX</span> idx_foo               <span class="comment">// ← ERROR: use IF EXISTS</span>
+<span class="crimson">CREATE VIEW</span> report_summary ...   <span class="comment">// ← ERROR: use OR REPLACE</span>
+
+<span class="comment">// Why? Because a migration that fails the second time</span>
+<span class="comment">// is a DevOps nightmare at 2 AM.</span>
+        </div>
+      </div>
+      <p class="reveal" style="margin-top: var(--element-gap); color: var(--text-muted);">
+        This rule only applies to migrations created after the cutoff date &mdash; no retroactive cleanup needed.
+      </p>
+    </div>
+    <div class="rule-bottom"></div>
+    <span class="slide-number">11</span>
+  </section>
+
+
+  <!-- ===========================================
+       SLIDE 12: HONEST FRICTION
+       =========================================== -->
+  <section class="slide alt-bg" aria-label="Honest friction">
+    <div class="rule-top"></div>
+    <div class="accent-bar"></div>
+    <div class="drop-cap">H</div>
+    <div class="slide-content">
+      <h2 class="reveal">It's not always smooth</h2>
+      <p class="reveal" style="margin-top: var(--element-gap); max-width: 620px;">
+        TypeScript gives you the tools to handle almost anything: type guards, generics, conditional types. But there are corners where the cost of perfect types outweighs the benefit.
+      </p>
+      <div class="compare reveal" style="margin-top: var(--content-gap);">
+        <div class="compare-panel">
+          <div class="compare-label">Partial test mocks</div>
+          <div class="code-block">
+<span class="keyword">function</span> <span class="accent">createMockResult</span>&lt;<span class="type">T</span>&gt;(
+  result: <span class="type">DeepPartial</span>&lt;<span class="type">ReturnType</span>&lt;<span class="type">T</span>&gt;&gt;,
+): <span class="type">ReturnType</span>&lt;<span class="type">T</span>&gt; {
+  <span class="keyword">return</span> result <span class="keyword">as</span> <span class="type">ReturnType</span>&lt;<span class="type">T</span>&gt;;
+}
+          </div>
+        </div>
+        <div class="compare-panel">
+          <div class="compare-label">Pinning an overload</div>
+          <div class="code-block">
+<span class="keyword">function</span> <span class="accent">spyWithSignature</span>&lt;<span class="type">TFn</span>&gt;(
+  spy: <span class="type">unknown</span>,
+): <span class="type">SpiedFunction</span>&lt;<span class="type">TFn</span>&gt; {
+  <span class="keyword">return</span> spy <span class="keyword">as</span> <span class="type">SpiedFunction</span>&lt;<span class="type">TFn</span>&gt;;
+}
+          </div>
+        </div>
+      </div>
+      <p class="reveal" style="margin-top: var(--element-gap); color: var(--text-muted); font-style: italic;">
+        Cases like this should be rare. When they exist, keep them in one place so they don't spread.
+      </p>
+    </div>
+    <div class="rule-bottom"></div>
+    <span class="slide-number">12</span>
+  </section>
+
+
+  <!-- ===========================================
+       SLIDE 13: SUPPRESSIONS
+       =========================================== -->
+  <section class="slide alt-bg" aria-label="Working with suppressions">
+    <div class="rule-top"></div>
+    <div class="accent-bar"></div>
+    <div class="slide-content">
+      <h2 class="reveal">Suppressions are a <em>plan</em>, not a pass</h2>
+      <p class="reveal" style="margin-top: var(--element-gap); max-width: 600px;">
+        The rules are strict and uniform across the codebase. Existing violations live in a global suppression file &mdash; tracked, visible, and shrinking over time.
+      </p>
+      <div class="reveal" style="margin-top: var(--content-gap);">
+        <div class="code-block">
+<span class="comment">// eslint-suppressions.json</span>
+<span class="comment">// Every existing violation is catalogued here.</span>
+<span class="comment">// The rules are the same everywhere.</span>
+
+<span class="comment">// New code?</span> Full type safety from day one.
+<span class="comment">// Existing code?</span> Fix violations as you touch files.
+<span class="comment">// Over time?</span> The suppression list gets shorter.
+        </div>
+      </div>
+      <p class="reveal" style="margin-top: var(--element-gap); color: var(--text-muted); font-style: italic;">
+        Typing new code correctly is what moves us forward. Reworking existing code happens naturally as we go.
+      </p>
+    </div>
+    <div class="rule-bottom"></div>
+    <span class="slide-number">13</span>
+  </section>
+
+
+  <!-- ===========================================
+       SLIDE 14: WHAT GOOD LOOKS LIKE
+       =========================================== -->
+  <section class="slide alt-bg" aria-label="What good looks like">
+    <div class="rule-top"></div>
+    <div class="accent-bar"></div>
+    <div class="drop-cap">G</div>
+    <div class="slide-content">
+      <h2 class="reveal">What it looks like in practice</h2>
+      <ul class="content-list reveal" style="margin-top: var(--content-gap); max-width: 650px;">
+        <li><strong>Define types before writing logic</strong> &mdash; let the shape of the data guide the shape of the code</li>
+        <li><strong>Use enums and discriminated unions</strong> &mdash; let the compiler reject invalid states for you</li>
+        <li><strong>Lean on base classes and generics</strong> &mdash; the type system can enforce architecture without extra tooling</li>
+      </ul>
+    </div>
+    <div class="rule-bottom"></div>
+    <span class="slide-number">14</span>
+  </section>
+
+
+  <!-- ===========================================
+       SLIDE 15: CLOSING
+       =========================================== -->
+  <section class="slide" aria-label="Closing">
+    <div class="rule-top"></div>
+    <div class="accent-bar"></div>
+    <div class="slide-content" style="align-items: center; text-align: center;">
+      <div class="pull-quote reveal" style="border-left: none; text-align: center; max-width: 650px;">
+        The best code isn't the code that compiles.<br>
+        It's the code that <em>communicates</em>.
+      </div>
+      <p class="reveal" style="margin-top: var(--content-gap); color: var(--text-muted); max-width: 450px; text-align: center;">
+        TypeScript and ESLint aren't gatekeepers.
+        They're collaborators &mdash; helping you say what you mean
+        and mean what you say.
+      </p>
+      <div class="reveal ornament" style="margin-top: var(--content-gap);">* * *</div>
+    </div>
+    <div class="rule-bottom"></div>
+  </section>
+
+
+  <!-- ===========================================
+       SLIDE PRESENTATION CONTROLLER
+       =========================================== -->
+  <script>
+    class SlidePresentation {
+      constructor() {
+        this.slides = document.querySelectorAll('.slide');
+        this.currentSlide = 0;
+        this.navDotsContainer = document.getElementById('navDots');
+        this.progressBar = document.getElementById('progressBar');
+        this.keyboardHint = document.getElementById('keyboardHint');
+        this.hintDismissed = false;
+
+        this.setupIntersectionObserver();
+        this.setupKeyboardNav();
+        this.setupTouchNav();
+        this.setupWheelNav();
+        this.setupNavDots();
+        this.updateProgressBar();
+      }
+
+      /* --- Intersection Observer: triggers .visible on scroll --- */
+      setupIntersectionObserver() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              const index = Array.from(this.slides).indexOf(entry.target);
+              if (index !== -1) {
+                this.currentSlide = index;
+                this.updateNavDots();
+                this.updateProgressBar();
+              }
+            }
+          });
+        }, { threshold: 0.5 });
+
+        this.slides.forEach(slide => observer.observe(slide));
+      }
+
+      /* --- Keyboard Navigation --- */
+      setupKeyboardNav() {
+        document.addEventListener('keydown', (e) => {
+          this.dismissHint();
+          switch (e.key) {
+            case 'ArrowDown':
+            case 'ArrowRight':
+            case ' ':
+            case 'PageDown':
+              e.preventDefault();
+              this.goToSlide(this.currentSlide + 1);
+              break;
+            case 'ArrowUp':
+            case 'ArrowLeft':
+            case 'PageUp':
+              e.preventDefault();
+              this.goToSlide(this.currentSlide - 1);
+              break;
+            case 'Home':
+              e.preventDefault();
+              this.goToSlide(0);
+              break;
+            case 'End':
+              e.preventDefault();
+              this.goToSlide(this.slides.length - 1);
+              break;
+          }
+        });
+      }
+
+      /* --- Touch/Swipe Support --- */
+      setupTouchNav() {
+        let startY = 0;
+        document.addEventListener('touchstart', (e) => {
+          startY = e.touches[0].clientY;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+          const diff = startY - e.changedTouches[0].clientY;
+          if (Math.abs(diff) > 50) {
+            this.dismissHint();
+            this.goToSlide(this.currentSlide + (diff > 0 ? 1 : -1));
+          }
+        }, { passive: true });
+      }
+
+      /* --- Mouse Wheel Navigation --- */
+      setupWheelNav() {
+        let lastScroll = 0;
+        document.addEventListener('wheel', () => {
+          const now = Date.now();
+          if (now - lastScroll > 200) {
+            this.dismissHint();
+          }
+          lastScroll = now;
+        }, { passive: true });
+      }
+
+      /* --- Navigation Dots --- */
+      setupNavDots() {
+        this.navDotsContainer.innerHTML = '';
+        this.slides.forEach((_, i) => {
+          const dot = document.createElement('button');
+          dot.classList.add('nav-dot');
+          if (i === 0) dot.classList.add('active');
+          dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+          dot.addEventListener('click', () => this.goToSlide(i));
+          this.navDotsContainer.appendChild(dot);
+        });
+      }
+
+      updateNavDots() {
+        const dots = this.navDotsContainer.querySelectorAll('.nav-dot');
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === this.currentSlide);
+        });
+      }
+
+      /* --- Progress Bar --- */
+      updateProgressBar() {
+        const progress = ((this.currentSlide) / (this.slides.length - 1)) * 100;
+        this.progressBar.style.width = progress + '%';
+      }
+
+      /* --- Navigate to Slide --- */
+      goToSlide(index) {
+        if (index < 0 || index >= this.slides.length) return;
+        this.slides[index].scrollIntoView({ behavior: 'smooth' });
+      }
+
+      /* --- Dismiss Keyboard Hint --- */
+      dismissHint() {
+        if (!this.hintDismissed && this.keyboardHint) {
+          this.hintDismissed = true;
+          this.keyboardHint.style.opacity = '0';
+          setTimeout(() => this.keyboardHint.remove(), 2000);
+        }
+      }
+    }
+
+    /* Initialize on DOM ready */
+    document.addEventListener('DOMContentLoaded', () => {
+      new SlidePresentation();
+    });
+  </script>
+
+</body>
+</html>

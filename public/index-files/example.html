@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Example Presentation</title>
+  </head>
+  <body>
+    <header>
+      <h1>Example Presentation</h1>
+      <p>A self-contained HTML presentation.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2>Why self-contained?</h2>
+        <ul>
+          <li>One <code>index.html</code>, no build step.</li>
+          <li>Easy to share or archive.</li>
+          <li>Works offline once loaded.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>How to add one</h2>
+        <p>
+          Drop an HTML file under <code>public/index-files/</code>, then add an entry to
+          <code>presentationsData.ts</code> with the filename as the <code>slug</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Fin</h2>
+        <p>Thanks for reading.</p>
+      </section>
+    </main>
+  </body>
+</html>
