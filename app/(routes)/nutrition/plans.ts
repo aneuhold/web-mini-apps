@@ -82,8 +82,65 @@ const trainingDay: NutritionPlan = {
     'Protein is now spread 54 / 25 / 57 / 27 / 88g across 5 feedings. Every single meal has protein. The 5 PM meal is now 88g of protein + 15g of fat from PB — a real post-workout meal that actually signals recovery and keeps you full through the evening work block.'
 };
 
+const nonTrainingDay: NutritionPlan = {
+  id: 'non-training-day',
+  title: 'Non-Training Day',
+  targets: {
+    calories: 1400,
+    protein: 197,
+    carbs: 20,
+    fat: 60
+  },
+  dailyBudget: [
+    '400g cooked chicken',
+    '4 scoops whey',
+    '4 tbsp chunky PB',
+    'No workout shake, no banana, no rice cakes',
+    'Three meals, whenever'
+  ],
+  meals: [
+    {
+      time: 'Meal 1',
+      name: 'Meal 1',
+      items: [
+        { food: chickenBreast, quantity: 150 },
+        { food: bodystrongWheyChocolate, quantity: 1 },
+        { food: krogerChunkyPB, quantity: 1 }
+      ]
+    },
+    {
+      time: 'Meal 2',
+      name: 'Meal 2',
+      totalLabelSuffix: '(w/ beans)',
+      items: [
+        { food: chickenBreast, quantity: 125 },
+        { food: bodystrongWheyChocolate, quantity: 1 },
+        { food: krogerChunkyPB, quantity: 1 },
+        {
+          food: greenBeansCanned,
+          quantity: 420,
+          amountDisplay: '1 can (~420g)',
+          optional: true,
+          optionalLabel: 'optional volume'
+        }
+      ]
+    },
+    {
+      time: 'Meal 3',
+      name: 'Meal 3',
+      items: [
+        { food: chickenBreast, quantity: 125 },
+        { food: bodystrongWheyChocolate, quantity: 2 },
+        { food: krogerChunkyPB, quantity: 2, amountDisplay: '2 tbsp (32g)' }
+      ]
+    }
+  ],
+  notes:
+    'Rest-day carbs land at 42g vs 20g target — unavoidable because whey (lactose) + PB (natural peanut carbs) contribute ~28g carbs before any food is added. Calories and protein land on target, fat is ~9g short. Not a real problem — the deficit still works.'
+};
+
 /**
  * Every nutrition plan available in the UI. The first entry is selected by
  * default. Add new plans here to make them available in the dropdown.
  */
-export const nutritionPlans: NutritionPlan[] = [trainingDay];
+export const nutritionPlans: NutritionPlan[] = [trainingDay, nonTrainingDay];
