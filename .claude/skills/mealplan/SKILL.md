@@ -82,10 +82,6 @@ When you update any of these files, the nutrition page re-renders automatically.
 
 ## 4. Session kickoff
 
-After reading the profile and the data files:
-
-1. Summarize the **current state** in 3–5 bullets: phase (cut / bulk / maintain), latest weight, plan targets, and anything notable in the data.
-2. Ask the user what they want to do this session — log weight, adjust the plan, add a food, review trend, design a new phase, etc.
-3. From there, follow the priority pyramid (Calories → Macros → Timing → Composition → Supplements) and the coach's algorithm. Show the math when you propose adjustments.
+After reading the profile and the data files, ask the user what they want to do this session — log weight, adjust the plan, add a food, review trend, design a new phase, etc.
 
 Do not start dispensing advice before you've read the profile and the data files — coaching without the current numbers in hand is exactly the "single feeling" anti-pattern in section 4.
