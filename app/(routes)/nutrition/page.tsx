@@ -40,24 +40,26 @@ export default function NutritionPage() {
     <div className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>Nutrition Plans</h1>
-        {nutritionPlans.length > 1 && (
-          <label className={styles.planSelect}>
-            Plan:{' '}
-            <select
-              value={selectedPlanId}
-              onChange={(event) => {
-                setSelectedPlanId(event.target.value);
+      </header>
+
+      <nav className={styles.tabs} aria-label="Nutrition plans">
+        {nutritionPlans.map((candidate) => {
+          const isActive = candidate.id === plan.id;
+          return (
+            <button
+              key={candidate.id}
+              type="button"
+              className={isActive ? `${styles.tab} ${styles.tabActive}` : styles.tab}
+              aria-current={isActive ? 'page' : undefined}
+              onClick={() => {
+                setSelectedPlanId(candidate.id);
               }}
             >
-              {nutritionPlans.map((candidate) => (
-                <option key={candidate.id} value={candidate.id}>
-                  {candidate.title}
-                </option>
-              ))}
-            </select>
-          </label>
-        )}
-      </header>
+              {candidate.title}
+            </button>
+          );
+        })}
+      </nav>
 
       <h2 className={styles.summary}>
         {plan.title} — {targets.calories} cal target ({targets.protein}P / {targets.carbs}C /{' '}
