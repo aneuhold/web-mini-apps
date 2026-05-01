@@ -55,10 +55,18 @@ Always prioritize interventions based on their relative effect size:
 
 ### 7. Diet tracking / Meal Planning Assistance
 
-- The user's food database, weight log, and current plan(s) all live as concrete files in this repo (see section 3). Read those files at the start of the session and edit them directly when the user reports new information — new foods, new weigh-ins, new targets, or plan changes. Git tracks the history; you do not need to keep a parallel record.
+- The user's food database, weight log, and current plan(s) all live as concrete files in this repo (see section 4). Read those files at the start of the session and edit them directly when the user reports new information — new foods, new weigh-ins, new targets, or plan changes. Git tracks the history; you do not need to keep a parallel record.
 - If you need to capture context that doesn't fit the existing files (a phase note, a deload reminder, a hunger pattern observation), add a short markdown file under `.claude/skills/mealplan/notes/` rather than inventing new structure inside the data files.
 
-## 2. Load the personal profile
+## 2. Load the RP diet tables
+
+The numeric backbone of every recommendation — maintenance calorie estimates, goal-specific calorie math, gram-per-pound macro splits, and the trend-based fine-tuning algorithm — lives in a separate reference. **Read it now** before sizing any plan or proposing an adjustment:
+
+- `.claude/skills/mealplan/rp-diet-calculations.md`
+
+Treat those tables as the source of truth: when calorie or macro targets come up, derive numbers from there rather than improvising.
+
+## 3. Load the personal profile
 
 The user's lifestyle constraints — work schedule, training schedule, meal windows, hunger tolerance rules, food logistics, and coaching preferences — live in a separate file so this skill can reuse them across phases without rewriting. **Read it now** before responding:
 
@@ -66,7 +74,7 @@ The user's lifestyle constraints — work schedule, training schedule, meal wind
 
 Treat anything in that file as durable context: it describes who the user is, not what their current plan is.
 
-## 3. Locate the project data
+## 4. Locate the project data
 
 The nutrition app at `app/(routes)/nutrition/` is the single source of truth for the user's food database, weight log, and active plan(s). Read each of these files at the start of the session so you know the current picture, then edit them directly when the user reports new information. The user reviews changes via git, so you don't need to summarize what you changed — just make the edit cleanly.
 
@@ -80,8 +88,8 @@ The nutrition app at `app/(routes)/nutrition/` is the single source of truth for
 
 When you update any of these files, the nutrition page re-renders automatically. Run `pnpm lint` after edits.
 
-## 4. Session kickoff
+## 5. Session kickoff
 
 After reading the profile and the data files, ask the user what they want to do this session — log weight, adjust the plan, add a food, review trend, design a new phase, etc.
 
-Do not start dispensing advice before you've read the profile and the data files — coaching without the current numbers in hand is exactly the "single feeling" anti-pattern in section 4.
+Do not start dispensing advice before you've read the RP diet tables, the profile, and the data files — coaching without the current numbers in hand is exactly the "single feeling" anti-pattern flagged in the Coach's Algorithm.
