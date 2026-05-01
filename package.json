@@ -8,6 +8,7 @@
     "dev": "next dev --turbopack",
     "build": "rimraf out && next build --no-lint --turbopack",
     "start": "pnpm run build && serve out",
+    "check": "tsc --noEmit",
     "lint": "eslint ."
   },
   "dependencies": {

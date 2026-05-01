@@ -30,6 +30,11 @@ export default function Page() {
             Design Patterns Flash Cards
           </Link>
         </li>
+        <li>
+          <Link href="/nutrition" aria-label="Nutrition plans app link">
+            Nutrition Plans
+          </Link>
+        </li>
       </ul>
       <Footer />
     </>

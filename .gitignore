@@ -31,5 +31,8 @@ out
 .svelte-kit
 /package
 
+# Typescript
+tsconfig.tsbuildinfo
+
 # Shared files
 */shared

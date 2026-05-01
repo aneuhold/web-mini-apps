@@ -65,7 +65,7 @@ Whenever creating a new project:
 
 ## Before Considering a Task Complete
 
-1. Run + fix any issues that come up: `pnpm lint`
+1. Run + fix any issues that come up: `pnpm lint --fix`, `pnpm check`
 
 # Code Style (CSS)
 
