@@ -5,6 +5,7 @@
 - Avoid code duplication; reuse existing code when possible
 - Whenever running tests, always use the Vitest extension, and don't run the test command in the terminal
 - This is a Next.js project, so we are using React components and the file-based routing system
+- The site is fully static (exported via `next build` + `output: 'export'`); there are no server components, server actions, or runtime APIs — every component is a client component and every data dependency must resolve at build time or in the browser
 
 ## Adding new Projects
 
@@ -71,3 +72,4 @@ Whenever creating a new project:
 
 - Use modern CSS syntax and features whenever possible, but primarily defer to the built-in styles of PaperCSS (see `app/global-styles/`).
 - Try to keep things generic
+- PaperCSS is opt-in, scoped under the `.papercss` class via `@scope` in `app/global-styles/global.css`. Routes that want PaperCSS should add `className="papercss"` to their top-level wrapper; routes that don't will get unstyled defaults.

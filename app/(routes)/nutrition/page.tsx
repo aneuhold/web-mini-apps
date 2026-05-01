@@ -37,7 +37,7 @@ export default function NutritionPage() {
   const { targets } = plan;
 
   return (
-    <div className={styles.container}>
+    <div className={`papercss ${styles.container}`}>
       <header className={styles.header}>
         <h1 className={styles.title}>Nutrition Plans</h1>
       </header>

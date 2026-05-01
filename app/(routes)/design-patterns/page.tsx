@@ -49,7 +49,7 @@ export default function DesignPatternsPage() {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={`papercss ${styles.container}`}>
       <header className={styles.header}>
         <h1 className={styles.title}>Design Patterns Flash Cards</h1>
         <p className={styles.subtitle}>Master software engineering design patterns</p>

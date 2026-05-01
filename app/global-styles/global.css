@@ -1,13 +1,18 @@
 /**
  * Note: PaperCSS is imported from a local file instead of a CDN URL.
- * 
+ *
  * As of 10/18/25 Turbopack (Next.js) currently has a bug where remote CSS imports
  * lose their layer() and media query attributes. Local imports work correctly
  * because Turbopack bundles them inline with proper @layer and @media wrappers.
- * 
+ *
  * Bug reports:
  * - Lightning CSS: https://github.com/parcel-bundler/lightningcss/issues/1074
  * - No bug report for Next.js at the moment. Just didn't have the motivation at the time 😅
+ *
+ * PaperCSS is opt-in: the local copy wraps its rules in `@scope (.papercss)`, so
+ * styles only apply to descendants of an element with `class="papercss"`. Routes
+ * that want PaperCSS add the class to their top-level wrapper; routes that don't
+ * get unstyled defaults instead of having to `unset` PaperCSS rules.
  */
 @import './paperCSS-v1.9.2.css' layer(external) not print;
 

@@ -260,7 +260,7 @@ export default function Page() {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={`papercss ${styles.container}`}>
       <div className={styles.header}>
         <h1 className={styles.title}>Image Printer</h1>
         <p>Upload images, add captions, and print them in a formatted layout.</p>

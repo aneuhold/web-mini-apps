@@ -98,7 +98,7 @@ export default function Page() {
   const imageDims = getImageDimensions();
 
   return (
-    <div className={styles.container}>
+    <div className={`papercss ${styles.container}`}>
       <div className={styles.header}>
         <h1 className={styles.title}>CSS Height Priority Tester</h1>
         <p className={styles.description}>

@@ -8,7 +8,7 @@ import styles from './page.module.css';
  */
 export default function Page() {
   return (
-    <>
+    <div className="papercss">
       <ul className={styles.appList}>
         <li>
           <Link href="/image-printer" aria-label="Image printer app link">
@@ -35,8 +35,13 @@ export default function Page() {
             Nutrition Plans
           </Link>
         </li>
+        <li>
+          <Link href="/presentations" aria-label="Presentations app link">
+            Presentations
+          </Link>
+        </li>
       </ul>
       <Footer />
-    </>
+    </div>
   );
 }
