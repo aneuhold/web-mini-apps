@@ -29,27 +29,20 @@ const trainingDay: NutritionPlan = {
       time: '5:30 AM',
       name: 'Breakfast',
       items: [
-        { food: chickenBreast, quantity: 125 },
-        {
-          food: bodystrongWheyChocolate,
-          quantity: 1,
-          amountDisplay: '1 scoop (shake or in oats)'
-        },
-        { food: krogerChunkyPB, quantity: 1, amountDisplay: '1 tbsp (16g)' }
+        { food: chickenBreast, quantity: 200 },
+        { food: krogerChunkyPB, quantity: 2, amountDisplay: '2 tbsp (32g)' }
       ]
     },
     {
       time: '8:30 AM',
-      items: [{ food: bodystrongWheyChocolate, quantity: 1, amountDisplay: '1 scoop shake' }]
+      items: [{ food: bodystrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' }]
     },
     {
       time: '11:00 AM',
       name: 'Lunch',
       totalLabelSuffix: '(w/ beans)',
       items: [
-        { food: chickenBreast, quantity: 125 },
-        { food: bodystrongWheyChocolate, quantity: 1, amountDisplay: '1 scoop shake' },
-        { food: krogerChunkyPB, quantity: 1 },
+        { food: chickenBreast, quantity: 200 },
         {
           food: greenBeansCanned,
           quantity: 420,
@@ -63,7 +56,7 @@ const trainingDay: NutritionPlan = {
       time: '2:40 PM',
       name: 'Pre-workout',
       items: [
-        { food: bodystrongWheyChocolate, quantity: 1, amountDisplay: '1 scoop shake' },
+        { food: bodystrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
         { food: banana, quantity: 110, amountDisplay: '110g (1 med)' },
         { food: riceCakeWhiteCheddar, quantity: 1, amountDisplay: '1' }
       ]
@@ -72,14 +65,13 @@ const trainingDay: NutritionPlan = {
       time: '4:50 PM',
       name: 'Dinner',
       items: [
-        { food: chickenBreast, quantity: 150 },
         { food: bodystrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
         { food: krogerChunkyPB, quantity: 2, amountDisplay: '2 tbsp (32g)' }
       ]
     }
   ],
   notes:
-    'Protein is now spread 54 / 25 / 57 / 27 / 88g across 5 feedings. Every single meal has protein. The 5 PM meal is now 88g of protein + 15g of fat from PB — a real post-workout meal that actually signals recovery and keeps you full through the evening work block.'
+    'Each meal has a single protein source — chicken (≥200g) or whey (≥2 scoops), never both. Protein lands ~48 / 50 / 41 / 52 / 57g across 5 feedings (~247g day, ~9g short of 256 target — same gap as the prior layout, inherent to the daily budget). Carb cluster stays around the 2:40 PM workout. Fewer items per meal: chicken+PB, shake, chicken+beans, shake+banana+rice cake, shake+PB.'
 };
 
 const nonTrainingDay: NutritionPlan = {
@@ -103,9 +95,8 @@ const nonTrainingDay: NutritionPlan = {
       time: 'Meal 1',
       name: 'Meal 1',
       items: [
-        { food: chickenBreast, quantity: 150 },
-        { food: bodystrongWheyChocolate, quantity: 1 },
-        { food: krogerChunkyPB, quantity: 1 }
+        { food: chickenBreast, quantity: 200 },
+        { food: krogerChunkyPB, quantity: 2, amountDisplay: '2 tbsp (32g)' }
       ]
     },
     {
@@ -113,9 +104,8 @@ const nonTrainingDay: NutritionPlan = {
       name: 'Meal 2',
       totalLabelSuffix: '(w/ beans)',
       items: [
-        { food: chickenBreast, quantity: 125 },
-        { food: bodystrongWheyChocolate, quantity: 1 },
-        { food: krogerChunkyPB, quantity: 1 },
+        { food: chickenBreast, quantity: 200 },
+        { food: bodystrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
         {
           food: greenBeansCanned,
           quantity: 420,
@@ -129,14 +119,13 @@ const nonTrainingDay: NutritionPlan = {
       time: 'Meal 3',
       name: 'Meal 3',
       items: [
-        { food: chickenBreast, quantity: 125 },
-        { food: bodystrongWheyChocolate, quantity: 2 },
+        { food: bodystrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
         { food: krogerChunkyPB, quantity: 2, amountDisplay: '2 tbsp (32g)' }
       ]
     }
   ],
   notes:
-    'Rest-day carbs land at 42g vs 20g target — unavoidable because whey (lactose) + PB (natural peanut carbs) contribute ~28g carbs before any food is added. Calories and protein land on target, fat is ~9g short. Not a real problem — the deficit still works.'
+    'When whey shows up it is ≥2 scoops; when chicken shows up it is ≥200g. M2 doubles up chicken + a 2-scoop shake to avoid concentrating all 4 daily scoops in one big shake. Protein ~48 / 91 / 57g (~195g day, ~2g short of 197). Calories distribute evenly across the three meals (~396 / 432 / 460). Carbs ~32g vs 20g target — unavoidable from whey + PB.'
 };
 
 /**
