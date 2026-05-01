@@ -22,6 +22,7 @@ Whenever creating a new project:
 
 ## Types & Functions
 
+- NEVER EVER use `any` NOT EVEN IN TESTS (use `unknown` if necessary, and only if absolutely unavoidable).
 - Add explicit types when unclear; extract complex object types to separate `type` declarations
 - Use PascalCase for type names; file names should match the primary exported type
 - Use arrow functions and `const`/`let` (never `var`)
@@ -40,6 +41,11 @@ Whenever creating a new project:
 
 ## File Organization
 
+### Barrel Files (`index.ts`)
+
+- Only use a barrel file when a folder has a **single public export** and all other files in the folder are internal implementation details consumed exclusively by that export. This keeps the import path clean without the tree-shaking and performance downsides of large barrel files that re-export many modules.
+- Do **not** create barrel files that aggregate exports from multiple unrelated modules. Every file in the folder should be reachable only through the one public export.
+
 ### Imports
 
 - Use named imports only (never `import * as`)
@@ -49,6 +55,17 @@ Whenever creating a new project:
 
 - Use PascalCase for enum names and values
 - Use TypeScript `enum` (not `const enum` or `type`)
+- Avoid string unions in as many cases as possible, prefer string enums for better readability and maintainability
+
+### Syntax and Best Practices
+
+- NEVER use `['propertyName']` syntax to access properties, always use `.propertyName` unless the property name is dynamic. Even then though, a variable / constant should be used instead of a string literal.
+- Use object destructuring when accessing multiple properties from an object
+- Prefer template literals over string concatenation.
+
+## Before Considering a Task Complete
+
+1. Run + fix any issues that come up: `pnpm lint`
 
 # Code Style (CSS)
 
