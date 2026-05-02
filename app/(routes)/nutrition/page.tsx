@@ -4,7 +4,6 @@ import Footer from '$components/Footer';
 import { Fragment, useState } from 'react';
 import nutritionPlanCalculator from './nutritionPlanCalculator';
 import { nutritionPlans } from './plans';
-import styles from './page.module.css';
 import type { MacroTotals } from './types';
 
 /**
@@ -16,15 +15,15 @@ import type { MacroTotals } from './types';
  */
 const MacroCells = ({ totals }: { totals: MacroTotals }) => (
   <>
-    <td className={styles.numCell}>{nutritionPlanCalculator.formatCalories(totals.calories)}</td>
-    <td className={styles.numCell}>{nutritionPlanCalculator.formatMacro(totals.protein)}</td>
-    <td className={styles.numCell}>{nutritionPlanCalculator.formatMacro(totals.carbs)}</td>
-    <td className={styles.numCell}>{nutritionPlanCalculator.formatMacro(totals.fat)}</td>
+    <td data-num>{nutritionPlanCalculator.formatCalories(totals.calories)}</td>
+    <td data-num>{nutritionPlanCalculator.formatMacro(totals.protein)}</td>
+    <td data-num>{nutritionPlanCalculator.formatMacro(totals.carbs)}</td>
+    <td data-num>{nutritionPlanCalculator.formatMacro(totals.fat)}</td>
   </>
 );
 
 /**
- * Nutrition plans page. Lists the available plans in a dropdown and
+ * Nutrition plans page. Lists the available plans in a tab strip and
  * renders the selected plan as a meal-by-meal table with per-meal totals,
  * a day total, and the target row. All numeric columns are computed at
  * render time from the plan data.
@@ -37,19 +36,18 @@ export default function NutritionPage() {
   const { targets } = plan;
 
   return (
-    <div className={`papercss ${styles.container}`}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Nutrition Plans</h1>
+    <article>
+      <header>
+        <h1>Nutrition Plans</h1>
       </header>
 
-      <nav className={styles.tabs} aria-label="Nutrition plans">
+      <nav aria-label="Nutrition plans">
         {nutritionPlans.map((candidate) => {
           const isActive = candidate.id === plan.id;
           return (
             <button
               key={candidate.id}
               type="button"
-              className={isActive ? `${styles.tab} ${styles.tabActive}` : styles.tab}
               aria-current={isActive ? 'page' : undefined}
               onClick={() => {
                 setSelectedPlanId(candidate.id);
@@ -61,28 +59,44 @@ export default function NutritionPage() {
         })}
       </nav>
 
-      <h2 className={styles.summary}>
-        {plan.title} — {targets.calories} cal target ({targets.protein}P / {targets.carbs}C /{' '}
-        {targets.fat}F)
-      </h2>
+      <section aria-label={`${plan.title} targets`}>
+        <h2>{plan.title} — Daily Targets</h2>
+        <dl>
+          <dt>Calories</dt>
+          <dd>{targets.calories}</dd>
+        </dl>
+        <dl>
+          <dt>Protein</dt>
+          <dd>{targets.protein}</dd>
+        </dl>
+        <dl>
+          <dt>Carbs</dt>
+          <dd>{targets.carbs}</dd>
+        </dl>
+        <dl>
+          <dt>Fat</dt>
+          <dd>{targets.fat}</dd>
+        </dl>
+      </section>
 
       {plan.dailyBudget && plan.dailyBudget.length > 0 && (
-        <p className={styles.budget}>
-          <strong>Daily budget:</strong> {plan.dailyBudget.join(' | ')}
-        </p>
+        <aside>
+          <strong>Daily budget</strong>
+          {plan.dailyBudget.join(' • ')}
+        </aside>
       )}
 
-      <div className={styles.tableWrapper}>
-        <table className={styles.table}>
+      <figure>
+        <table>
           <thead>
             <tr>
               <th>Time</th>
               <th>Food</th>
               <th>Amount</th>
-              <th className={styles.numCell}>Cal</th>
-              <th className={styles.numCell}>P</th>
-              <th className={styles.numCell}>C</th>
-              <th className={styles.numCell}>F</th>
+              <th data-num>Cal</th>
+              <th data-num>P</th>
+              <th data-num>C</th>
+              <th data-num>F</th>
             </tr>
           </thead>
           <tbody>
@@ -100,16 +114,12 @@ export default function NutritionPage() {
                     return (
                       <tr
                         key={`${item.food.name}-${itemIdx}`}
-                        className={isFirst ? styles.mealStartRow : undefined}
+                        data-meal-start={isFirst ? '' : undefined}
                       >
-                        <td className={styles.timeCell}>{isFirst ? meal.time : ''}</td>
+                        <td>{isFirst ? meal.time : ''}</td>
                         <td>
                           {item.food.name}
-                          {item.optional && (
-                            <span className={styles.optional}>
-                              ({item.optionalLabel ?? 'optional'})
-                            </span>
-                          )}
+                          {item.optional && <small>({item.optionalLabel ?? 'optional'})</small>}
                         </td>
                         <td>{nutritionPlanCalculator.formatItemAmount(item)}</td>
                         <MacroCells totals={itemTotals} />
@@ -117,7 +127,7 @@ export default function NutritionPage() {
                     );
                   })}
                   {totalLabel && (
-                    <tr className={styles.totalRow}>
+                    <tr data-row="meal-total">
                       <td />
                       <td colSpan={2}>{totalLabel}</td>
                       <MacroCells totals={mealTotals} />
@@ -126,23 +136,23 @@ export default function NutritionPage() {
                 </Fragment>
               );
             })}
-            <tr className={styles.dayTotalRow}>
+            <tr data-row="day-total">
               <td />
               <td colSpan={2}>Day total</td>
               <MacroCells totals={dayTotals} />
             </tr>
-            <tr className={styles.targetRow}>
+            <tr data-row="target">
               <td />
               <td colSpan={2}>Target</td>
               <MacroCells totals={targets} />
             </tr>
           </tbody>
         </table>
-      </div>
+      </figure>
 
-      {plan.notes && <p className={styles.notes}>{plan.notes}</p>}
+      {plan.notes && <blockquote>{plan.notes}</blockquote>}
 
       <Footer />
-    </div>
+    </article>
   );
 }
