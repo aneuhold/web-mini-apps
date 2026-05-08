@@ -1,4 +1,4 @@
-import type { MacroTotals, Meal, MealItem, NutritionPlan } from './types';
+import type { Food, FoodTotal, MacroTotals, Meal, MealItem, NutritionPlan } from './types';
 
 /**
  * Computes macro totals for nutrition plan items, meals, and full days,
@@ -48,9 +48,26 @@ class NutritionPlanCalculator {
   }
 
   /**
+   * Sum every meal item by food to produce one row per food with the
+   * total quantity served across the day, in the order each food first
+   * appears in the plan.
+   *
+   * @param plan - The plan to aggregate.
+   */
+  computeFoodTotals(plan: NutritionPlan): FoodTotal[] {
+    const totals = new Map<Food, number>();
+    for (const meal of plan.meals) {
+      for (const item of meal.items) {
+        totals.set(item.food, (totals.get(item.food) ?? 0) + item.quantity);
+      }
+    }
+    return Array.from(totals, ([food, quantity]) => ({ food, quantity }));
+  }
+
+  /**
    * Render the amount column for a meal item. Uses the explicit
-   * `amountDisplay` override when provided; otherwise falls back to a
-   * sensible default based on the food's unit label.
+   * `amountDisplay` override when provided; otherwise falls back to the
+   * default rendering for the food's unit label.
    *
    * @param item - The meal item being rendered.
    */
@@ -58,7 +75,18 @@ class NutritionPlanCalculator {
     if (item.amountDisplay) {
       return item.amountDisplay;
     }
-    const { quantity, food } = item;
+    return this.formatFoodAmount(item.food, item.quantity);
+  }
+
+  /**
+   * Render a `quantity` of a `food` using the food's reference unit
+   * label. Grams render compact (`200g`); other units pluralize
+   * (`2 scoops`, `1 bar`).
+   *
+   * @param food - The food being rendered.
+   * @param quantity - Quantity in the food's `serving.unitLabel`.
+   */
+  formatFoodAmount(food: Food, quantity: number): string {
     if (food.serving.unitLabel === 'g') {
       return `${quantity}g`;
     }

@@ -61,15 +61,22 @@ export interface Meal {
 }
 
 /**
- * A complete daily nutrition plan: targets, optional daily budget summary,
- * the ordered meals, and an optional notes paragraph rendered below the
- * table.
+ * Aggregated quantity of a single food across every meal in a plan,
+ * expressed in the food's reference `serving.unitLabel`.
+ */
+export interface FoodTotal {
+  food: Food;
+  quantity: number;
+}
+
+/**
+ * A complete daily nutrition plan: targets, the ordered meals, and an
+ * optional notes paragraph rendered below the table.
  */
 export interface NutritionPlan {
   id: string;
   title: string;
   targets: MacroTotals;
-  dailyBudget?: string[];
   meals: Meal[];
   notes?: string;
 }

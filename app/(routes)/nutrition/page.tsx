@@ -33,6 +33,7 @@ export default function NutritionPage() {
   const plan =
     nutritionPlans.find((candidate) => candidate.id === selectedPlanId) ?? nutritionPlans[0];
   const dayTotals = nutritionPlanCalculator.computePlanTotals(plan);
+  const foodTotals = nutritionPlanCalculator.computeFoodTotals(plan);
   const { targets } = plan;
 
   return (
@@ -79,10 +80,15 @@ export default function NutritionPage() {
         </dl>
       </section>
 
-      {plan.dailyBudget && plan.dailyBudget.length > 0 && (
+      {foodTotals.length > 0 && (
         <aside>
-          <strong>Daily budget</strong>
-          {plan.dailyBudget.join(' • ')}
+          <strong>Total foods</strong>
+          {foodTotals
+            .map(
+              ({ food, quantity }) =>
+                `${food.name}: ${nutritionPlanCalculator.formatFoodAmount(food, quantity)}`
+            )
+            .join(', ')}
         </aside>
       )}
 

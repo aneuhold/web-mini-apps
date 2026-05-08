@@ -41,11 +41,19 @@ const formatDelta = (actual: MacroTotals, target: MacroTotals): string => {
  */
 const printPlan = (plan: NutritionPlan): void => {
   const dayTotals = nutritionPlanCalculator.computePlanTotals(plan);
+  const foodTotals = nutritionPlanCalculator.computeFoodTotals(plan);
 
   console.log(`\n=== ${plan.title} (${plan.id}) ===`);
   console.log(`Target : ${formatMacros(plan.targets)}`);
-  if (plan.dailyBudget && plan.dailyBudget.length > 0) {
-    console.log(`Budget : ${plan.dailyBudget.join(' • ')}`);
+
+  if (foodTotals.length > 0) {
+    const formatted = foodTotals
+      .map(
+        ({ food, quantity }) =>
+          `${food.name}: ${nutritionPlanCalculator.formatFoodAmount(food, quantity)}`
+      )
+      .join(', ');
+    console.log(`Foods  : ${formatted}`);
   }
 
   console.log('\nMeals:');

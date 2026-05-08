@@ -17,13 +17,6 @@ const trainingDay: NutritionPlan = {
     carbs: 70,
     fat: 60
   },
-  dailyBudget: [
-    '400g cooked chicken',
-    '6 scoops whey',
-    '4 tbsp chunky PB',
-    '1 banana',
-    '1 rice cake'
-  ],
   meals: [
     {
       time: '5:30 AM',
@@ -83,13 +76,6 @@ const nonTrainingDay: NutritionPlan = {
     carbs: 20,
     fat: 60
   },
-  dailyBudget: [
-    '400g cooked chicken',
-    '4 scoops whey',
-    '4 tbsp chunky PB',
-    'No workout shake, no banana, no rice cakes',
-    'Three meals, whenever'
-  ],
   meals: [
     {
       time: 'Meal 1',
