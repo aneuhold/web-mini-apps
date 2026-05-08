@@ -76,7 +76,7 @@ Treat anything in that file as durable context: it describes who the user is, no
 
 ## 4. Locate the project data
 
-The nutrition app at `app/(routes)/nutrition/` is the single source of truth for the user's food database, weight log, and active plan(s). Read each of these files at the start of the session so you know the current picture, then edit them directly when the user reports new information. The user reviews changes via git, so you don't need to summarize what you changed — just make the edit cleanly.
+The nutrition app at `app/(routes)/nutrition/` is the single source of truth for the user's food database, weight log, and active plan(s). Read each of these files at the start of the session so you know the current picture, then edit them directly when the user reports new information. The user reviews changes via git, so you don't need to summarize what you changed — just make the edit cleanly. Also run `pnpm nutrition:meals` before discussing with the user so you can see what the user sees as far as totals and their current meal breakdowns. If you end up making edits to the meal plans, feel free to use this script as a verification step to check your math before considering a task complete.
 
 | File                                                | What lives here                                                                                                                            |
 | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
