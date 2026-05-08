@@ -9,7 +9,8 @@
     "build": "rimraf out && next build --no-lint --turbopack",
     "start": "pnpm run build && serve out",
     "check": "tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "nutrition:meals": "tsx 'app/(routes)/nutrition/scripts/printMealPlans.ts'"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
@@ -30,6 +31,7 @@
     "netlify-cli": "^23.9.1",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
 }
