@@ -95,6 +95,20 @@ class NutritionPlanCalculator {
   }
 
   /**
+   * Render one row of the day's per-food totals: `name: total` plus a
+   * `(≥min/meal)` suffix when the food declares a `minPerMeal` rule.
+   *
+   * @param foodTotal - Aggregated quantity for a single food.
+   */
+  formatFoodTotal({ food, quantity }: FoodTotal): string {
+    const base = `${food.name}: ${this.formatFoodAmount(food, quantity)}`;
+    if (food.minPerMeal === undefined) {
+      return base;
+    }
+    return `${base} (≥${this.formatFoodAmount(food, food.minPerMeal)}/meal)`;
+  }
+
+  /**
    * Format a calorie value for display. Calories are rounded to the
    * nearest whole number.
    *

@@ -48,10 +48,7 @@ const printPlan = (plan: NutritionPlan): void => {
 
   if (foodTotals.length > 0) {
     const formatted = foodTotals
-      .map(
-        ({ food, quantity }) =>
-          `${food.name}: ${nutritionPlanCalculator.formatFoodAmount(food, quantity)}`
-      )
+      .map((foodTotal) => nutritionPlanCalculator.formatFoodTotal(foodTotal))
       .join(', ');
     console.log(`Foods  : ${formatted}`);
   }

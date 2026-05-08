@@ -64,7 +64,7 @@ const trainingDay: NutritionPlan = {
     }
   ],
   notes:
-    'Each meal has a single protein source — chicken (≥200g) or whey (≥2 scoops), never both. Protein lands ~48 / 50 / 41 / 52 / 57g across 5 feedings (~247g day, ~9g short of 256 target — same gap as the prior layout, inherent to the daily budget). Carb cluster stays around the 2:40 PM workout. Fewer items per meal: chicken+PB, shake, chicken+beans, shake+banana+rice cake, shake+PB.'
+    'Each meal has a single protein source — chicken or whey, never both. Protein lands ~48 / 50 / 41 / 52 / 57g across 5 feedings (~247g day, ~9g short of 256 target). Carb cluster stays around the 2:40 PM workout. Fewer items per meal: chicken+PB, shake, chicken+beans, shake+banana+rice cake, shake+PB.'
 };
 
 const nonTrainingDay: NutritionPlan = {
@@ -111,7 +111,7 @@ const nonTrainingDay: NutritionPlan = {
     }
   ],
   notes:
-    'When whey shows up it is ≥2 scoops; when chicken shows up it is ≥200g. M2 doubles up chicken + a 2-scoop shake to avoid concentrating all 4 daily scoops in one big shake. Protein ~48 / 91 / 57g (~195g day, ~2g short of 197). Calories distribute evenly across the three meals (~396 / 432 / 460). Carbs ~32g vs 20g target — unavoidable from whey + PB.'
+    'M2 doubles up chicken + a 2-scoop shake to avoid concentrating all 4 daily scoops in one big shake. Protein ~48 / 91 / 57g (~195g day, ~2g short of 197). Calories distribute evenly across the three meals (~396 / 432 / 460). Carbs ~32g vs 20g target — unavoidable from whey + PB.'
 };
 
 /**

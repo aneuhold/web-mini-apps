@@ -2,12 +2,14 @@ import type { Food } from './types';
 
 export const chickenBreast: Food = {
   name: 'Chicken breast',
-  serving: { amount: 476, unitLabel: 'g', calories: 514, protein: 96.9, carbs: 0, fat: 14.6 }
+  serving: { amount: 476, unitLabel: 'g', calories: 514, protein: 96.9, carbs: 0, fat: 14.6 },
+  minPerMeal: 200
 };
 
 export const bodystrongWheyChocolate: Food = {
   name: 'Bodystrong Whey, Chocolate',
-  serving: { amount: 2, unitLabel: 'scoop', calories: 280, protein: 50, carbs: 7, fat: 4.6 }
+  serving: { amount: 2, unitLabel: 'scoop', calories: 280, protein: 50, carbs: 7, fat: 4.6 },
+  minPerMeal: 2
 };
 
 export const riceCakeWhiteCheddar: Food = {

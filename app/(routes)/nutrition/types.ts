@@ -21,6 +21,14 @@ export interface FoodServing {
 export interface Food {
   name: string;
   serving: FoodServing;
+  /**
+   * Self-imposed minimum quantity (in `serving.unitLabel`) when this food
+   * appears in a meal at all. Captures rules like "if chicken shows up,
+   * it's at least 200g" so the constraint travels with the food rather
+   * than living in plan-level prose. This is an ideal as well. If it simply isn't possible
+   * this can be ignored. Please provide a reason though.
+   */
+  minPerMeal?: number;
 }
 
 /**
