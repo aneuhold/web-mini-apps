@@ -37,6 +37,11 @@ export const krogerChunkyPB: Food = {
   serving: { amount: 2, unitLabel: 'tbsp', calories: 180, protein: 7, carbs: 9, fat: 15 }
 };
 
+export const jifChunkyPB: Food = {
+  name: 'JIF Chunky PB',
+  serving: { amount: 2, unitLabel: 'tbsp', calories: 190, protein: 7, carbs: 8, fat: 16 }
+};
+
 export const greenBeansCanned: Food = {
   name: 'Green beans (canned)',
   serving: { amount: 120, unitLabel: 'g', calories: 15, protein: 1, carbs: 3, fat: 0 }
