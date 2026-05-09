@@ -56,3 +56,18 @@ export const cornCanned: Food = {
   name: 'Corn (canned)',
   serving: { amount: 125, unitLabel: 'g', calories: 70, protein: 2, carbs: 12, fat: 1 }
 };
+
+export const krogerChunkLightTunaPouch: Food = {
+  name: 'Kroger Chunk Light Tuna pouch',
+  serving: { amount: 1, unitLabel: 'pouch', calories: 80, protein: 18, carbs: 0, fat: 1 }
+};
+
+export const starkistTunaCreationsBaconRanch: Food = {
+  name: 'StarKist Tuna Creations Bacon Ranch',
+  serving: { amount: 1, unitLabel: 'pouch', calories: 80, protein: 15, carbs: 2, fat: 1 }
+};
+
+export const dannonLightFitGreekBlueberry: Food = {
+  name: 'Dannon Light + Fit Greek Yogurt (Blueberry)',
+  serving: { amount: 1, unitLabel: 'container', calories: 80, protein: 12, carbs: 8, fat: 0 }
+};
