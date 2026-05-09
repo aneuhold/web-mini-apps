@@ -137,7 +137,8 @@ const nonTrainingDayNoChicken: NutritionPlan = {
       name: 'Meal 2',
       totalLabelSuffix: '(w/ beans)',
       items: [
-        { food: bodystrongWheyChocolate, quantity: 4, amountDisplay: '4 scoops shake' },
+        { food: bodystrongWheyChocolate, quantity: 3, amountDisplay: '3 scoops shake' },
+        { food: krogerChunkyPB, quantity: 1.5, amountDisplay: '1.5 tbsp (24g)' },
         {
           food: greenBeansCanned,
           quantity: 420,
@@ -157,7 +158,7 @@ const nonTrainingDayNoChicken: NutritionPlan = {
     }
   ],
   notes:
-    'Chicken-out fallback. M1 and M3 mirror the standard whey+PB combo; M2 doubles up to 4 scoops in place of the usual chicken+whey pairing — same structural pattern as the regular non-training day, just with whey replacing chicken. Protein lands ~57 / 103 / 57g (~217g day, ~20g over 197 target). Calories run ~1532 (~130 over target) and fat ~48g (~12 short) — the structural cost of swapping lean chicken for whey+PB. Treat this as a 1–2 day/week swap, not the default cut day; the calorie drag adds up if used continuously.'
+    'Chicken-out fallback. M1 and M3 mirror the standard whey+PB combo. M2 swaps the chicken+whey pairing for 3 scoops + 1.5 tbsp PB + beans — fractional servings tuned to hit protein and stay above the 0.3g/lb fat minimum without overshooting calories more than necessary. Protein lands ~57 / 84 / 57g (~198g day, on target). Calories ~1528 (~128 over target) and fat ~57g (~3 short, but above the 55.5g/day floor at ~185 lb). Carbs ~60g vs 20g target — unavoidable from whey + PB. The cal drift is the structural cost of replacing lean chicken; treat as a 1–2 day/week swap, not the default cut day.'
 };
 
 /**
