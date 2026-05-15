@@ -25,10 +25,17 @@ export interface Food {
    * Self-imposed minimum quantity (in `serving.unitLabel`) when this food
    * appears in a meal at all. Captures rules like "if chicken shows up,
    * it's at least 200g" so the constraint travels with the food rather
-   * than living in plan-level prose. This is an ideal as well. If it simply isn't possible
-   * this can be ignored. Please provide a reason though.
+   * than living in plan-level prose.
    */
-  minPerMeal?: number;
+  minServingAmountPerMeal?: number;
+  maxServingAmountPerMeal?: number;
+  /**
+   * The step-size of a serving amount if used in a meal. For example, if a food's serving
+   * amount is 200g and `allowedStepServingAmountPerMeal` is 50g, then valid meal quantities
+   * for that food are 0g, 50g, 100g, 150g, 200g, 250g, etc. This must be taken into account within
+   * the constrains of `minServingAmountPerMeal` and `maxServingAmountPerMeal` if those are set.
+   */
+  allowedStepServingAmountPerMeal?: number;
 }
 
 /**

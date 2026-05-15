@@ -1,7 +1,7 @@
 import {
   banana,
   bodystrongWheyChocolate,
-  caseinShakeVanilla,
+  caseinProteinShakeVanilla,
   chickenBreast,
   greenBeansCanned,
   krogerChunkyPB,
@@ -118,7 +118,7 @@ const trainingDayShakeAlt: NutritionPlan = {
       time: '4:50 PM',
       name: 'Dinner',
       items: [
-        { food: caseinShakeVanilla, quantity: 2, amountDisplay: '2 bottles' },
+        { food: caseinProteinShakeVanilla, quantity: 2, amountDisplay: '2 bottles' },
         { food: krogerChunkyPB, quantity: 2, amountDisplay: '2 tbsp (32g)' }
       ]
     }

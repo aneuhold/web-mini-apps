@@ -102,10 +102,10 @@ class NutritionPlanCalculator {
    */
   formatFoodTotal({ food, quantity }: FoodTotal): string {
     const base = `${food.name}: ${this.formatFoodAmount(food, quantity)}`;
-    if (food.minPerMeal === undefined) {
+    if (food.minServingAmountPerMeal === undefined) {
       return base;
     }
-    return `${base} (≥${this.formatFoodAmount(food, food.minPerMeal)}/meal)`;
+    return `${base} (≥${this.formatFoodAmount(food, food.minServingAmountPerMeal)}/meal)`;
   }
 
   /**
