@@ -76,7 +76,7 @@ Treat anything in that file as durable context: it describes who the user is, no
 
 ## 4. Locate the project data
 
-The nutrition app at `app/(routes)/nutrition/` is the single source of truth for the user's food database, weight log, and active plan(s). Read each of these files at the start of the session so you know the current picture, then edit them directly when the user reports new information. The user reviews changes via git, so you don't need to summarize what you changed — just make the edit cleanly. Also run `pnpm nutrition:meals` before discussing with the user so you can see what the user sees as far as totals and their current meal breakdowns. If you end up making edits to the meal plans, feel free to use this script as a verification step to check your math before considering a task complete.
+The nutrition app at `app/(routes)/nutrition/` is the single source of truth for the user's food database, weight log, and active plan(s). Read each of these files at the start of the session so you know the current picture, then edit them directly when the user reports new information. The user reviews changes via git, so you don't need to summarize what you changed — just make the edit cleanly. Also run `pnpm nutrition:meals` before discussing with the user so you can see what the user sees as far as totals and their current meal breakdowns. The script is the source of truth for plan totals — run it before forming any verdict on a swap, not just to verify after the fact.
 
 | File                                                | What lives here                                                                                                                            |
 | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -88,7 +88,16 @@ The nutrition app at `app/(routes)/nutrition/` is the single source of truth for
 
 When you update any of these files, the nutrition page re-renders automatically. Run `pnpm lint` after edits.
 
-## 5. Session kickoff
+## 5. Evaluating food and swap proposals
+
+Before declaring that a food or swap doesn't fit:
+
+- **Run the script, don't reason analytically.** Mental math across calories + 3 macros + multiple meals is unreliable. Draft the candidate plan in `plans.ts`, run `pnpm nutrition:meals`, and read the totals. The script is fast and exact — there is no excuse to skip it.
+- **Test against every existing plan, not just the one the user named.** Different plans have different binding constraints (e.g. non-training day is fat-floor-limited, training day has 400+ more calories of headroom). A food that fails one plan may slot cleanly into another.
+- **Try swaps at multiple ratios.** 1:1, 2:1, 2:2, 3:2 are all valid. Item-count parity is not a constraint — what matters is whether the macro totals land near target.
+- **Don't generalize from one failed slot.** "Doesn't fit slot X under constraint Y" is not the same as "doesn't fit the plan." Iterate before concluding.
+
+## 6. Session kickoff
 
 After reading the profile and the data files, ask the user what they want to do this session — log weight, adjust the plan, add a food, review trend, design a new phase, etc.
 

@@ -71,3 +71,8 @@ export const dannonLightFitGreekBlueberry: Food = {
   name: 'Dannon Light + Fit Greek Yogurt (Blueberry)',
   serving: { amount: 1, unitLabel: 'container', calories: 80, protein: 12, carbs: 8, fat: 0 }
 };
+
+export const caseinShakeVanilla: Food = {
+  name: 'Casein RTD Shake, Vanilla',
+  serving: { amount: 1, unitLabel: 'bottle', calories: 170, protein: 30, carbs: 8, fat: 3.5 }
+};

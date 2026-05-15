@@ -1,6 +1,7 @@
 import {
   banana,
   bodystrongWheyChocolate,
+  caseinShakeVanilla,
   chickenBreast,
   greenBeansCanned,
   krogerChunkyPB,
@@ -65,6 +66,65 @@ const trainingDay: NutritionPlan = {
   ],
   notes:
     'Each meal has a single protein source — chicken or whey, never both. Protein lands ~48 / 50 / 41 / 52 / 57g across 5 feedings (~247g day, ~9g short of 256 target). Carb cluster stays around the 2:40 PM workout. Fewer items per meal: chicken+PB, shake, chicken+beans, shake+banana+rice cake, shake+PB.'
+};
+
+const trainingDayShakeAlt: NutritionPlan = {
+  id: 'training-day-shake-alt',
+  title: 'Training Day (Shake Alt)',
+  targets: {
+    calories: 1850,
+    protein: 256,
+    carbs: 70,
+    fat: 60
+  },
+  meals: [
+    {
+      time: '5:30 AM',
+      name: 'Breakfast',
+      items: [
+        { food: chickenBreast, quantity: 200 },
+        { food: krogerChunkyPB, quantity: 2, amountDisplay: '2 tbsp (32g)' }
+      ]
+    },
+    {
+      time: '8:30 AM',
+      items: [{ food: bodystrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' }]
+    },
+    {
+      time: '11:00 AM',
+      name: 'Lunch',
+      totalLabelSuffix: '(w/ beans)',
+      items: [
+        { food: chickenBreast, quantity: 200 },
+        {
+          food: greenBeansCanned,
+          quantity: 420,
+          amountDisplay: '1 full can (~420g)',
+          optional: true,
+          optionalLabel: 'optional volume'
+        }
+      ]
+    },
+    {
+      time: '2:40 PM',
+      name: 'Pre-workout',
+      items: [
+        { food: bodystrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
+        { food: banana, quantity: 110, amountDisplay: '110g (1 med)' },
+        { food: riceCakeWhiteCheddar, quantity: 1, amountDisplay: '1' }
+      ]
+    },
+    {
+      time: '4:50 PM',
+      name: 'Dinner',
+      items: [
+        { food: caseinShakeVanilla, quantity: 2, amountDisplay: '2 bottles' },
+        { food: krogerChunkyPB, quantity: 2, amountDisplay: '2 tbsp (32g)' }
+      ]
+    }
+  ],
+  notes:
+    '4:50 PM dinner swaps the 2-scoop whey + PB for 2 RTD casein bottles + PB. Casein is slow-digesting, useful pre-sleep. Day lands ~1886 cal / 261P / 93C / 59F — protein +5g vs target, fat essentially at the 60g target (well above the 55.5g floor — better fat-floor compliance than the standard training day at 57g), calories +36 over.'
 };
 
 const nonTrainingDay: NutritionPlan = {
@@ -166,6 +226,7 @@ const nonTrainingDayNoChicken: NutritionPlan = {
  */
 export const nutritionPlans: NutritionPlan[] = [
   trainingDay,
+  trainingDayShakeAlt,
   nonTrainingDay,
   nonTrainingDayNoChicken
 ];
