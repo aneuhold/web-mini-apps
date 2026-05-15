@@ -7,8 +7,8 @@ export const chickenBreast: Food = {
   allowedStepServingAmountPerMeal: 25
 };
 
-export const bodystrongWheyChocolate: Food = {
-  name: 'Bodystrong Whey, Chocolate',
+export const bodyStrongWheyChocolate: Food = {
+  name: 'BodyStrong Whey, Chocolate',
   serving: { amount: 2, unitLabel: 'scoop', calories: 280, protein: 50, carbs: 7, fat: 4.6 },
   minServingAmountPerMeal: 2,
   maxServingAmountPerMeal: 4,
@@ -62,19 +62,19 @@ export const jifChunkyPB: Food = {
 
 export const greenBeansCanned: Food = {
   name: 'Green beans (canned)',
-  serving: { amount: 1, unitLabel: 'can', calories: 15, protein: 1, carbs: 3, fat: 0 },
+  serving: { amount: 1, unitLabel: 'can', calories: 52.5, protein: 3.5, carbs: 10.5, fat: 0 },
   allowedStepServingAmountPerMeal: 1
 };
 
 export const peasCanned: Food = {
   name: 'Peas (canned)',
-  serving: { amount: 1, unitLabel: 'can', calories: 50, protein: 3, carbs: 10, fat: 0 },
+  serving: { amount: 1, unitLabel: 'can', calories: 175, protein: 10.5, carbs: 30.5, fat: 0 },
   allowedStepServingAmountPerMeal: 1
 };
 
 export const cornCanned: Food = {
   name: 'Corn (canned)',
-  serving: { amount: 1, unitLabel: 'can', calories: 70, protein: 2, carbs: 12, fat: 1 },
+  serving: { amount: 1, unitLabel: 'can', calories: 245, protein: 7, carbs: 42, fat: 1 },
   allowedStepServingAmountPerMeal: 1
 };
 

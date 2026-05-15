@@ -1,6 +1,6 @@
 import {
   banana,
-  bodystrongWheyChocolate,
+  bodyStrongWheyChocolate,
   caseinProteinShakeVanilla,
   chickenBreast,
   greenBeansCanned,
@@ -24,12 +24,12 @@ const trainingDay: NutritionPlan = {
       name: 'Breakfast',
       items: [
         { food: chickenBreast, quantity: 200 },
-        { food: krogerChunkyPB, quantity: 2, amountDisplay: '2 tbsp (32g)' }
+        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
       ]
     },
     {
       time: '8:30 AM',
-      items: [{ food: bodystrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' }]
+      items: [{ food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' }]
     },
     {
       time: '11:00 AM',
@@ -39,8 +39,8 @@ const trainingDay: NutritionPlan = {
         { food: chickenBreast, quantity: 200 },
         {
           food: greenBeansCanned,
-          quantity: 420,
-          amountDisplay: '1 full can (~420g)',
+          quantity: 1,
+          amountDisplay: '1 can',
           optional: true,
           optionalLabel: 'optional volume'
         }
@@ -50,17 +50,17 @@ const trainingDay: NutritionPlan = {
       time: '2:40 PM',
       name: 'Pre-workout',
       items: [
-        { food: bodystrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
-        { food: banana, quantity: 110, amountDisplay: '110g (1 med)' },
-        { food: riceCakeWhiteCheddar, quantity: 1, amountDisplay: '1' }
+        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
+        { food: banana, quantity: 1 },
+        { food: riceCakeWhiteCheddar, quantity: 1 }
       ]
     },
     {
       time: '4:50 PM',
       name: 'Dinner',
       items: [
-        { food: bodystrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
-        { food: krogerChunkyPB, quantity: 2, amountDisplay: '2 tbsp (32g)' }
+        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
+        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
       ]
     }
   ],
@@ -83,12 +83,12 @@ const trainingDayShakeAlt: NutritionPlan = {
       name: 'Breakfast',
       items: [
         { food: chickenBreast, quantity: 200 },
-        { food: krogerChunkyPB, quantity: 2, amountDisplay: '2 tbsp (32g)' }
+        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
       ]
     },
     {
       time: '8:30 AM',
-      items: [{ food: bodystrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' }]
+      items: [{ food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' }]
     },
     {
       time: '11:00 AM',
@@ -98,8 +98,8 @@ const trainingDayShakeAlt: NutritionPlan = {
         { food: chickenBreast, quantity: 200 },
         {
           food: greenBeansCanned,
-          quantity: 420,
-          amountDisplay: '1 full can (~420g)',
+          quantity: 1,
+          amountDisplay: '1 can',
           optional: true,
           optionalLabel: 'optional volume'
         }
@@ -109,9 +109,9 @@ const trainingDayShakeAlt: NutritionPlan = {
       time: '2:40 PM',
       name: 'Pre-workout',
       items: [
-        { food: bodystrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
-        { food: banana, quantity: 110, amountDisplay: '110g (1 med)' },
-        { food: riceCakeWhiteCheddar, quantity: 1, amountDisplay: '1' }
+        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
+        { food: banana, quantity: 1 },
+        { food: riceCakeWhiteCheddar, quantity: 1 }
       ]
     },
     {
@@ -119,7 +119,7 @@ const trainingDayShakeAlt: NutritionPlan = {
       name: 'Dinner',
       items: [
         { food: caseinProteinShakeVanilla, quantity: 2, amountDisplay: '2 bottles' },
-        { food: krogerChunkyPB, quantity: 2, amountDisplay: '2 tbsp (32g)' }
+        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
       ]
     }
   ],
@@ -142,7 +142,7 @@ const nonTrainingDay: NutritionPlan = {
       name: 'Meal 1',
       items: [
         { food: chickenBreast, quantity: 200 },
-        { food: krogerChunkyPB, quantity: 2, amountDisplay: '2 tbsp (32g)' }
+        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
       ]
     },
     {
@@ -151,11 +151,11 @@ const nonTrainingDay: NutritionPlan = {
       totalLabelSuffix: '(w/ beans)',
       items: [
         { food: chickenBreast, quantity: 200 },
-        { food: bodystrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
+        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
         {
           food: greenBeansCanned,
-          quantity: 420,
-          amountDisplay: '1 can (~420g)',
+          quantity: 1,
+          amountDisplay: '1 can',
           optional: true,
           optionalLabel: 'optional volume'
         }
@@ -165,8 +165,8 @@ const nonTrainingDay: NutritionPlan = {
       time: 'Meal 3',
       name: 'Meal 3',
       items: [
-        { food: bodystrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
-        { food: krogerChunkyPB, quantity: 2, amountDisplay: '2 tbsp (32g)' }
+        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
+        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
       ]
     }
   ],
@@ -188,20 +188,20 @@ const nonTrainingDayNoChicken: NutritionPlan = {
       time: 'Meal 1',
       name: 'Meal 1',
       items: [
-        { food: bodystrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
-        { food: krogerChunkyPB, quantity: 2, amountDisplay: '2 tbsp (32g)' }
+        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
+        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
       ]
     },
     {
       time: 'Meal 2',
       name: 'Meal 2',
-      totalLabelSuffix: '(w/ beans)',
+      totalLabelSuffix: '(w/ green beans)',
       items: [
-        { food: bodystrongWheyChocolate, quantity: 3, amountDisplay: '3 scoops shake' },
+        { food: bodyStrongWheyChocolate, quantity: 3, amountDisplay: '3 scoops shake' },
         {
           food: greenBeansCanned,
-          quantity: 420,
-          amountDisplay: '1 can (~420g)',
+          quantity: 1,
+          amountDisplay: '1 can',
           optional: true,
           optionalLabel: 'optional volume'
         }
@@ -211,8 +211,8 @@ const nonTrainingDayNoChicken: NutritionPlan = {
       time: 'Meal 3',
       name: 'Meal 3',
       items: [
-        { food: bodystrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
-        { food: krogerChunkyPB, quantity: 2, amountDisplay: '2 tbsp (32g)' }
+        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
+        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
       ]
     }
   ],
