@@ -3,7 +3,7 @@
 import Footer from '$components/Footer';
 import { Fragment, useState } from 'react';
 import nutritionPlanCalculator from './nutritionPlanCalculator';
-import { nutritionPlans } from './plans';
+import { nutritionPlanGroups, nutritionPlans } from './plans';
 import type { MacroTotals } from './types';
 
 /**
@@ -23,10 +23,10 @@ const MacroCells = ({ totals }: { totals: MacroTotals }) => (
 );
 
 /**
- * Nutrition plans page. Lists the available plans in a tab strip and
- * renders the selected plan as a meal-by-meal table with per-meal totals,
- * a day total, and the target row. All numeric columns are computed at
- * render time from the plan data.
+ * Nutrition plans page. Lists the available plans in a phase → category →
+ * pills navigation tree and renders the selected plan as a meal-by-meal
+ * table with per-meal totals, a day total, and the target row. All numeric
+ * columns are computed at render time from the plan data.
  */
 export default function NutritionPage() {
   const [selectedPlanId, setSelectedPlanId] = useState(nutritionPlans[0].id);
@@ -44,21 +44,38 @@ export default function NutritionPage() {
       </header>
 
       <nav aria-label="Nutrition plans">
-        {nutritionPlans.map((candidate) => {
-          const isActive = candidate.id === plan.id;
-          return (
-            <button
-              key={candidate.id}
-              type="button"
-              aria-current={isActive ? 'page' : undefined}
-              onClick={() => {
-                setSelectedPlanId(candidate.id);
-              }}
-            >
-              {candidate.title}
-            </button>
-          );
-        })}
+        {nutritionPlanGroups.map((phaseGroup) => (
+          <div key={phaseGroup.phase} data-phase-group>
+            <h2>{phaseGroup.phase}</h2>
+            {phaseGroup.categories.map((category) => {
+              const calorieTarget = category.plans[0].calorieTarget;
+              return (
+                <div key={category.label} data-plan-category>
+                  <h3>
+                    {category.label} Day<span> · {calorieTarget} cal</span>
+                  </h3>
+                  <div data-plan-pills>
+                    {category.plans.map((candidate) => {
+                      const isActive = candidate.id === plan.id;
+                      return (
+                        <button
+                          key={candidate.id}
+                          type="button"
+                          aria-current={isActive ? 'page' : undefined}
+                          onClick={() => {
+                            setSelectedPlanId(candidate.id);
+                          }}
+                        >
+                          {candidate.title}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ))}
       </nav>
 
       <section aria-label={`${plan.title} targets`}>
