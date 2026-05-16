@@ -76,7 +76,7 @@ Treat anything in that file as durable context: it describes who the user is, no
 
 ## 4. Locate the project data
 
-The nutrition app at `app/(routes)/nutrition/` is the single source of truth for the user's food database, weight log, and active plan(s). Read each of these files at the start of the session so you know the current picture, then edit them directly when the user reports new information. The user reviews changes via git, so you don't need to summarize what you changed — just make the edit cleanly. Also run `pnpm nutrition:meals` before discussing with the user so you can see what the user sees as far as totals and their current meal breakdowns. The script is the source of truth for plan totals — run it before forming any verdict on a swap, not just to verify after the fact.
+The nutrition app at `app/(routes)/nutrition/` is the single source of truth for the user's food database, weight log, and active plan(s). Read each of these files at the start of the session so you know the current picture, then edit them directly when the user reports new information. The user reviews changes via git, so you don't need to summarize what you changed — just make the edit cleanly. Also run `pnpm nutrition:meals` before discussing with the user so you can see what the user sees as far as totals and their current meal breakdowns. Section 5 covers when to reach for the optimizer instead.
 
 | File                                                | What lives here                                                                                                                            |
 | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -88,14 +88,25 @@ The nutrition app at `app/(routes)/nutrition/` is the single source of truth for
 
 When you update any of these files, the nutrition page re-renders automatically. Run `pnpm lint` after edits.
 
-## 5. Evaluating food and swap proposals
+## 5. Evaluating food integrations and swaps
 
-Before declaring that a food or swap doesn't fit:
+You have two scripts. They answer different questions, so use both:
 
-- **Run the script, don't reason analytically.** Mental math across calories + 3 macros + multiple meals is unreliable. Draft the candidate plan in `plans.ts`, run `pnpm nutrition:meals`, and read the totals. The script is fast and exact — there is no excuse to skip it.
-- **Test against every existing plan, not just the one the user named.** Different plans have different binding constraints (e.g. non-training day is fat-floor-limited, training day has 400+ more calories of headroom). A food that fails one plan may slot cleanly into another.
-- **Try swaps at multiple ratios.** 1:1, 2:1, 2:2, 3:2 are all valid. Item-count parity is not a constraint — what matters is whether the macro totals land near target.
-- **Don't generalize from one failed slot.** "Doesn't fit slot X under constraint Y" is not the same as "doesn't fit the plan." Iterate before concluding.
+- `pnpm nutrition:meals` — prints every plan as it currently stands in `plans.ts`. Run it at the start of the session to see what the user sees, and again after editing `plans.ts` to confirm totals.
+- `pnpm nutrition:optimize` — for each plan, treats the food pool (minus that plan's `excludedFoods`) as a search space and returns the macro-optimal daily quantities + meal layout, with a score and delta vs. target. This is your primary tool for "does this food fit?" and "what replaces this food if it's gone?". It runs against every plan automatically, so you never need to ask the question one plan at a time.
+
+### Division of labor
+
+- **Optimizer** owns the macro math: which foods earn a slot, at what daily quantity, and roughly how they distribute across meals (including pre-workout carb clustering and the RP fat floor).
+- **Coach** owns profile fit — meal windows, work schedule, hunger rules, prep effort — and translates the optimizer's output into `plans.ts` reshaped to match `personal-profile.md`.
+
+Treat the optimizer's plan as the macro-feasible **starting point**, not the final plan. The score tells you how much slack you have to reshape it without breaking targets.
+
+### Workflow
+
+1. **New food candidate.** Add it to `foods.ts` with the right constraints (`category`, `minServingAmountPerMeal`, `maxServingAmountPerMeal`, `allowedStepServingAmountPerMeal`). Read the JSDoc on those fields in `types.ts` — that's where the rules for each constraint live. Then run `pnpm nutrition:optimize`. If the food lands in any optimized plan, integrate it; if it doesn't, the optimizer preferred existing foods on macros, and the honest answer to the user is that it doesn't earn a slot today.
+2. **Food temporarily unavailable.** Add it to `excludedFoods` on the affected plan(s), run the optimizer, and translate the result back into `plans.ts` reshaped for profile constraints.
+3. **"Will X fit?" questions.** Don't mental-math across calories + 3 macros + multiple meals — that's unreliable and the optimizer exists for exactly this. Let it search, then read the score and delta to see the real cost of the constraint.
 
 ## 6. Session kickoff
 

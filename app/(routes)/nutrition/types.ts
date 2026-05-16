@@ -23,16 +23,25 @@ export interface Food {
   serving: FoodServing;
   /**
    * Mutual-exclusion group. The optimizer picks at most one food per
-   * category per day. Omit for foods that have no same-type competitor.
+   * category per day — e.g. one peanut butter, one tuna pouch, one
+   * protein powder. Set whenever another food of the same type exists
+   * in the pool; omit for foods that have no same-type competitor.
    */
   category?: FoodCategory;
   /**
    * Self-imposed minimum quantity (in `serving.unitLabel`) when this food
    * appears in a meal at all. Captures rules like "if chicken shows up,
    * it's at least 200g" so the constraint travels with the food rather
-   * than living in plan-level prose.
+   * than living in plan-level prose. The optimizer reads this when
+   * deciding feasible per-meal serving sizes.
    */
   minServingAmountPerMeal?: number;
+  /**
+   * Self-imposed maximum quantity (in `serving.unitLabel`) when this food
+   * appears in a meal. Mirror of `minServingAmountPerMeal` — use for caps
+   * like "no more than 32g of peanut butter per meal." The optimizer will
+   * not allocate more than this in any single meal.
+   */
   maxServingAmountPerMeal?: number;
   /**
    * The step-size of a serving amount if used in a meal. For example, if a food's serving
