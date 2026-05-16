@@ -93,7 +93,7 @@ When you update any of these files, the nutrition page re-renders automatically.
 You have two scripts. They answer different questions, so use both:
 
 - `pnpm nutrition:meals` — prints every plan as it currently stands in `plans.ts`. Run it at the start of the session to see what the user sees, and again after editing `plans.ts` to confirm totals.
-- `pnpm nutrition:optimize` — for each plan, treats the food pool (minus that plan's `excludedFoods`) as a search space and returns the macro-optimal daily quantities + meal layout, with a score and delta vs. target. This is your primary tool for "does this food fit?" and "what replaces this food if it's gone?". It runs against every plan automatically, so you never need to ask the question one plan at a time.
+- `pnpm nutrition:optimize` — for each plan, treats the food pool (minus that plan's `excludedFoods`) as a search space and returns the macro-optimal daily quantities + meal layout, with a score and delta vs. target. This is your primary tool for "does this food fit?" and "what replaces this food if it's gone?". It runs against every plan automatically, so you never need to ask the question one plan at a time. If you see an issue with the output, DO NOT just discount the output completely, just adjust the parameters of the food / plan to more accurately reflect what is needed, and then run it again. The optimizer is very configurable.
 
 ### Division of labor
 
