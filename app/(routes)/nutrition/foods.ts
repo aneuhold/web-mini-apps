@@ -66,6 +66,8 @@ export const jifChunkyPB: Food = {
   serving: { amount: 32, unitLabel: 'g', calories: 190, protein: 7, carbs: 8, fat: 16 },
   category: FoodCategory.PeanutButter,
   minServingAmountPerMeal: 10,
+  // Not out, but still working through the kroger PB
+  maxServingAmountPerPlan: 0,
   allowedStepServingAmountPerMeal: 1
 };
 
@@ -94,8 +96,17 @@ export const krogerChunkLightTunaPouch: Food = {
   name: 'Kroger Chunk Light Tuna pouch',
   serving: { amount: 1, unitLabel: 'pouch', calories: 80, protein: 18, carbs: 0, fat: 1 },
   category: FoodCategory.TunaPouch,
-  // Synced up between the tuna pouch types
-  maxServingAmountPerPlan: 4,
+  // Currently out
+  maxServingAmountPerPlan: 0,
+  allowedStepServingAmountPerMeal: 1
+};
+
+export const starkistHickorySmokedTunaPouch: Food = {
+  name: 'StarKist Tuna Creations Hickory Smoked',
+  serving: { amount: 1, unitLabel: 'pouch', calories: 110, protein: 17, carbs: 0, fat: 4.5 },
+  category: FoodCategory.TunaPouch,
+  // Max amount in a day because of amount available
+  maxServingAmountPerPlan: 1,
   allowedStepServingAmountPerMeal: 1
 };
 
@@ -103,14 +114,16 @@ export const starkistTunaCreationsBaconRanch: Food = {
   name: 'StarKist Tuna Creations Bacon Ranch',
   serving: { amount: 1, unitLabel: 'pouch', calories: 80, protein: 15, carbs: 2, fat: 1 },
   category: FoodCategory.TunaPouch,
-  // Synced up between the tuna pouch types
-  maxServingAmountPerPlan: 4,
+  // Currently out
+  maxServingAmountPerPlan: 0,
   allowedStepServingAmountPerMeal: 1
 };
 
 export const dannonLightFitGreekBlueberry: Food = {
   name: 'Dannon Light + Fit Greek Yogurt (Blueberry)',
   serving: { amount: 1, unitLabel: 'container', calories: 80, protein: 12, carbs: 8, fat: 0 },
+  // Max amount in a day because of amount available
+  maxServingAmountPerPlan: 1,
   allowedStepServingAmountPerMeal: 1
 };
 
