@@ -95,3 +95,22 @@ export const dannonLightFitGreekBlueberry: Food = {
   serving: { amount: 1, unitLabel: 'container', calories: 80, protein: 12, carbs: 8, fat: 0 },
   allowedStepServingAmountPerMeal: 1
 };
+
+/** Every food defined in this module; used as the default candidate pool for the optimizer. */
+export const allFoods: Food[] = [
+  chickenBreast,
+  bodyStrongWheyChocolate,
+  caseinProteinShakeVanilla,
+  riceCakeWhiteCheddar,
+  banana,
+  kindThinsPBDarkChocolate,
+  clifBuildersMiniChocMint,
+  krogerChunkyPB,
+  jifChunkyPB,
+  greenBeansCanned,
+  peasCanned,
+  cornCanned,
+  krogerChunkLightTunaPouch,
+  starkistTunaCreationsBaconRanch,
+  dannonLightFitGreekBlueberry
+];

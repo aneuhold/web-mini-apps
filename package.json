@@ -10,7 +10,8 @@
     "start": "pnpm run build && serve out",
     "check": "tsc --noEmit",
     "lint": "eslint .",
-    "nutrition:meals": "tsx 'app/(routes)/nutrition/scripts/printMealPlans.ts'"
+    "nutrition:meals": "tsx 'app/(routes)/nutrition/scripts/printMealPlans.ts'",
+    "nutrition:optimize": "tsx 'app/(routes)/nutrition/scripts/optimizeMealPlan.ts'"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

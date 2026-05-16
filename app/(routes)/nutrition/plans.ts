@@ -177,6 +177,7 @@ const nonTrainingDay: NutritionPlan = {
 const nonTrainingDayNoChicken: NutritionPlan = {
   id: 'non-training-day-no-chicken',
   title: 'Non-Training Day (No Chicken)',
+  excludedFoods: [chickenBreast],
   targets: {
     calories: 1400,
     protein: 197,
