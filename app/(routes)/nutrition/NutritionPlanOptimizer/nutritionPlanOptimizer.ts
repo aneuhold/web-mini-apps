@@ -1,5 +1,5 @@
+import nutritionPlanCalculator from '../nutritionPlanCalculator';
 import type { Food, NutritionPlan } from '../types';
-import { weightHistory } from '../weightHistory';
 import dailyQuantityOptimizer from './dailyQuantityOptimizer';
 import foodBoundsCalculator from './foodBoundsCalculator';
 import macroScorer from './macroScorer';
@@ -34,11 +34,8 @@ class NutritionPlanOptimizer {
     const { targetPlan, availableFoods, preWorkoutMealIndex } = config;
     const numMeals = targetPlan.meals.length;
 
-    const latestWeight = weightHistory.at(-1);
-    if (latestWeight === undefined) {
-      throw new Error('weightHistory is empty — cannot compute RP fat floor');
-    }
-    const fatFloorGrams = RP_FAT_FLOOR_G_PER_LB * latestWeight.weightLb;
+    const targets = nutritionPlanCalculator.computeTargets(targetPlan);
+    const fatFloorGrams = RP_FAT_FLOOR_G_PER_LB * targetPlan.bodyweightLb;
 
     const allBounds = foodBoundsCalculator.computeAllBounds(
       availableFoods,
@@ -49,7 +46,7 @@ class NutritionPlanOptimizer {
 
     const dailyQuantities = dailyQuantityOptimizer.optimize(
       allBounds,
-      targetPlan.targets,
+      targets,
       fatFloorGrams,
       targetPlan.phase
     );
@@ -63,7 +60,7 @@ class NutritionPlanOptimizer {
 
     const actualTotals = macroScorer.computeTotals(dailyQuantities);
     const score = macroScorer.score(actualTotals, {
-      targets: targetPlan.targets,
+      targets,
       fatFloorGrams,
       phase: targetPlan.phase
     });
@@ -72,7 +69,9 @@ class NutritionPlanOptimizer {
       id: `${targetPlan.id}-optimized`,
       title: `${targetPlan.title} (Optimized)`,
       phase: targetPlan.phase,
-      targets: targetPlan.targets,
+      bodyweightLb: targetPlan.bodyweightLb,
+      calorieTarget: targetPlan.calorieTarget,
+      activityLevel: targetPlan.activityLevel,
       meals: optimizedMeals
     };
 

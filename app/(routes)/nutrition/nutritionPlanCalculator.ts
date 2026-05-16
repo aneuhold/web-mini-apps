@@ -1,10 +1,59 @@
 import type { Food, FoodTotal, MacroTotals, Meal, MealItem, NutritionPlan } from './types';
+import { ActivityLevel, DietPhase } from './types';
+
+const KCAL_PER_G_PROTEIN = 4;
+const KCAL_PER_G_CARBS = 4;
+const KCAL_PER_G_FAT = 9;
+const CUTTING_PROTEIN_G_PER_LB = 1.2;
+const BULKING_PROTEIN_G_PER_LB = 1.0;
+const MAINTENANCE_PROTEIN_G_PER_LB = 1.0;
+const FAT_FLOOR_G_PER_LB = 0.3;
+
+const ACTIVITY_CARB_MULTIPLIER: Record<ActivityLevel, number> = {
+  [ActivityLevel.NonTraining]: 0.5,
+  [ActivityLevel.Light]: 1.0,
+  [ActivityLevel.Moderate]: 1.5,
+  [ActivityLevel.Hard]: 2.0
+};
 
 /**
  * Computes macro totals for nutrition plan items, meals, and full days,
  * and formats those totals for display in the plan table.
  */
 class NutritionPlanCalculator {
+  /**
+   * Derive the daily macro target for a plan from its fixed bodyweight,
+   * calorie target, diet phase, and activity level. Returns the canonical
+   * target every consumer (page, printer, optimizer) should use.
+   *
+   * @param plan - The plan to derive targets for.
+   */
+  computeTargets(plan: NutritionPlan): MacroTotals {
+    const { bodyweightLb: bw, calorieTarget: t, phase } = plan;
+    switch (phase) {
+      case DietPhase.Cutting: {
+        const protein = CUTTING_PROTEIN_G_PER_LB * bw;
+        const fat = FAT_FLOOR_G_PER_LB * bw;
+        const carbs = (t - protein * KCAL_PER_G_PROTEIN - fat * KCAL_PER_G_FAT) / KCAL_PER_G_CARBS;
+        return { calories: t, protein, carbs, fat };
+      }
+      case DietPhase.Bulking: {
+        const protein = BULKING_PROTEIN_G_PER_LB * bw;
+        const fat = FAT_FLOOR_G_PER_LB * bw;
+        const carbs = (t - protein * KCAL_PER_G_PROTEIN - fat * KCAL_PER_G_FAT) / KCAL_PER_G_CARBS;
+        return { calories: t, protein, carbs, fat };
+      }
+      case DietPhase.Maintenance: {
+        const protein = MAINTENANCE_PROTEIN_G_PER_LB * bw;
+        const carbs = ACTIVITY_CARB_MULTIPLIER[plan.activityLevel] * bw;
+        const rawFat =
+          (t - protein * KCAL_PER_G_PROTEIN - carbs * KCAL_PER_G_CARBS) / KCAL_PER_G_FAT;
+        const fat = Math.max(rawFat, FAT_FLOOR_G_PER_LB * bw);
+        return { calories: t, protein, carbs, fat };
+      }
+    }
+  }
+
   /**
    * Compute the macro contribution of a single served item by scaling the
    * food's reference serving by `quantity / serving.amount`.

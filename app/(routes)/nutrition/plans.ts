@@ -8,18 +8,15 @@ import {
   riceCakeWhiteCheddar
 } from './foods';
 import type { NutritionPlan } from './types';
-import { DietPhase } from './types';
+import { ActivityLevel, DietPhase } from './types';
 
 const trainingDay: NutritionPlan = {
   id: 'training-day',
   title: 'Training Day',
   phase: DietPhase.Cutting,
-  targets: {
-    calories: 1850,
-    protein: 256,
-    carbs: 70,
-    fat: 60
-  },
+  bodyweightLb: 184,
+  calorieTarget: 1850,
+  activityLevel: ActivityLevel.Moderate,
   requiredFoods: [
     {
       food: chickenBreast,
@@ -80,12 +77,9 @@ const trainingDayShakeAlt: NutritionPlan = {
   id: 'training-day-shake-alt',
   title: 'Training Day (Shake Alt)',
   phase: DietPhase.Cutting,
-  targets: {
-    calories: 1850,
-    protein: 256,
-    carbs: 70,
-    fat: 60
-  },
+  bodyweightLb: 184,
+  calorieTarget: 1850,
+  activityLevel: ActivityLevel.Moderate,
   meals: [
     {
       time: '5:30 AM',
@@ -140,12 +134,9 @@ const nonTrainingDay: NutritionPlan = {
   id: 'non-training-day',
   title: 'Non-Training Day',
   phase: DietPhase.Cutting,
-  targets: {
-    calories: 1400,
-    protein: 197,
-    carbs: 20,
-    fat: 60
-  },
+  bodyweightLb: 184,
+  calorieTarget: 1400,
+  activityLevel: ActivityLevel.NonTraining,
   requiredFoods: [
     {
       food: chickenBreast,
@@ -194,13 +185,10 @@ const nonTrainingDayNoChicken: NutritionPlan = {
   id: 'non-training-day-no-chicken',
   title: 'Non-Training Day (No Chicken)',
   phase: DietPhase.Cutting,
+  bodyweightLb: 184,
+  calorieTarget: 1400,
+  activityLevel: ActivityLevel.NonTraining,
   excludedFoods: [chickenBreast],
-  targets: {
-    calories: 1400,
-    protein: 197,
-    carbs: 20,
-    fat: 60
-  },
   meals: [
     {
       time: 'Meal 1',

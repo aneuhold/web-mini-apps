@@ -37,11 +37,12 @@ const printOptimizedPlan = (plan: NutritionPlan): void => {
   });
 
   const { optimizedPlan, actualTotals, score } = result;
+  const targets = nutritionPlanCalculator.computeTargets(plan);
 
   console.log(`\n=== ${plan.title} → Optimized (score: ${score.toFixed(0)}) ===`);
-  console.log(`Target  : ${nutritionPlanPrinter.formatMacros(plan.targets)}`);
+  console.log(`Target  : ${nutritionPlanPrinter.formatMacros(targets)}`);
   console.log(`Actual  : ${nutritionPlanPrinter.formatMacros(actualTotals)}`);
-  console.log(`Delta   : ${nutritionPlanPrinter.formatDelta(actualTotals, plan.targets)}`);
+  console.log(`Delta   : ${nutritionPlanPrinter.formatDelta(actualTotals, targets)}`);
 
   if (preWorkoutMealIndex !== undefined) {
     console.log(
@@ -63,7 +64,7 @@ const printOptimizedPlan = (plan: NutritionPlan): void => {
   }
 
   console.log(`\nDay total : ${nutritionPlanPrinter.formatMacros(actualTotals)}`);
-  console.log(`Vs target : ${nutritionPlanPrinter.formatDelta(actualTotals, plan.targets)}`);
+  console.log(`Vs target : ${nutritionPlanPrinter.formatDelta(actualTotals, targets)}`);
 };
 
 for (const plan of nutritionPlans) {

@@ -41,11 +41,12 @@ class NutritionPlanPrinter {
    * @param plan - Nutrition plan to summarise.
    */
   printPlan(plan: NutritionPlan): void {
+    const targets = nutritionPlanCalculator.computeTargets(plan);
     const dayTotals = nutritionPlanCalculator.computePlanTotals(plan);
     const foodTotals = nutritionPlanCalculator.computeFoodTotals(plan);
 
     console.log(`\n=== ${plan.title} (${plan.id}) ===`);
-    console.log(`Target : ${this.formatMacros(plan.targets)}`);
+    console.log(`Target : ${this.formatMacros(targets)}`);
 
     if (foodTotals.length > 0) {
       const formatted = foodTotals
@@ -64,7 +65,7 @@ class NutritionPlanPrinter {
     }
 
     console.log('\nDay total : ' + this.formatMacros(dayTotals));
-    console.log('Vs target : ' + this.formatDelta(dayTotals, plan.targets));
+    console.log('Vs target : ' + this.formatDelta(dayTotals, targets));
   }
 }
 

@@ -39,29 +39,10 @@ Use the **3,500 Calorie Rule**: one pound of tissue ≈ 3,500 calories.
 3.  **Daily Calorie Adjustment:** Weekly Adjustment ÷ 7 days.
 4.  **Daily Target:** Maintenance Calories +/- Daily Adjustment.
 
-## 3. Macronutrient Balancing (Grams per Pound)
-
-Calculate macros in **grams per pound of bodyweight** rather than percentages — this guarantees physiological needs are met regardless of total calories.
-
-| Macronutrient     | Cutting (Fat Loss)       | Bulking (Massing)             | Maintenance                    |
-| :---------------- | :----------------------- | :---------------------------- | :----------------------------- |
-| **Protein**       | **1.0g – 1.5g / lb**     | **~1.0g / lb**                | **1.0g / lb**                  |
-| **Fats**          | **0.3g / lb (Minimum)**  | **0.3g / lb min + Remainder** | **0.3g / lb min + remainder**  |
-| **Carbohydrates** | **Remainder (min 1.0g)** | **Remainder (maximize)**      | **Activity-Based** (see below) |
-
-**Maintenance Carbohydrate Starting Points:**
-
-- **Non-training:** 0.5g / lb
-- **Light Day:** 1.0g / lb
-- **Moderate Day:** 1.5g / lb
-- **Hard Day:** 2.0g / lb
-
-_Reference: Table 10.2_
-
-## 4. Fine-Tuning Algorithm
+## 3. Fine-Tuning Algorithm
 
 Initial calculations are estimates. Adjust based on **average weight trends** over 2–3 weeks — never single weigh-ins.
 
 - **To shift weight change by 0.5 lb/week:** Adjust intake by **250 calories/day**.
 - **To shift weight change by 1.0 lb/week:** Adjust intake by **500 calories/day**.
-- **Adjustment Priority:** When cutting, subtract from **fats first** until they reach 0.3g/lb, then subtract from **carbohydrates**.
+- **Adjustment Priority:** When cutting, subtract from **fats first** until they hit the fat floor, then subtract from **carbohydrates**.

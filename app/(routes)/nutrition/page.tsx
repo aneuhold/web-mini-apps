@@ -34,7 +34,7 @@ export default function NutritionPage() {
     nutritionPlans.find((candidate) => candidate.id === selectedPlanId) ?? nutritionPlans[0];
   const dayTotals = nutritionPlanCalculator.computePlanTotals(plan);
   const foodTotals = nutritionPlanCalculator.computeFoodTotals(plan);
-  const { targets } = plan;
+  const targets = nutritionPlanCalculator.computeTargets(plan);
 
   return (
     <article>

@@ -68,6 +68,20 @@ export enum DietPhase {
 }
 
 /**
+ * Training intensity descriptor for a plan. Drives the carb multiplier in
+ * the Maintenance branch of `nutritionPlanCalculator.computeTargets`;
+ * harmless on cutting and bulking plans (carbs there come from the
+ * remainder formula), but kept required so every plan declares the
+ * training intensity it is sized for.
+ */
+export enum ActivityLevel {
+  NonTraining = 'NonTraining',
+  Light = 'Light',
+  Moderate = 'Moderate',
+  Hard = 'Hard'
+}
+
+/**
  * Groups of mutually exclusive foods: the optimizer will pick at most one
  * food from each category per day. Assign a category to a food whenever
  * another food of the same type exists in the pool.
@@ -134,7 +148,12 @@ export interface NutritionPlan {
   id: string;
   title: string;
   phase: DietPhase;
-  targets: MacroTotals;
+  /** Fixed bodyweight (lb) the plan is sized for. Drives macro target math. */
+  bodyweightLb: number;
+  /** Daily calorie target (kcal) for the plan. */
+  calorieTarget: number;
+  /** Training intensity descriptor; consumed by the Maintenance branch of `computeTargets`. */
+  activityLevel: ActivityLevel;
   /**
    * Foods that must not appear in this plan when the optimizer selects from
    * the full food pool. Use for plans like "No Chicken" where a normally
