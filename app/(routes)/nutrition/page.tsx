@@ -68,15 +68,15 @@ export default function NutritionPage() {
         </dl>
         <dl>
           <dt>Protein</dt>
-          <dd>{targets.protein}</dd>
+          <dd>{nutritionPlanCalculator.formatMacro(targets.protein)}</dd>
         </dl>
         <dl>
           <dt>Carbs</dt>
-          <dd>{targets.carbs}</dd>
+          <dd>{nutritionPlanCalculator.formatMacro(targets.carbs)}</dd>
         </dl>
         <dl>
           <dt>Fat</dt>
-          <dd>{targets.fat}</dd>
+          <dd>{nutritionPlanCalculator.formatMacro(targets.fat)}</dd>
         </dl>
       </section>
 

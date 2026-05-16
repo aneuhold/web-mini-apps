@@ -175,8 +175,7 @@ class NutritionPlanCalculator {
    * @param value - Raw macro gram total.
    */
   formatMacro(value: number): string {
-    const rounded = Math.round(value * 10) / 10;
-    return rounded.toString();
+    return value.toFixed(1);
   }
 
   private emptyTotals(): MacroTotals {
