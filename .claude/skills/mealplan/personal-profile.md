@@ -67,8 +67,7 @@ Reference document for nutrition coaching context. Covers lifestyle, schedule, a
 **Food logistics**
 
 - Does not cook outside of one weekly chicken batch (~400g cooked/day available)
-- Keeps ~30 lb of whey protein powder on hand at all times — shakes are always available as backup or supplement
-- At least 1 shake/day is standard, more as needed to fill protein targets
+- Keeps ~30 lb of whey protein powder on hand at all times — shakes are always available as backup or supplement, but there is no daily minimum (use only when macros call for it)
 - "Meals" are assembly, not recipes — no cooking during the week
 
 **Planning defaults**

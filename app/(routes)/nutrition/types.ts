@@ -44,6 +44,14 @@ export interface Food {
    */
   maxServingAmountPerMeal?: number;
   /**
+   * Self-imposed maximum quantity (in `serving.unitLabel`) for this food
+   * across the entire day. Use for caps like "no more than 50g of peanut
+   * butter total per day." The optimizer will not allocate more than this
+   * in the daily total. Combine with `maxServingAmountPerMeal` to constrain
+   * both per-meal and per-day.
+   */
+  maxServingAmountPerPlan?: number;
+  /**
    * The step-size of a serving amount if used in a meal. For example, if a food's serving
    * amount is 200g and `allowedStepServingAmountPerMeal` is 50g, then valid meal quantities
    * for that food are 0g, 50g, 100g, 150g, 200g, 250g, etc. This must be taken into account within

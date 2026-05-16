@@ -28,7 +28,7 @@ class FoodBoundsCalculator {
     const perMealMax =
       food.maxServingAmountPerMeal ?? food.serving.amount * PRACTICAL_MAX_SERVINGS_PER_MEAL;
 
-    const dailyMax = perMealMax * numMeals;
+    const dailyMax = Math.min(perMealMax * numMeals, food.maxServingAmountPerPlan ?? Infinity);
     const minUnits = perMealMin > 0 ? Math.ceil(perMealMin / step) : 0;
     const maxUnits = Math.floor(perMealMax / step);
 
