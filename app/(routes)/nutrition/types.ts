@@ -22,6 +22,11 @@ export interface Food {
   name: string;
   serving: FoodServing;
   /**
+   * Mutual-exclusion group. The optimizer picks at most one food per
+   * category per day. Omit for foods that have no same-type competitor.
+   */
+  category?: FoodCategory;
+  /**
    * Self-imposed minimum quantity (in `serving.unitLabel`) when this food
    * appears in a meal at all. Captures rules like "if chicken shows up,
    * it's at least 200g" so the constraint travels with the food rather
@@ -36,6 +41,19 @@ export interface Food {
    * the constrains of `minServingAmountPerMeal` and `maxServingAmountPerMeal` if those are set.
    */
   allowedStepServingAmountPerMeal?: number;
+}
+
+/**
+ * Groups of mutually exclusive foods: the optimizer will pick at most one
+ * food from each category per day. Assign a category to a food whenever
+ * another food of the same type exists in the pool.
+ */
+export enum FoodCategory {
+  CannedVegetable = 'CannedVegetable',
+  PeanutButter = 'PeanutButter',
+  ProteinBar = 'ProteinBar',
+  ProteinPowder = 'ProteinPowder',
+  TunaPouch = 'TunaPouch'
 }
 
 /**
@@ -94,4 +112,10 @@ export interface NutritionPlan {
   targets: MacroTotals;
   meals: Meal[];
   notes?: string;
+  /**
+   * Foods that must not appear in this plan when the optimizer selects from
+   * the full food pool. Use for plans like "No Chicken" where a normally
+   * available food is intentionally off the table.
+   */
+  excludedFoods?: Food[];
 }
