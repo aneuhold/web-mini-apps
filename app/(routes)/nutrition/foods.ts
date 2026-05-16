@@ -13,6 +13,16 @@ export const chickenBreast: Food = {
 export const bodyStrongWheyChocolate: Food = {
   name: 'BodyStrong Whey, Chocolate',
   serving: { amount: 2, unitLabel: 'scoop', calories: 280, protein: 50, carbs: 7, fat: 4.6 },
+  category: FoodCategory.ProteinPowder,
+  minServingAmountPerMeal: 2,
+  maxServingAmountPerMeal: 4,
+  allowedStepServingAmountPerMeal: 1
+};
+
+export const optimumNutritionGoldStandardWhey: Food = {
+  name: 'Optimum Nutrition Gold Standard Whey',
+  serving: { amount: 1, unitLabel: 'scoop', calories: 120, protein: 24, carbs: 3, fat: 1.5 },
+  category: FoodCategory.ProteinPowder,
   minServingAmountPerMeal: 2,
   maxServingAmountPerMeal: 4,
   allowedStepServingAmountPerMeal: 1
@@ -133,6 +143,7 @@ export const dannonLightFitGreekBlueberry: Food = {
 export const allFoods: Food[] = [
   chickenBreast,
   bodyStrongWheyChocolate,
+  optimumNutritionGoldStandardWhey,
   caseinProteinShakeVanilla,
   riceCakeWhiteCheddar,
   banana,

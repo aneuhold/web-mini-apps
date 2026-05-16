@@ -7,15 +7,16 @@ import {
   greenBeansCanned,
   kindThinsPBDarkChocolate,
   krogerChunkyPB,
+  optimumNutritionGoldStandardWhey,
   peasCanned,
   riceCakeWhiteCheddar
-} from './foods';
-import type { NutritionPlan } from './types';
-import { ActivityLevel, DietPhase } from './types';
+} from '../foods';
+import type { NutritionPlan } from '../types';
+import { ActivityLevel, DietPhase } from '../types';
 
-const trainingDay: NutritionPlan = {
+export const trainingDay: NutritionPlan = {
   id: 'training-day',
-  title: 'Training Day',
+  title: 'Default',
   phase: DietPhase.Cutting,
   bodyweightLb: 184,
   calorieTarget: 1850,
@@ -77,9 +78,9 @@ const trainingDay: NutritionPlan = {
     'Each meal has a single protein source — chicken or whey, never both. Protein lands ~48 / 50 / 41 / 52 / 57g across 5 feedings (~247g day, ~9g short of 256 target). Carb cluster stays around the 2:40 PM workout. Fewer items per meal: chicken+PB, shake, chicken+beans, shake+banana+rice cake, shake+PB.'
 };
 
-const trainingDayV2: NutritionPlan = {
+export const trainingDayV2: NutritionPlan = {
   id: 'training-day-v2',
-  title: 'Training Day v2',
+  title: 'v2',
   phase: DietPhase.Cutting,
   bodyweightLb: 184,
   calorieTarget: 1850,
@@ -139,9 +140,9 @@ const trainingDayV2: NutritionPlan = {
   ]
 };
 
-const trainingDayShakeAlt: NutritionPlan = {
+export const trainingDayShakeAlt: NutritionPlan = {
   id: 'training-day-shake-alt',
-  title: 'Training Day (Shake Alt)',
+  title: 'Shake Alt',
   phase: DietPhase.Cutting,
   bodyweightLb: 184,
   calorieTarget: 1850,
@@ -205,62 +206,14 @@ const trainingDayShakeAlt: NutritionPlan = {
   ]
 };
 
-const nonTrainingDay: NutritionPlan = {
-  id: 'non-training-day',
-  title: 'Non-Training Day',
+export const trainingDayOnWhey: NutritionPlan = {
+  id: 'training-day-on-whey',
+  title: 'ON Whey',
   phase: DietPhase.Cutting,
   bodyweightLb: 184,
-  calorieTarget: 1400,
-  activityLevel: ActivityLevel.NonTraining,
-  requiredFoods: [
-    {
-      food: chickenBreast,
-      quantity: 200
-    }
-  ],
-  meals: [
-    {
-      time: 'Meal 1',
-      name: 'Meal 1',
-      items: [
-        { food: chickenBreast, quantity: 200 },
-        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
-      ]
-    },
-    {
-      time: 'Meal 2',
-      name: 'Meal 2',
-      totalLabelSuffix: '(w/ beans)',
-      items: [
-        { food: chickenBreast, quantity: 200 },
-        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
-        {
-          food: greenBeansCanned,
-          quantity: 1,
-          amountDisplay: '1 can',
-          optional: true,
-          optionalLabel: 'optional volume'
-        }
-      ]
-    },
-    {
-      time: 'Meal 3',
-      name: 'Meal 3',
-      items: [
-        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
-        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
-      ]
-    }
-  ]
-};
-
-const nonTrainingDayV2: NutritionPlan = {
-  id: 'non-training-day-v2',
-  title: 'Non-Training Day v2',
-  phase: DietPhase.Cutting,
-  bodyweightLb: 184,
-  calorieTarget: 1400,
-  activityLevel: ActivityLevel.NonTraining,
+  calorieTarget: 1850,
+  activityLevel: ActivityLevel.Moderate,
+  excludedFoods: [bodyStrongWheyChocolate],
   requiredFoods: [
     {
       food: chickenBreast,
@@ -269,85 +222,53 @@ const nonTrainingDayV2: NutritionPlan = {
   ],
   meals: [
     {
-      time: 'Meal 1',
-      name: 'Meal 1',
+      time: '5:30 AM',
+      name: 'Breakfast',
       items: [
-        { food: bodyStrongWheyChocolate, quantity: 3, amountDisplay: '3 scoops shake' },
-        { food: krogerChunkyPB, quantity: 16, amountDisplay: '16g (~1 tbsp)' }
+        { food: optimumNutritionGoldStandardWhey, quantity: 2, amountDisplay: '2 scoops shake' },
+        { food: riceCakeWhiteCheddar, quantity: 1 },
+        { food: krogerChunkyPB, quantity: 11, amountDisplay: '11g (~3/4 tbsp)' }
       ]
     },
     {
-      time: 'Meal 2',
-      name: 'Meal 2',
+      time: '8:30 AM',
+      name: 'Break',
+      items: [
+        { food: dannonLightFitGreekBlueberry, quantity: 1, amountDisplay: '1 container' },
+        { food: riceCakeWhiteCheddar, quantity: 1 },
+        { food: kindThinsPBDarkChocolate, quantity: 1, amountDisplay: '1 bar' },
+        { food: krogerChunkyPB, quantity: 11, amountDisplay: '11g (~3/4 tbsp)' }
+      ]
+    },
+    {
+      time: '11:00 AM',
+      name: 'Lunch',
       items: [
         { food: chickenBreast, quantity: 200 },
-        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
-        { food: krogerChunkyPB, quantity: 16, amountDisplay: '16g (~1 tbsp)' }
+        { food: optimumNutritionGoldStandardWhey, quantity: 2, amountDisplay: '2 scoops shake' },
+        { food: riceCakeWhiteCheddar, quantity: 1 }
       ]
     },
     {
-      time: 'Meal 3',
-      name: 'Meal 3',
+      time: '2:40 PM',
+      name: 'Pre-workout',
+      items: [
+        { food: riceCakeWhiteCheddar, quantity: 1 },
+        { food: peasCanned, quantity: 1, amountDisplay: '1 can' },
+        { food: krogerChunkyPB, quantity: 12, amountDisplay: '12g (~3/4 tbsp)' }
+      ]
+    },
+    {
+      time: '4:50 PM',
+      name: 'Dinner',
       items: [
         { food: chickenBreast, quantity: 200 },
-        { food: krogerChunkyPB, quantity: 16, amountDisplay: '16g (~1 tbsp)' }
+        { food: riceCakeWhiteCheddar, quantity: 1 },
+        { food: kindThinsPBDarkChocolate, quantity: 1, amountDisplay: '1 bar' },
+        { food: krogerChunkyPB, quantity: 12, amountDisplay: '12g (~3/4 tbsp)' }
       ]
     }
-  ]
+  ],
+  notes:
+    'Optimizer-tuned: 4 ON scoops (split 2 breakfast / 2 lunch) clear the protein target without the fat drag of an extra bar; pre-workout uses peas + rice cake + PB so the 2:40 carb cluster has no bar fat in the workout window. Lands within 2 cal / 1g of every macro vs the cutting target. Casein dropped — at 24g P / 120 cal per scoop, ON Whey is the leaner anchor.'
 };
-
-const nonTrainingDayNoChicken: NutritionPlan = {
-  id: 'non-training-day-no-chicken',
-  title: 'Non-Training Day (No Chicken)',
-  phase: DietPhase.Cutting,
-  bodyweightLb: 184,
-  calorieTarget: 1400,
-  activityLevel: ActivityLevel.NonTraining,
-  excludedFoods: [chickenBreast],
-  meals: [
-    {
-      time: 'Meal 1',
-      name: 'Meal 1',
-      items: [
-        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
-        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
-      ]
-    },
-    {
-      time: 'Meal 2',
-      name: 'Meal 2',
-      totalLabelSuffix: '(w/ green beans)',
-      items: [
-        { food: bodyStrongWheyChocolate, quantity: 3, amountDisplay: '3 scoops shake' },
-        {
-          food: greenBeansCanned,
-          quantity: 1,
-          amountDisplay: '1 can',
-          optional: true,
-          optionalLabel: 'optional volume'
-        }
-      ]
-    },
-    {
-      time: 'Meal 3',
-      name: 'Meal 3',
-      items: [
-        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
-        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
-      ]
-    }
-  ]
-};
-
-/**
- * Every nutrition plan available in the UI. The first entry is selected by
- * default. Add new plans here to make them available in the dropdown.
- */
-export const nutritionPlans: NutritionPlan[] = [
-  trainingDay,
-  trainingDayV2,
-  trainingDayShakeAlt,
-  nonTrainingDay,
-  nonTrainingDayV2,
-  nonTrainingDayNoChicken
-];
