@@ -7,8 +7,8 @@ import {
   krogerChunkyPB,
   riceCakeWhiteCheddar
 } from './foods';
-import { DietPhase } from './types';
 import type { NutritionPlan } from './types';
+import { DietPhase } from './types';
 
 const trainingDay: NutritionPlan = {
   id: 'training-day',
@@ -20,6 +20,12 @@ const trainingDay: NutritionPlan = {
     carbs: 70,
     fat: 60
   },
+  requiredFoods: [
+    {
+      food: chickenBreast,
+      quantity: 400
+    }
+  ],
   meals: [
     {
       time: '5:30 AM',
@@ -140,6 +146,12 @@ const nonTrainingDay: NutritionPlan = {
     carbs: 20,
     fat: 60
   },
+  requiredFoods: [
+    {
+      food: chickenBreast,
+      quantity: 200
+    }
+  ],
   meals: [
     {
       time: 'Meal 1',

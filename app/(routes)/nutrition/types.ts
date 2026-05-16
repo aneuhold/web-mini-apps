@@ -135,12 +135,21 @@ export interface NutritionPlan {
   title: string;
   phase: DietPhase;
   targets: MacroTotals;
-  meals: Meal[];
-  notes?: string;
   /**
    * Foods that must not appear in this plan when the optimizer selects from
    * the full food pool. Use for plans like "No Chicken" where a normally
    * available food is intentionally off the table.
    */
   excludedFoods?: Food[];
+  /**
+   * Foods that must appear in this plan with at least the specified daily
+   * total quantity (in `food.serving.unitLabel`). Use for constraints like
+   * "include at least 200g of chicken breast every day." The optimizer
+   * adds these foods to the candidate pool even if absent from
+   * `availableFoods` and will not let their daily total drop below the
+   * requested quantity (rounded up to the food's step).
+   */
+  requiredFoods?: FoodTotal[];
+  meals: Meal[];
+  notes?: string;
 }

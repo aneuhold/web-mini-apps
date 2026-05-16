@@ -40,7 +40,11 @@ class NutritionPlanOptimizer {
     }
     const fatFloorGrams = RP_FAT_FLOOR_G_PER_LB * latestWeight.weightLb;
 
-    const allBounds = foodBoundsCalculator.computeAllBounds(availableFoods, numMeals);
+    const allBounds = foodBoundsCalculator.computeAllBounds(
+      availableFoods,
+      numMeals,
+      targetPlan.requiredFoods
+    );
     const boundsMap = new Map<Food, FoodBounds>(allBounds.map((b) => [b.food, b]));
 
     const dailyQuantities = dailyQuantityOptimizer.optimize(

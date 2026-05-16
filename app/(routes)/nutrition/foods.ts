@@ -5,6 +5,8 @@ export const chickenBreast: Food = {
   name: 'Chicken breast',
   serving: { amount: 476, unitLabel: 'g', calories: 514, protein: 96.9, carbs: 0, fat: 14.6 },
   minServingAmountPerMeal: 200,
+  // Only because I don't have enough chicken in the week to support more than this per day.
+  maxServingAmountPerPlan: 400,
   allowedStepServingAmountPerMeal: 25
 };
 
