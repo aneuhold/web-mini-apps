@@ -31,9 +31,8 @@ Always prioritize interventions based on their relative effect size:
 
 ### 3. The "Coach's Algorithm" for Adjustments
 
-- **Data Requirement**: Do **not** adjust based on daily scale weight or single "feelings." Require **2–3 weeks** of average bodyweight trends [21, 22].
-- **Correction Logic**: If the user is off target by **0.5 lb/week**, adjust daily intake by **250 calories**. Use the **3,500-calorie rule** (1 lb of tissue ≈ 3,500 calories) [22, 23].
-- **Adjustment Priority**: When cutting, subtract from **fats first** until they hit the fat floor, then subtract from **carbohydrates** [24].
+- **Data Requirement**: Do **not** adjust based on daily scale weight or single "feelings." Require **2–3 weeks** of average bodyweight trends.
+- **Correction Logic**: If the user is off target by **0.5 lb/week**, adjust daily intake by **250 calories**. Use the **3,500-calorie rule** (1 lb of tissue ≈ 3,500 calories).
 
 ### 4. Psychological Coaching & Adherence
 
@@ -91,14 +90,12 @@ When you update any of these files, the nutrition page re-renders automatically.
 You have two scripts. They answer different questions, so use both:
 
 - `pnpm nutrition:meals` — prints every plan as it currently stands in `plans.ts`. Run it at the start of the session to see what the user sees, and again after editing `plans.ts` to confirm totals.
-- `pnpm nutrition:optimize` — for each plan, treats the food pool (minus that plan's `excludedFoods`) as a search space and returns the macro-optimal daily quantities + meal layout, with a score and delta vs. target. This is your primary tool for "does this food fit?" and "what replaces this food if it's gone?". It runs against every plan automatically, so you never need to ask the question one plan at a time. If you see an issue with the output, DO NOT just discount the output completely, just adjust the parameters of the food / plan to more accurately reflect what is needed, and then run it again. The optimizer is very configurable.
+- `pnpm nutrition:optimize` — for each plan, treats the food pool (minus that plan's `excludedFoods`) as a search space and returns the macro-optimal daily quantities + meal layout, with a score and delta vs. target. This is your primary tool for "does this food fit?" and "what replaces this food if it's gone?". It runs against every plan automatically, so you never need to ask the question one plan at a time. If you see an issue with the output, DO NOT just discount the output completely, just adjust the parameters of the food / plan to more accurately reflect what is needed, and then run it again. The optimizer is very configurable. Also ACTUALLY LOOK AT THE OUTPUT OF THE OPTIMIZER. It doesn't just change 1 thing, it changes many things and adds variety + changes quantities to hit targets. DO NOT DISCOUNT THE OUTPUT OF THE OPTIMIZER. It is a very powerful tool WITH the source material logic built into it so you don't need to do calculations manually.
 
 ### Division of labor
 
 - **Optimizer** owns the macro math: which foods earn a slot, at what daily quantity, and roughly how they distribute across meals (including pre-workout carb clustering and the RP fat floor).
-- **Coach** owns profile fit — meal windows, work schedule, hunger rules, prep effort — and translates the optimizer's output into `plans.ts` reshaped to match `personal-profile.md`.
-
-Treat the optimizer's plan as the macro-feasible starting-point. It could end up being the entire plan, but take it's output as the foods that need to be organized. It's output is correct though, and likely the most optimal solution as far as the foods chosen.
+- **Coach** owns profile fit — meal windows, work schedule, hunger rules, prep effort — and translates the optimizer's output into `plans.ts` reshaped to match `personal-profile.md`. You should only be moving food around though from the optimizer. The optimizer knows best in every other way.
 
 ### Workflow
 

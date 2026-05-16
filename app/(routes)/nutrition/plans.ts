@@ -4,6 +4,8 @@ import {
   caseinProteinShakeVanilla,
   chickenBreast,
   greenBeansCanned,
+  kindThinsPBDarkChocolate,
+  krogerChunkLightTunaPouch,
   krogerChunkyPB,
   riceCakeWhiteCheddar
 } from './foods';
@@ -71,6 +73,71 @@ const trainingDay: NutritionPlan = {
   ],
   notes:
     'Each meal has a single protein source — chicken or whey, never both. Protein lands ~48 / 50 / 41 / 52 / 57g across 5 feedings (~247g day, ~9g short of 256 target). Carb cluster stays around the 2:40 PM workout. Fewer items per meal: chicken+PB, shake, chicken+beans, shake+banana+rice cake, shake+PB.'
+};
+
+const trainingDayV2: NutritionPlan = {
+  id: 'training-day-v2',
+  title: 'Training Day v2',
+  phase: DietPhase.Cutting,
+  bodyweightLb: 184,
+  calorieTarget: 1850,
+  activityLevel: ActivityLevel.Moderate,
+  requiredFoods: [
+    {
+      food: chickenBreast,
+      quantity: 400
+    }
+  ],
+  meals: [
+    {
+      time: '5:30 AM',
+      name: 'Breakfast',
+      items: [
+        { food: chickenBreast, quantity: 200 },
+        { food: krogerChunkyPB, quantity: 16, amountDisplay: '16g (~1 tbsp)' },
+        { food: krogerChunkLightTunaPouch, quantity: 1, amountDisplay: '1 pouch' }
+      ]
+    },
+    {
+      time: '8:30 AM',
+      items: [
+        { food: caseinProteinShakeVanilla, quantity: 1, amountDisplay: '1 bottle' },
+        { food: kindThinsPBDarkChocolate, quantity: 1, amountDisplay: '1 bar' }
+      ]
+    },
+    {
+      time: '11:00 AM',
+      name: 'Lunch',
+      totalLabelSuffix: '(w/ beans)',
+      items: [
+        { food: chickenBreast, quantity: 200 },
+        {
+          food: greenBeansCanned,
+          quantity: 1,
+          amountDisplay: '1 can',
+          optional: true,
+          optionalLabel: 'optional volume'
+        }
+      ]
+    },
+    {
+      time: '2:40 PM',
+      name: 'Pre-workout',
+      items: [
+        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
+        { food: banana, quantity: 1 },
+        { food: riceCakeWhiteCheddar, quantity: 2 }
+      ]
+    },
+    {
+      time: '4:50 PM',
+      name: 'Dinner',
+      items: [
+        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
+        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
+      ]
+    }
+  ]
 };
 
 const trainingDayShakeAlt: NutritionPlan = {
@@ -176,9 +243,7 @@ const nonTrainingDay: NutritionPlan = {
         { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
       ]
     }
-  ],
-  notes:
-    'M2 doubles up chicken + a 2-scoop shake to avoid concentrating all 4 daily scoops in one big shake. Protein ~48 / 91 / 57g (~195g day, ~2g short of 197). Calories distribute evenly across the three meals (~396 / 432 / 460). Carbs ~32g vs 20g target — unavoidable from whey + PB.'
+  ]
 };
 
 const nonTrainingDayNoChicken: NutritionPlan = {
@@ -221,9 +286,7 @@ const nonTrainingDayNoChicken: NutritionPlan = {
         { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
       ]
     }
-  ],
-  notes:
-    'Chicken-out fallback, calorie-first. M1 and M3 mirror the standard whey+PB combo; M2 is a 3-scoop shake + beans (no PB) to keep cal at target. Protein lands ~57 / 78 / 57g (~192g day, ~5g short of 197 target — RP-acceptable). Calories ~1393 (~7 under target, on the money). Fat ~46g dips below the 0.3g/lb daily floor (~55.5g at 185 lb), but this is a 1–2 day/week swap and weekly fat average stays above floor from chicken+PB on training days. Carbs ~53g vs 20g — unavoidable from whey. Hitting cal, P, and F-floor simultaneously is impossible with only whey/PB/beans (chicken is what makes the regular plan work); per RP priority, calories dominate, so cal target wins this trade.'
+  ]
 };
 
 /**
@@ -232,6 +295,7 @@ const nonTrainingDayNoChicken: NutritionPlan = {
  */
 export const nutritionPlans: NutritionPlan[] = [
   trainingDay,
+  trainingDayV2,
   trainingDayShakeAlt,
   nonTrainingDay,
   nonTrainingDayNoChicken

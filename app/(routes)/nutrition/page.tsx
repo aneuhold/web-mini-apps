@@ -35,6 +35,7 @@ export default function NutritionPage() {
   const dayTotals = nutritionPlanCalculator.computePlanTotals(plan);
   const foodTotals = nutritionPlanCalculator.computeFoodTotals(plan);
   const targets = nutritionPlanCalculator.computeTargets(plan);
+  const score = nutritionPlanCalculator.computeScore(plan, dayTotals);
 
   return (
     <article>
@@ -77,6 +78,12 @@ export default function NutritionPage() {
         <dl>
           <dt>Fat</dt>
           <dd>{nutritionPlanCalculator.formatMacro(targets.fat)}</dd>
+        </dl>
+        <dl>
+          <dt>Score</dt>
+          <dd>
+            {Math.round(score)} <small>(lower is better)</small>
+          </dd>
         </dl>
       </section>
 

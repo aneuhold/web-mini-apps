@@ -66,6 +66,8 @@ class NutritionPlanPrinter {
 
     console.log('\nDay total : ' + this.formatMacros(dayTotals));
     console.log('Vs target : ' + this.formatDelta(dayTotals, targets));
+    const score = nutritionPlanCalculator.computeScore(plan, dayTotals);
+    console.log(`Score     : ${Math.round(score)} (lower is better)`);
   }
 }
 

@@ -1,3 +1,4 @@
+import macroScorer from './NutritionPlanOptimizer/macroScorer';
 import type { Food, FoodTotal, MacroTotals, Meal, MealItem, NutritionPlan } from './types';
 import { ActivityLevel, DietPhase } from './types';
 
@@ -111,6 +112,22 @@ class NutritionPlanCalculator {
       }
     }
     return Array.from(totals, ([food, quantity]) => ({ food, quantity }));
+  }
+
+  /**
+   * Score a plan's actual day totals against its targets using the same
+   * weighted penalty function the optimizer uses. Lower is better; 0 means
+   * the plan hits every macro priority for its phase.
+   *
+   * @param plan - The plan whose targets and phase drive the scoring.
+   * @param actual - The plan's actual day-total macros (from `computePlanTotals`).
+   */
+  computeScore(plan: NutritionPlan, actual: MacroTotals): number {
+    return macroScorer.score(actual, {
+      targets: this.computeTargets(plan),
+      fatFloorGrams: FAT_FLOOR_G_PER_LB * plan.bodyweightLb,
+      phase: plan.phase
+    });
   }
 
   /**
