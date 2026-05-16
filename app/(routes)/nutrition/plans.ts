@@ -246,6 +246,58 @@ const nonTrainingDay: NutritionPlan = {
   ]
 };
 
+const nonTrainingDayV2: NutritionPlan = {
+  id: 'non-training-day-v2',
+  title: 'Non-Training Day v2',
+  phase: DietPhase.Cutting,
+  bodyweightLb: 184,
+  calorieTarget: 1400,
+  activityLevel: ActivityLevel.NonTraining,
+  requiredFoods: [
+    {
+      food: chickenBreast,
+      quantity: 400
+    }
+  ],
+  meals: [
+    {
+      time: 'Meal 1',
+      name: 'Meal 1',
+      items: [
+        { food: chickenBreast, quantity: 200 },
+        { food: krogerChunkLightTunaPouch, quantity: 2, amountDisplay: '2 pouches' },
+        { food: krogerChunkyPB, quantity: 14, amountDisplay: '14g (~1 tbsp)' }
+      ]
+    },
+    {
+      time: 'Meal 2',
+      name: 'Meal 2',
+      totalLabelSuffix: '(w/ beans)',
+      items: [
+        { food: chickenBreast, quantity: 200 },
+        { food: krogerChunkLightTunaPouch, quantity: 1, amountDisplay: '1 pouch' },
+        { food: krogerChunkyPB, quantity: 14, amountDisplay: '14g (~1 tbsp)' },
+        {
+          food: greenBeansCanned,
+          quantity: 1,
+          amountDisplay: '1 can',
+          optional: true,
+          optionalLabel: 'optional volume'
+        }
+      ]
+    },
+    {
+      time: 'Meal 3',
+      name: 'Meal 3',
+      items: [
+        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
+        { food: krogerChunkLightTunaPouch, quantity: 1, amountDisplay: '1 pouch' },
+        { food: krogerChunkyPB, quantity: 28, amountDisplay: '28g (~2 tbsp)' }
+      ]
+    }
+  ]
+};
+
 const nonTrainingDayNoChicken: NutritionPlan = {
   id: 'non-training-day-no-chicken',
   title: 'Non-Training Day (No Chicken)',
@@ -298,5 +350,6 @@ export const nutritionPlans: NutritionPlan[] = [
   trainingDayV2,
   trainingDayShakeAlt,
   nonTrainingDay,
+  nonTrainingDayV2,
   nonTrainingDayNoChicken
 ];
