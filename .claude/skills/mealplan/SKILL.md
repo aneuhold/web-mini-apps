@@ -100,13 +100,14 @@ You have two scripts. They answer different questions, so use both:
 - **Optimizer** owns the macro math: which foods earn a slot, at what daily quantity, and roughly how they distribute across meals (including pre-workout carb clustering and the RP fat floor).
 - **Coach** owns profile fit — meal windows, work schedule, hunger rules, prep effort — and translates the optimizer's output into `plans.ts` reshaped to match `personal-profile.md`.
 
-Treat the optimizer's plan as the macro-feasible **starting point**, not the final plan. The score tells you how much slack you have to reshape it without breaking targets.
+Treat the optimizer's plan as the macro-feasible starting-point. It could end up being the entire plan, but take it's output as the foods that need to be organized. It's output is correct though, and likely the most optimal solution as far as the foods chosen.
 
 ### Workflow
 
-1. **New food candidate.** Add it to `foods.ts` with the right constraints (`category`, `minServingAmountPerMeal`, `maxServingAmountPerMeal`, `allowedStepServingAmountPerMeal`). Read the JSDoc on those fields in `types.ts` — that's where the rules for each constraint live. Then run `pnpm nutrition:optimize`. If the food lands in any optimized plan, integrate it; if it doesn't, the optimizer preferred existing foods on macros, and the honest answer to the user is that it doesn't earn a slot today.
+1. **New food candidate.** Add it to `foods.ts` with the right constraints (`category`, `minServingAmountPerMeal`, `maxServingAmountPerMeal`, `maxServingAmountPerPlan`, `allowedStepServingAmountPerMeal`). Read the JSDoc on those fields in `types.ts` — that's where the rules for each constraint live. Then run `pnpm nutrition:optimize`. If the food lands in any optimized plan, integrate it; if it doesn't, the optimizer preferred existing foods on macros, and the honest answer to the user is that it doesn't earn a slot today.
 2. **Food temporarily unavailable.** Add it to `excludedFoods` on the affected plan(s), run the optimizer, and translate the result back into `plans.ts` reshaped for profile constraints.
-3. **"Will X fit?" questions.** Don't mental-math across calories + 3 macros + multiple meals — that's unreliable and the optimizer exists for exactly this. Let it search, then read the score and delta to see the real cost of the constraint.
+3. **Force a food in.** Add `{ food, quantity }` to the plan's `requiredFoods` — the optimizer will keep the daily total at or above `quantity` (rounded up to the food's step).
+4. **"Will X fit?" questions.** Don't mental-math across calories + 3 macros + multiple meals — that's unreliable and the optimizer exists for exactly this. Let it search, then read the score and delta to see the real cost of the constraint.
 
 ## 6. Session kickoff
 
