@@ -13,7 +13,6 @@ export const chickenBreast: Food = {
 export const bodyStrongWheyChocolate: Food = {
   name: 'BodyStrong Whey, Chocolate',
   serving: { amount: 2, unitLabel: 'scoop', calories: 280, protein: 50, carbs: 7, fat: 4.6 },
-  category: FoodCategory.ProteinPowder,
   minServingAmountPerMeal: 2,
   maxServingAmountPerMeal: 4,
   allowedStepServingAmountPerMeal: 1
@@ -22,7 +21,6 @@ export const bodyStrongWheyChocolate: Food = {
 export const caseinProteinShakeVanilla: Food = {
   name: 'Casein Protein Shake, Vanilla',
   serving: { amount: 1, unitLabel: 'bottle', calories: 170, protein: 30, carbs: 8, fat: 3.5 },
-  category: FoodCategory.ProteinPowder,
   maxServingAmountPerMeal: 2,
   // Max amount in a day because of amount available
   maxServingAmountPerPlan: 2,
@@ -77,6 +75,8 @@ export const greenBeansCanned: Food = {
   name: 'Green beans (canned)',
   serving: { amount: 1, unitLabel: 'can', calories: 52.5, protein: 3.5, carbs: 10.5, fat: 0 },
   category: FoodCategory.CannedVegetable,
+  // Stock-limited: 2/day keeps the week supplied
+  maxServingAmountPerPlan: 2,
   allowedStepServingAmountPerMeal: 1
 };
 
