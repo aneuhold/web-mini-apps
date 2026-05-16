@@ -161,50 +161,48 @@ const trainingDayShakeAlt: NutritionPlan = {
       time: '5:30 AM',
       name: 'Breakfast',
       items: [
-        { food: chickenBreast, quantity: 200 },
-        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
+        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
+        { food: riceCakeWhiteCheddar, quantity: 1 },
+        { food: krogerChunkyPB, quantity: 11, amountDisplay: '11g (~3/4 tbsp)' }
       ]
     },
     {
       time: '8:30 AM',
       name: 'Break',
-      items: [{ food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' }]
+      items: [
+        { food: riceCakeWhiteCheddar, quantity: 1 },
+        { food: kindThinsPBDarkChocolate, quantity: 1, amountDisplay: '1 bar' }
+      ]
     },
     {
       time: '11:00 AM',
       name: 'Lunch',
-      totalLabelSuffix: '(w/ beans)',
       items: [
         { food: chickenBreast, quantity: 200 },
-        {
-          food: greenBeansCanned,
-          quantity: 1,
-          amountDisplay: '1 can',
-          optional: true,
-          optionalLabel: 'optional volume'
-        }
+        { food: riceCakeWhiteCheddar, quantity: 1 },
+        { food: krogerChunkyPB, quantity: 11, amountDisplay: '11g (~3/4 tbsp)' }
       ]
     },
     {
       time: '2:40 PM',
       name: 'Pre-workout',
       items: [
-        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
-        { food: banana, quantity: 1 },
-        { food: riceCakeWhiteCheddar, quantity: 1 }
+        { food: riceCakeWhiteCheddar, quantity: 2 },
+        { food: peasCanned, quantity: 1, amountDisplay: '1 can' },
+        { food: krogerChunkyPB, quantity: 11, amountDisplay: '11g (~3/4 tbsp)' }
       ]
     },
     {
       time: '4:50 PM',
       name: 'Dinner',
       items: [
+        { food: chickenBreast, quantity: 200 },
+        { food: riceCakeWhiteCheddar, quantity: 1 },
         { food: caseinProteinShakeVanilla, quantity: 2, amountDisplay: '2 bottles' },
-        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
+        { food: krogerChunkyPB, quantity: 12, amountDisplay: '12g (~3/4 tbsp)' }
       ]
     }
-  ],
-  notes:
-    '4:50 PM dinner swaps the 2-scoop whey + PB for 2 RTD casein bottles + PB. Casein is slow-digesting, useful pre-sleep. Day lands ~1886 cal / 261P / 93C / 59F — protein +5g vs target, fat essentially at the 60g target (well above the 55.5g floor — better fat-floor compliance than the standard training day at 57g), calories +36 over.'
+  ]
 };
 
 const nonTrainingDay: NutritionPlan = {
