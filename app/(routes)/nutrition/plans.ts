@@ -7,6 +7,7 @@ import {
   greenBeansCanned,
   kindThinsPBDarkChocolate,
   krogerChunkyPB,
+  optimumNutritionGoldStandardWhey,
   peasCanned,
   riceCakeWhiteCheddar
 } from './foods';
@@ -339,6 +340,122 @@ const nonTrainingDayNoChicken: NutritionPlan = {
   ]
 };
 
+const trainingDayOnWhey: NutritionPlan = {
+  id: 'training-day-on-whey',
+  title: 'Training Day (ON Whey)',
+  phase: DietPhase.Cutting,
+  bodyweightLb: 184,
+  calorieTarget: 1850,
+  activityLevel: ActivityLevel.Moderate,
+  excludedFoods: [bodyStrongWheyChocolate],
+  requiredFoods: [
+    {
+      food: chickenBreast,
+      quantity: 400
+    }
+  ],
+  meals: [
+    {
+      time: '5:30 AM',
+      name: 'Breakfast',
+      items: [
+        { food: optimumNutritionGoldStandardWhey, quantity: 3, amountDisplay: '3 scoops shake' },
+        { food: riceCakeWhiteCheddar, quantity: 1 }
+      ]
+    },
+    {
+      time: '8:30 AM',
+      name: 'Break',
+      items: [
+        { food: caseinProteinShakeVanilla, quantity: 1, amountDisplay: '1 bottle' },
+        { food: riceCakeWhiteCheddar, quantity: 1 },
+        { food: krogerChunkyPB, quantity: 12, amountDisplay: '12g (~3/4 tbsp)' }
+      ]
+    },
+    {
+      time: '11:00 AM',
+      name: 'Lunch',
+      totalLabelSuffix: '(w/ beans)',
+      items: [
+        { food: chickenBreast, quantity: 200 },
+        {
+          food: greenBeansCanned,
+          quantity: 1,
+          amountDisplay: '1 can',
+          optional: true,
+          optionalLabel: 'optional volume'
+        },
+        { food: kindThinsPBDarkChocolate, quantity: 1, amountDisplay: '1 bar' },
+        { food: krogerChunkyPB, quantity: 13, amountDisplay: '13g (~3/4 tbsp)' }
+      ]
+    },
+    {
+      time: '2:40 PM',
+      name: 'Pre-workout',
+      items: [
+        { food: riceCakeWhiteCheddar, quantity: 2 },
+        { food: kindThinsPBDarkChocolate, quantity: 1, amountDisplay: '1 bar' },
+        { food: krogerChunkyPB, quantity: 13, amountDisplay: '13g (~3/4 tbsp)' }
+      ]
+    },
+    {
+      time: '4:50 PM',
+      name: 'Dinner',
+      items: [
+        { food: chickenBreast, quantity: 200 },
+        { food: riceCakeWhiteCheddar, quantity: 1 },
+        { food: dannonLightFitGreekBlueberry, quantity: 1, amountDisplay: '1 container' },
+        { food: kindThinsPBDarkChocolate, quantity: 1, amountDisplay: '1 bar' }
+      ]
+    }
+  ],
+  notes:
+    'ON Whey (24g P / 120 cal per scoop) is leaner than BodyStrong, so the daily macro budget shifts toward more carbs and bars. Chicken + green beans live at lunch to keep work-hours fuel satisfying; carb cluster (rice cakes, bar, PB) lands at the 2:40 PM pre-workout. Casein bottle anchors the 8:30 break.'
+};
+
+const nonTrainingDayOnWhey: NutritionPlan = {
+  id: 'non-training-day-on-whey',
+  title: 'Non-Training Day (ON Whey)',
+  phase: DietPhase.Cutting,
+  bodyweightLb: 184,
+  calorieTarget: 1400,
+  activityLevel: ActivityLevel.NonTraining,
+  excludedFoods: [bodyStrongWheyChocolate],
+  requiredFoods: [
+    {
+      food: chickenBreast,
+      quantity: 400
+    }
+  ],
+  meals: [
+    {
+      time: 'Meal 1',
+      name: 'Meal 1',
+      items: [
+        { food: optimumNutritionGoldStandardWhey, quantity: 3, amountDisplay: '3 scoops shake' },
+        { food: krogerChunkyPB, quantity: 22, amountDisplay: '22g (~1.5 tbsp)' }
+      ]
+    },
+    {
+      time: 'Meal 2',
+      name: 'Meal 2',
+      items: [
+        { food: chickenBreast, quantity: 200 },
+        { food: optimumNutritionGoldStandardWhey, quantity: 2, amountDisplay: '2 scoops shake' },
+        { food: krogerChunkyPB, quantity: 22, amountDisplay: '22g (~1.5 tbsp)' }
+      ]
+    },
+    {
+      time: 'Meal 3',
+      name: 'Meal 3',
+      items: [
+        { food: chickenBreast, quantity: 200 },
+        { food: krogerChunkyPB, quantity: 22, amountDisplay: '22g (~1.5 tbsp)' }
+      ]
+    }
+  ]
+};
+
 /**
  * Every nutrition plan available in the UI. The first entry is selected by
  * default. Add new plans here to make them available in the dropdown.
@@ -347,7 +464,9 @@ export const nutritionPlans: NutritionPlan[] = [
   trainingDay,
   trainingDayV2,
   trainingDayShakeAlt,
+  trainingDayOnWhey,
   nonTrainingDay,
   nonTrainingDayV2,
-  nonTrainingDayNoChicken
+  nonTrainingDayNoChicken,
+  nonTrainingDayOnWhey
 ];
