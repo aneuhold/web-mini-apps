@@ -3,63 +3,103 @@ import { DietPhase } from '../types';
 import type { ScoringConfig } from './optimizerTypes';
 
 type ScoringWeights = {
-  calories: number;
-  protein: number;
-  fat: number;
-  carbs: number;
+  caloriesAbove: number;
+  caloriesBelow: number;
+  proteinAbove: number;
+  proteinBelow: number;
+  fatAbove: number;
+  fatBelow: number;
+  carbsAbove: number;
+  carbsBelow: number;
+  /**
+   * Applied (squared) to the summed below-floor deficit across macros whose
+   * hard floor sits below their target (so the floor needs its own threshold
+   * separate from `xBelow`). When target equals floor, the macro's `xBelow`
+   * already carries this weight directly and its `MacroFloors` entry is 0.
+   */
+  belowFloor: number;
 };
 
 const PHASE_WEIGHTS: Record<DietPhase, ScoringWeights> = {
-  [DietPhase.Cutting]: { calories: 10, protein: 5, fat: 3, carbs: 1 },
-  [DietPhase.Bulking]: { calories: 10, protein: 3, fat: 3, carbs: 5 },
-  [DietPhase.Maintenance]: { calories: 10, protein: 4, fat: 3, carbs: 3 }
+  [DietPhase.Maintenance]: {
+    caloriesAbove: 10,
+    caloriesBelow: 10,
+    proteinAbove: 4,
+    proteinBelow: 4,
+    fatAbove: 0,
+    fatBelow: 0,
+    carbsAbove: 3,
+    carbsBelow: 3,
+    belowFloor: 15
+  },
+  [DietPhase.Cutting]: {
+    caloriesAbove: 10,
+    caloriesBelow: 10,
+    // Light penalty for cutting protein surplus. We want most to go to carbs.
+    proteinAbove: 2,
+    proteinBelow: 5,
+    fatAbove: 3,
+    fatBelow: 15,
+    carbsAbove: 0,
+    carbsBelow: 0,
+    belowFloor: 15
+  },
+  [DietPhase.Bulking]: {
+    caloriesAbove: 10,
+    caloriesBelow: 10,
+    proteinAbove: 3,
+    proteinBelow: 15,
+    fatAbove: 3,
+    fatBelow: 15,
+    carbsAbove: 0,
+    carbsBelow: 0,
+    belowFloor: 15
+  }
 };
 
 /**
- * Scores macro combinations against plan targets and hard RP limits.
+ * Scores macro combinations against plan targets and RP hard floors.
  * Lower score = closer to the optimum.
  */
 class MacroScorer {
   /**
-   * Compute the weighted penalty score for actual macros vs. targets.
-   * Penalty shapes vary by phase: cutting uses one-sided penalties for protein
-   * (deficit only) and carbs (surplus only); bulking uses one-sided for carbs
-   * (deficit only); maintenance is two-sided for all. Fat is always penalized
-   * only when below the RP floor.
+   * Compute the weighted penalty score for actual macros vs. targets and floors.
+   * Each macro has independent weights for below-target vs. above-target deltas,
+   * letting the phase express asymmetric goals (e.g. cutting penalizes protein
+   * deficits but not surpluses, and penalizes carb surpluses but not deficits).
+   * A single `belowFloor` weight is applied to the summed deficit of any macro
+   * sitting below its hard floor; floor enforcement stays separate from
+   * target-shaping so macros like maintenance fat can have a floor without
+   * pulling toward the calorie-driven target.
    *
    * @param actual - Actual macro totals to evaluate.
-   * @param config - Targets, RP fat floor, and diet phase.
+   * @param config - Targets, RP floors, and diet phase.
    */
   score(actual: MacroTotals, config: ScoringConfig): number {
-    const { targets, fatFloorGrams, phase } = config;
-    const weights = PHASE_WEIGHTS[phase];
+    const { targets, floors, phase } = config;
+    const w = PHASE_WEIGHTS[phase];
 
     const calDelta = actual.calories - targets.calories;
-    const fatPenalty = Math.max(0, fatFloorGrams - actual.fat);
+    const protDelta = actual.protein - targets.protein;
+    const fatDelta = actual.fat - targets.fat;
+    const carbDelta = actual.carbs - targets.carbs;
 
-    let protPenalty = 0;
-    let carbPenalty = 0;
+    const calWeight = calDelta < 0 ? w.caloriesBelow : w.caloriesAbove;
+    const protWeight = protDelta < 0 ? w.proteinBelow : w.proteinAbove;
+    const fatWeight = fatDelta < 0 ? w.fatBelow : w.fatAbove;
+    const carbWeight = carbDelta < 0 ? w.carbsBelow : w.carbsAbove;
 
-    switch (phase) {
-      case DietPhase.Cutting:
-        protPenalty = Math.max(0, targets.protein - actual.protein);
-        carbPenalty = Math.max(0, actual.carbs - targets.carbs);
-        break;
-      case DietPhase.Bulking:
-        protPenalty = actual.protein - targets.protein;
-        carbPenalty = Math.max(0, targets.carbs - actual.carbs);
-        break;
-      case DietPhase.Maintenance:
-        protPenalty = actual.protein - targets.protein;
-        carbPenalty = actual.carbs - targets.carbs;
-        break;
-    }
+    const floorDeficit =
+      Math.max(0, floors.protein - actual.protein) +
+      Math.max(0, floors.carbs - actual.carbs) +
+      Math.max(0, floors.fat - actual.fat);
 
     return (
-      weights.calories * calDelta * calDelta +
-      weights.protein * protPenalty * protPenalty +
-      weights.fat * fatPenalty * fatPenalty +
-      weights.carbs * carbPenalty * carbPenalty
+      calWeight * calDelta * calDelta +
+      protWeight * protDelta * protDelta +
+      fatWeight * fatDelta * fatDelta +
+      carbWeight * carbDelta * carbDelta +
+      w.belowFloor * floorDeficit * floorDeficit
     );
   }
 

@@ -1,14 +1,26 @@
 import macroScorer from './NutritionPlanOptimizer/macroScorer';
-import type { Food, FoodTotal, MacroTotals, Meal, MealItem, NutritionPlan } from './types';
+import type {
+  Food,
+  FoodTotal,
+  MacroFloors,
+  MacroTotals,
+  Meal,
+  MealItem,
+  NutritionPlan
+} from './types';
 import { ActivityLevel, DietPhase } from './types';
 
 const KCAL_PER_G_PROTEIN = 4;
 const KCAL_PER_G_CARBS = 4;
 const KCAL_PER_G_FAT = 9;
+/** Cutting protein target (above the universal 1.0 g/lb baseline to spare muscle). */
 const CUTTING_PROTEIN_G_PER_LB = 1.2;
-const BULKING_PROTEIN_G_PER_LB = 1.0;
-const MAINTENANCE_PROTEIN_G_PER_LB = 1.0;
+/** Universal RP protein baseline: bulking & maintenance target, cutting hard floor. */
+const PROTEIN_BASELINE_G_PER_LB = 1.0;
+/** Universal RP fat floor; also the cutting & bulking fat target. */
 const FAT_FLOOR_G_PER_LB = 0.3;
+/** Bulking carb floor — sits below the remainder-based carb target. */
+const BULKING_CARB_FLOOR_G_PER_LB = 1.0;
 
 const ACTIVITY_CARB_MULTIPLIER: Record<ActivityLevel, number> = {
   [ActivityLevel.NonTraining]: 0.5,
@@ -39,19 +51,45 @@ class NutritionPlanCalculator {
         return { calories: t, protein, carbs, fat };
       }
       case DietPhase.Bulking: {
-        const protein = BULKING_PROTEIN_G_PER_LB * bw;
+        const protein = PROTEIN_BASELINE_G_PER_LB * bw;
         const fat = FAT_FLOOR_G_PER_LB * bw;
         const carbs = (t - protein * KCAL_PER_G_PROTEIN - fat * KCAL_PER_G_FAT) / KCAL_PER_G_CARBS;
         return { calories: t, protein, carbs, fat };
       }
       case DietPhase.Maintenance: {
-        const protein = MAINTENANCE_PROTEIN_G_PER_LB * bw;
+        const protein = PROTEIN_BASELINE_G_PER_LB * bw;
         const carbs = ACTIVITY_CARB_MULTIPLIER[plan.activityLevel] * bw;
         const rawFat =
           (t - protein * KCAL_PER_G_PROTEIN - carbs * KCAL_PER_G_CARBS) / KCAL_PER_G_FAT;
         const fat = Math.max(rawFat, FAT_FLOOR_G_PER_LB * bw);
         return { calories: t, protein, carbs, fat };
       }
+    }
+  }
+
+  /**
+   * Derive the RP hard floors for a plan: the macro minimums the day must
+   * clear regardless of the calorie target. Returned values are in grams;
+   * macros without a floor in the given phase are set to 0.
+   *
+   * Only floors whose threshold differs from the macro target are returned
+   * here — when target equals floor (cutting/bulking fat, bulking protein),
+   * the heavy weight is baked into that macro's `xBelow` entry in
+   * `PHASE_WEIGHTS` instead, so we don't double-count the deficit.
+   *
+   * See macro-target-calculations.md for the math behind this.
+   *
+   * @param plan - The plan whose phase and bodyweight drive the floors.
+   */
+  computeFloors(plan: NutritionPlan): MacroFloors {
+    const { bodyweightLb: bw, phase } = plan;
+    switch (phase) {
+      case DietPhase.Cutting:
+        return { protein: PROTEIN_BASELINE_G_PER_LB * bw, carbs: 0, fat: 0 };
+      case DietPhase.Bulking:
+        return { protein: 0, carbs: BULKING_CARB_FLOOR_G_PER_LB * bw, fat: 0 };
+      case DietPhase.Maintenance:
+        return { protein: 0, carbs: 0, fat: FAT_FLOOR_G_PER_LB * bw };
     }
   }
 
@@ -125,7 +163,7 @@ class NutritionPlanCalculator {
   computeScore(plan: NutritionPlan, actual: MacroTotals): number {
     return macroScorer.score(actual, {
       targets: this.computeTargets(plan),
-      fatFloorGrams: FAT_FLOOR_G_PER_LB * plan.bodyweightLb,
+      floors: this.computeFloors(plan),
       phase: plan.phase
     });
   }

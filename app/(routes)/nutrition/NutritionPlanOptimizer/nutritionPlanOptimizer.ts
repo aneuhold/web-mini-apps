@@ -6,9 +6,6 @@ import macroScorer from './macroScorer';
 import mealAllocator from './mealAllocator';
 import type { FoodBounds, OptimizationConfig, OptimizationResult } from './optimizerTypes';
 
-/** RP minimum fat per pound of bodyweight (grams). This applies to every phase  */
-const RP_FAT_FLOOR_G_PER_LB = 0.3;
-
 /**
  * Orchestrates the three-phase nutrition plan optimizer:
  *
@@ -18,7 +15,7 @@ const RP_FAT_FLOOR_G_PER_LB = 0.3;
  *
  * Phase 2 — `dailyQuantityOptimizer`: greedy hill-climbing with random
  *   restarts to find the food quantities whose macros best match the
- *   plan's targets and the RP fat floor.
+ *   plan's targets and the RP macro floors.
  *
  * Phase 3 — `mealAllocator`: distribute daily totals across meal slots,
  *   spreading protein evenly and clustering carbs around the pre-workout
@@ -35,7 +32,7 @@ class NutritionPlanOptimizer {
     const numMeals = targetPlan.meals.length;
 
     const targets = nutritionPlanCalculator.computeTargets(targetPlan);
-    const fatFloorGrams = RP_FAT_FLOOR_G_PER_LB * targetPlan.bodyweightLb;
+    const floors = nutritionPlanCalculator.computeFloors(targetPlan);
 
     const allBounds = foodBoundsCalculator.computeAllBounds(
       availableFoods,
@@ -47,7 +44,7 @@ class NutritionPlanOptimizer {
     const dailyQuantities = dailyQuantityOptimizer.optimize(
       allBounds,
       targets,
-      fatFloorGrams,
+      floors,
       targetPlan.phase
     );
 
@@ -61,7 +58,7 @@ class NutritionPlanOptimizer {
     const actualTotals = macroScorer.computeTotals(dailyQuantities);
     const score = macroScorer.score(actualTotals, {
       targets,
-      fatFloorGrams,
+      floors,
       phase: targetPlan.phase
     });
 

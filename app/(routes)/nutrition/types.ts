@@ -120,6 +120,18 @@ export interface MacroTotals {
 }
 
 /**
+ * Hard minimums (grams) for each macro the day must clear. Zero means no
+ * floor applies in this phase. Drives the heavy `belowFloor` penalty in
+ * `macroScorer.score` so the optimizer treats falling below as much worse
+ * than missing the calorie target.
+ */
+export interface MacroFloors {
+  protein: number;
+  carbs: number;
+  fat: number;
+}
+
+/**
  * One feeding window within a plan. `name` doubles as the prefix for the
  * total row (`${name} total`). When `name` is omitted no total row is
  * rendered, but the meal's items still contribute to the day total.

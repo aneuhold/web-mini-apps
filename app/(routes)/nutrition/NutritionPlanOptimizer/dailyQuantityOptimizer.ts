@@ -1,5 +1,5 @@
 import { DietPhase, FoodCategory } from '../types';
-import type { Food, MacroTotals } from '../types';
+import type { Food, MacroFloors, MacroTotals } from '../types';
 import macroScorer from './macroScorer';
 import type { FoodBounds, ScoringConfig } from './optimizerTypes';
 
@@ -42,22 +42,22 @@ const SA_COOLING = 0.9987;
 class DailyQuantityOptimizer {
   /**
    * Return the daily quantity per food that minimizes the weighted macro
-   * penalty against `targets` while respecting the RP fat floor.
+   * penalty against `targets` while respecting the RP macro floors.
    *
    * @param bounds - Valid daily quantity sets per food from Phase 1.
    * @param targets - Macro targets for the day.
-   * @param fatFloorGrams - RP minimum fat: 0.3g × bodyweight_lb.
+   * @param floors - RP hard minimums per macro (0 when no floor applies).
    * @param phase - Diet phase; drives scoring weights and penalty shapes.
    * @param saRuns - Number of independent SA runs; best result is returned.
    */
   optimize(
     bounds: FoodBounds[],
     targets: MacroTotals,
-    fatFloorGrams: number,
+    floors: MacroFloors,
     phase: DietPhase,
     saRuns = 3
   ): Map<Food, number> {
-    const config: ScoringConfig = { targets, fatFloorGrams, phase };
+    const config: ScoringConfig = { targets, floors, phase };
     const categoryGroups = this.buildCategoryGroups(bounds);
 
     let bestQuantities = this.simulatedAnnealing(bounds, config, categoryGroups);
