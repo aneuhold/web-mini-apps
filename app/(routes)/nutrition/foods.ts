@@ -94,6 +94,8 @@ export const krogerChunkLightTunaPouch: Food = {
   name: 'Kroger Chunk Light Tuna pouch',
   serving: { amount: 1, unitLabel: 'pouch', calories: 80, protein: 18, carbs: 0, fat: 1 },
   category: FoodCategory.TunaPouch,
+  // Synced up between the tuna pouch types
+  maxServingAmountPerPlan: 4,
   allowedStepServingAmountPerMeal: 1
 };
 
@@ -101,6 +103,8 @@ export const starkistTunaCreationsBaconRanch: Food = {
   name: 'StarKist Tuna Creations Bacon Ranch',
   serving: { amount: 1, unitLabel: 'pouch', calories: 80, protein: 15, carbs: 2, fat: 1 },
   category: FoodCategory.TunaPouch,
+  // Synced up between the tuna pouch types
+  maxServingAmountPerPlan: 4,
   allowedStepServingAmountPerMeal: 1
 };
 
