@@ -1,5 +1,5 @@
-import { DietPhase, FoodCategory } from '../types';
 import type { Food, MacroFloors, MacroTotals } from '../types';
+import { DietPhase, FoodCategory } from '../types';
 import macroScorer from './macroScorer';
 import type { FoodBounds, ScoringConfig } from './optimizerTypes';
 
@@ -55,16 +55,15 @@ class DailyQuantityOptimizer {
     targets: MacroTotals,
     floors: MacroFloors,
     phase: DietPhase,
-    saRuns = 3
+    saRuns = 5
   ): Map<Food, number> {
     const config: ScoringConfig = { targets, floors, phase };
     const categoryGroups = this.buildCategoryGroups(bounds);
 
-    let bestQuantities = this.simulatedAnnealing(bounds, config, categoryGroups);
-    this.hillClimb(bestQuantities, bounds, config, categoryGroups);
-    let bestScore = macroScorer.score(macroScorer.computeTotals(bestQuantities), config);
+    let bestQuantities = new Map<Food, number>();
+    let bestScore = Infinity;
 
-    for (let r = 1; r < saRuns; r++) {
+    for (let r = 0; r < saRuns; r++) {
       const quantities = this.simulatedAnnealing(bounds, config, categoryGroups);
       this.hillClimb(quantities, bounds, config, categoryGroups);
       const sc = macroScorer.score(macroScorer.computeTotals(quantities), config);
@@ -93,19 +92,14 @@ class DailyQuantityOptimizer {
     config: ScoringConfig,
     categoryGroups: Map<FoodCategory, Food[]>
   ): Map<Food, number> {
-    const currentIndices = new Map<Food, number>();
-    const currentQuantities = new Map<Food, number>();
-    for (const { food, validDailyQuantities } of bounds) {
-      currentIndices.set(food, 0);
-      currentQuantities.set(food, validDailyQuantities[0]);
-    }
+    const { currentIndices, currentQuantities } = this.randomInitialState(bounds, categoryGroups);
 
-    let currentTotals: MacroTotals = { calories: 0, protein: 0, carbs: 0, fat: 0 };
+    let currentTotals = macroScorer.computeTotals(currentQuantities);
     let currentScore = macroScorer.score(currentTotals, config);
     let bestScore = currentScore;
     let bestQuantities = new Map(currentQuantities);
 
-    const movesPerTemp = bounds.length * 2;
+    const movesPerTemp = bounds.length * 10;
     let temperature = SA_T_INIT;
 
     while (temperature > SA_T_FINAL) {
@@ -150,6 +144,37 @@ class DailyQuantityOptimizer {
     }
 
     return bestQuantities;
+  }
+
+  /**
+   * Build a random starting state for one SA run. For each category, one
+   * member is chosen to be "active" (random quantity); the rest stay at 0
+   * so the exclusivity constraint holds from the very first move. Foods
+   * without a category get a random valid quantity directly.
+   *
+   * @param bounds - Valid daily quantity sets per food.
+   * @param categoryGroups - Foods grouped by category for exclusivity.
+   */
+  private randomInitialState(
+    bounds: FoodBounds[],
+    categoryGroups: Map<FoodCategory, Food[]>
+  ): { currentIndices: Map<Food, number>; currentQuantities: Map<Food, number> } {
+    const activeInCategory = new Map<FoodCategory, Food>();
+    for (const [category, foods] of categoryGroups) {
+      activeInCategory.set(category, foods[Math.floor(Math.random() * foods.length)]);
+    }
+
+    const currentIndices = new Map<Food, number>();
+    const currentQuantities = new Map<Food, number>();
+    for (const { food, validDailyQuantities } of bounds) {
+      const canBeNonZero =
+        food.category === undefined || activeInCategory.get(food.category) === food;
+      const idx = canBeNonZero ? Math.floor(Math.random() * validDailyQuantities.length) : 0;
+      currentIndices.set(food, idx);
+      currentQuantities.set(food, validDailyQuantities[idx]);
+    }
+
+    return { currentIndices, currentQuantities };
   }
 
   /**

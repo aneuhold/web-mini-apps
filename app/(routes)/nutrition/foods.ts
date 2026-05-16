@@ -24,6 +24,8 @@ export const caseinProteinShakeVanilla: Food = {
   serving: { amount: 1, unitLabel: 'bottle', calories: 170, protein: 30, carbs: 8, fat: 3.5 },
   category: FoodCategory.ProteinPowder,
   maxServingAmountPerMeal: 2,
+  // Max amount in a day because of amount available
+  maxServingAmountPerPlan: 2,
   allowedStepServingAmountPerMeal: 1
 };
 
