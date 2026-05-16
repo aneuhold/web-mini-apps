@@ -1,12 +1,18 @@
 import type { Food, MacroTotals } from '../types';
-import type { ScoringConfig, ScoringWeights } from './optimizerTypes';
+import { DietPhase } from '../types';
+import type { ScoringConfig } from './optimizerTypes';
 
-/** RP-priority weights: calories > protein > fat floor > carbs. */
-export const DEFAULT_WEIGHTS: ScoringWeights = {
-  calories: 10,
-  protein: 5,
-  fat: 3,
-  carbs: 1
+type ScoringWeights = {
+  calories: number;
+  protein: number;
+  fat: number;
+  carbs: number;
+};
+
+const PHASE_WEIGHTS: Record<DietPhase, ScoringWeights> = {
+  [DietPhase.Cutting]: { calories: 10, protein: 5, fat: 3, carbs: 1 },
+  [DietPhase.Bulking]: { calories: 10, protein: 3, fat: 3, carbs: 5 },
+  [DietPhase.Maintenance]: { calories: 10, protein: 4, fat: 3, carbs: 3 }
 };
 
 /**
@@ -16,24 +22,44 @@ export const DEFAULT_WEIGHTS: ScoringWeights = {
 class MacroScorer {
   /**
    * Compute the weighted penalty score for actual macros vs. targets.
-   * Fat is only penalized when it falls below the RP floor, never for exceeding it.
+   * Penalty shapes vary by phase: cutting uses one-sided penalties for protein
+   * (deficit only) and carbs (surplus only); bulking uses one-sided for carbs
+   * (deficit only); maintenance is two-sided for all. Fat is always penalized
+   * only when below the RP floor.
    *
    * @param actual - Actual macro totals to evaluate.
-   * @param config - Targets, RP fat floor, and per-macro weights.
+   * @param config - Targets, RP fat floor, and diet phase.
    */
   score(actual: MacroTotals, config: ScoringConfig): number {
-    const { targets, fatFloorGrams, weights } = config;
+    const { targets, fatFloorGrams, phase } = config;
+    const weights = PHASE_WEIGHTS[phase];
 
     const calDelta = actual.calories - targets.calories;
-    const protDelta = actual.protein - targets.protein;
-    const carbDelta = actual.carbs - targets.carbs;
     const fatPenalty = Math.max(0, fatFloorGrams - actual.fat);
+
+    let protPenalty = 0;
+    let carbPenalty = 0;
+
+    switch (phase) {
+      case DietPhase.Cutting:
+        protPenalty = Math.max(0, targets.protein - actual.protein);
+        carbPenalty = Math.max(0, actual.carbs - targets.carbs);
+        break;
+      case DietPhase.Bulking:
+        protPenalty = actual.protein - targets.protein;
+        carbPenalty = Math.max(0, targets.carbs - actual.carbs);
+        break;
+      case DietPhase.Maintenance:
+        protPenalty = actual.protein - targets.protein;
+        carbPenalty = actual.carbs - targets.carbs;
+        break;
+    }
 
     return (
       weights.calories * calDelta * calDelta +
-      weights.protein * protDelta * protDelta +
+      weights.protein * protPenalty * protPenalty +
       weights.fat * fatPenalty * fatPenalty +
-      weights.carbs * carbDelta * carbDelta
+      weights.carbs * carbPenalty * carbPenalty
     );
   }
 

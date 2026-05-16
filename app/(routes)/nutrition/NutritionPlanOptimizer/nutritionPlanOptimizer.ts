@@ -1,12 +1,12 @@
 import type { Food, NutritionPlan } from '../types';
-import type { FoodBounds, OptimizationConfig, OptimizationResult } from './optimizerTypes';
-import foodBoundsCalculator from './foodBoundsCalculator';
-import macroScorer, { DEFAULT_WEIGHTS } from './macroScorer';
-import dailyQuantityOptimizer from './dailyQuantityOptimizer';
-import mealAllocator from './mealAllocator';
 import { weightHistory } from '../weightHistory';
+import dailyQuantityOptimizer from './dailyQuantityOptimizer';
+import foodBoundsCalculator from './foodBoundsCalculator';
+import macroScorer from './macroScorer';
+import mealAllocator from './mealAllocator';
+import type { FoodBounds, OptimizationConfig, OptimizationResult } from './optimizerTypes';
 
-/** RP minimum fat per pound of bodyweight (grams). */
+/** RP minimum fat per pound of bodyweight (grams). This applies to every phase  */
 const RP_FAT_FLOOR_G_PER_LB = 0.3;
 
 /**
@@ -46,7 +46,8 @@ class NutritionPlanOptimizer {
     const dailyQuantities = dailyQuantityOptimizer.optimize(
       allBounds,
       targetPlan.targets,
-      fatFloorGrams
+      fatFloorGrams,
+      targetPlan.phase
     );
 
     const optimizedMeals = mealAllocator.allocate(
@@ -60,12 +61,13 @@ class NutritionPlanOptimizer {
     const score = macroScorer.score(actualTotals, {
       targets: targetPlan.targets,
       fatFloorGrams,
-      weights: DEFAULT_WEIGHTS
+      phase: targetPlan.phase
     });
 
     const optimizedPlan: NutritionPlan = {
       id: `${targetPlan.id}-optimized`,
       title: `${targetPlan.title} (Optimized)`,
+      phase: targetPlan.phase,
       targets: targetPlan.targets,
       meals: optimizedMeals
     };

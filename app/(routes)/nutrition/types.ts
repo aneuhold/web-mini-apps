@@ -43,6 +43,13 @@ export interface Food {
   allowedStepServingAmountPerMeal?: number;
 }
 
+/** The current diet phase, which drives macro priorities and scoring weights in the optimizer. */
+export enum DietPhase {
+  Cutting = 'Cutting',
+  Bulking = 'Bulking',
+  Maintenance = 'Maintenance'
+}
+
 /**
  * Groups of mutually exclusive foods: the optimizer will pick at most one
  * food from each category per day. Assign a category to a food whenever
@@ -109,6 +116,7 @@ export interface FoodTotal {
 export interface NutritionPlan {
   id: string;
   title: string;
+  phase: DietPhase;
   targets: MacroTotals;
   meals: Meal[];
   notes?: string;

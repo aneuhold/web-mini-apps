@@ -1,4 +1,4 @@
-import type { Food, MacroTotals, NutritionPlan } from '../types';
+import type { DietPhase, Food, MacroTotals, NutritionPlan } from '../types';
 
 /** Valid daily quantities for a food, pre-computed considering per-meal constraints and numMeals. */
 export type FoodBounds = {
@@ -11,18 +11,12 @@ export type FoodBounds = {
   perMealMax: number;
 };
 
-export type ScoringWeights = {
-  calories: number;
-  protein: number;
-  fat: number;
-  carbs: number;
-};
-
 export type ScoringConfig = {
   targets: MacroTotals;
   /** Daily fat floor in grams (RP: 0.3g × bodyweight_lb). Fat is only penalized when below this. */
   fatFloorGrams: number;
-  weights: ScoringWeights;
+  /** Diet phase; drives scoring weights and per-macro penalty shapes. */
+  phase: DietPhase;
 };
 
 export type OptimizationConfig = {

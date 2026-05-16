@@ -7,11 +7,13 @@ import {
   krogerChunkyPB,
   riceCakeWhiteCheddar
 } from './foods';
+import { DietPhase } from './types';
 import type { NutritionPlan } from './types';
 
 const trainingDay: NutritionPlan = {
   id: 'training-day',
   title: 'Training Day',
+  phase: DietPhase.Cutting,
   targets: {
     calories: 1850,
     protein: 256,
@@ -71,6 +73,7 @@ const trainingDay: NutritionPlan = {
 const trainingDayShakeAlt: NutritionPlan = {
   id: 'training-day-shake-alt',
   title: 'Training Day (Shake Alt)',
+  phase: DietPhase.Cutting,
   targets: {
     calories: 1850,
     protein: 256,
@@ -130,6 +133,7 @@ const trainingDayShakeAlt: NutritionPlan = {
 const nonTrainingDay: NutritionPlan = {
   id: 'non-training-day',
   title: 'Non-Training Day',
+  phase: DietPhase.Cutting,
   targets: {
     calories: 1400,
     protein: 197,
@@ -177,6 +181,7 @@ const nonTrainingDay: NutritionPlan = {
 const nonTrainingDayNoChicken: NutritionPlan = {
   id: 'non-training-day-no-chicken',
   title: 'Non-Training Day (No Chicken)',
+  phase: DietPhase.Cutting,
   excludedFoods: [chickenBreast],
   targets: {
     calories: 1400,
