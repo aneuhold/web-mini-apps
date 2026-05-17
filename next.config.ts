@@ -1,6 +1,9 @@
+import withBundleAnalyzer from '@next/bundle-analyzer';
 import { NextConfig } from 'next';
 import withExportImages from 'next-export-optimize-images';
 import path from 'path';
+
+const bundleAnalyzer = withBundleAnalyzer({ enabled: process.env.ANALYZE === 'true' });
 
 const nextConfig: NextConfig = {
   turbopack: {},
@@ -21,4 +24,4 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(__dirname, '../')
 };
 
-export default withExportImages(nextConfig);
+export default bundleAnalyzer(withExportImages(nextConfig));
