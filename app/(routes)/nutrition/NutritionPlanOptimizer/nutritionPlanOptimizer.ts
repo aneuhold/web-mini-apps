@@ -69,7 +69,8 @@ class NutritionPlanOptimizer {
       bodyweightLb: targetPlan.bodyweightLb,
       calorieTarget: targetPlan.calorieTarget,
       activityLevel: targetPlan.activityLevel,
-      meals: optimizedMeals
+      meals: optimizedMeals,
+      lastUpdatedAt: targetPlan.lastUpdatedAt
     };
 
     return { optimizedPlan, score, actualTotals };
