@@ -3,11 +3,10 @@ import { writeFileSync } from 'fs';
 import { resolve } from 'path';
 import { parseArgs } from 'util';
 import optimizedVariants from '../plans/optimizedVariants';
-import { planFromVariant } from '../plans/planFromVariant';
-import { enumerateVariants } from '../plans/variantKey';
 import nutritionPlanCalculator from '../services/nutritionPlanCalculator';
 import nutritionPlanOptimizer from '../services/NutritionPlanOptimizer/nutritionPlanOptimizer';
 import nutritionPlanPrinter from '../services/nutritionPlanPrinter';
+import nutritionVariants from '../services/nutritionVariants';
 import { allFoods } from '../util/foods';
 import type { NutritionPlan } from '../util/types';
 import { DayType, DietPhase } from '../util/types';
@@ -84,7 +83,7 @@ const parseCliArgs = (): CliArgs => {
  * @param dayType
  */
 const expand = (phase: DietPhase, dayType: DayType): VariantScope[] =>
-  enumerateVariants(phase, dayType).map(({ key }) => ({ phase, dayType, key }));
+  nutritionVariants.enumerateAll(phase, dayType).map(({ key }) => ({ phase, dayType, key }));
 
 /**
  * Prompt for a phase. `undefined` means "All".
@@ -183,12 +182,11 @@ const findPreWorkoutMealIndex = (plan: NutritionPlan): number | undefined => {
  * @param key
  */
 const optimizeVariant = (phase: DietPhase, dayType: DayType, key: string): NutritionPlan => {
-  const enumerated = enumerateVariants(phase, dayType);
-  const match = enumerated.find((v) => v.key === key);
+  const match = nutritionVariants.enumerateAll(phase, dayType).find((v) => v.key === key);
   if (!match) {
     throw new Error(`Cannot find swap state for variant key: ${key}`);
   }
-  const plan = planFromVariant(phase, dayType, match.swapState);
+  const plan = nutritionVariants.buildPlanFromTemplate(phase, dayType, match.swapState);
   const excluded = new Set(plan.excludedFoods ?? []);
   const availableFoods = allFoods.filter((food) => !excluded.has(food));
   const preWorkoutMealIndex = findPreWorkoutMealIndex(plan);

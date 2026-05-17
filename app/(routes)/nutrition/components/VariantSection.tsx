@@ -1,6 +1,6 @@
-import { getOptimizedPlan } from '../plans/planFromVariant';
 import { planTemplates } from '../plans/planTemplates';
-import type { SwapState } from '../plans/variantKey';
+import type { SwapState } from '../services/nutritionVariants';
+import nutritionVariants from '../services/nutritionVariants';
 import { DAY_TYPE_LABEL, DayType, DietPhase } from '../util/types';
 import VariantTable from './VariantTable';
 
@@ -28,7 +28,7 @@ const VariantSection = ({
   onSwapStateChange: (next: SwapState) => void;
 }) => {
   const template = planTemplates[phase][dayType];
-  const plan = getOptimizedPlan(phase, dayType, swapState);
+  const plan = nutritionVariants.getOptimizedPlan(phase, dayType, swapState);
 
   return (
     <div data-day-section>

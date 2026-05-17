@@ -1,6 +1,6 @@
-import type { AllSwapStates } from '../plans/variantKey';
-import { defaultAllSwapStates } from '../plans/variantKey';
 import { DayType, DietPhase, isDayType, isDietPhase, isFoodCategory } from '../util/types';
+import type { AllSwapStates } from './nutritionVariants';
+import nutritionVariants from './nutritionVariants';
 
 const STORAGE_KEY = 'v2-nutrition:view-state';
 
@@ -16,7 +16,7 @@ export type NutritionViewState = {
 };
 
 const defaultViewState = (): NutritionViewState => ({
-  swapStates: defaultAllSwapStates(),
+  swapStates: nutritionVariants.defaultAllSwapStates(),
   activePhase: DietPhase.Cutting,
   activeDayType: DayType.Training
 });
@@ -75,7 +75,7 @@ class NutritionLocalData {
    * @param stored
    */
   private mergeWithDefaultSwapStates(stored: unknown): AllSwapStates {
-    const fresh = defaultAllSwapStates();
+    const fresh = nutritionVariants.defaultAllSwapStates();
 
     // Bail if the stored blob isn't an object at all.
     if (!isPlainObject(stored)) return fresh;

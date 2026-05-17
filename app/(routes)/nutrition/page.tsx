@@ -3,9 +3,9 @@
 import Footer from '$components/Footer';
 import { useEffect, useState } from 'react';
 import VariantSection from './components/VariantSection';
-import type { SwapState } from './plans/variantKey';
 import type { NutritionViewState } from './services/nutritionLocalData';
 import nutritionLocalData from './services/nutritionLocalData';
+import type { SwapState } from './services/nutritionVariants';
 import { DAY_TYPE_LABEL, DayType, DietPhase } from './util/types';
 
 const PHASE_ORDER: DietPhase[] = [DietPhase.Cutting, DietPhase.Bulking, DietPhase.Maintenance];
