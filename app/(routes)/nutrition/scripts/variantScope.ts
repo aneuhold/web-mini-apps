@@ -109,6 +109,19 @@ const promptDay = async (): Promise<DayType | undefined> =>
   });
 
 /**
+ * Prompt for whether the caller wants every variant in scope or wants to
+ * cherry-pick a subset. Returning `false` means "All".
+ */
+const promptVariantSubset = async (): Promise<boolean> =>
+  select<boolean>({
+    message: 'Variants',
+    choices: [
+      { name: 'All', value: false },
+      { name: 'Pick specific…', value: true }
+    ]
+  });
+
+/**
  * Resolve CLI args (possibly via interactive prompts when no narrowing flags
  * are passed) into the concrete set of (phase × day-type × variant) entries
  * the script should operate on.
@@ -133,14 +146,24 @@ export const resolveScope = async (args: CliArgs): Promise<VariantScope[]> => {
     return DAY_VALUES.flatMap((d) => expand(argPhase, d));
   }
 
-  // Fully interactive: pick phase → day → variant subset.
+  // Fully interactive. "All" at any level short-circuits the deeper prompts
+  // — picking "All" means "don't ask me again".
   const pickedPhase = await promptPhase();
-  const pickedDay = await promptDay();
-  const phases = pickedPhase === undefined ? PHASE_VALUES : [pickedPhase];
-  const days = pickedDay === undefined ? DAY_VALUES : [pickedDay];
-  const candidates = phases.flatMap((p) => days.flatMap((d) => expand(p, d)));
+  if (pickedPhase === undefined) {
+    return PHASE_VALUES.flatMap((p) => DAY_VALUES.flatMap((d) => expand(p, d)));
+  }
 
+  const pickedDay = await promptDay();
+  if (pickedDay === undefined) {
+    return DAY_VALUES.flatMap((d) => expand(pickedPhase, d));
+  }
+
+  const candidates = expand(pickedPhase, pickedDay);
   if (candidates.length <= 1) return candidates;
+
+  const wantsSubset = await promptVariantSubset();
+  if (!wantsSubset) return candidates;
+
   const selectedKeys = await checkbox<string>({
     message: 'Variants',
     pageSize: Math.min(20, candidates.length),
