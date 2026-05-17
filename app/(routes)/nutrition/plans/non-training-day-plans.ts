@@ -112,31 +112,24 @@ export const nonTrainingDayNoChicken: NutritionPlan = {
       time: 'Meal 1',
       name: 'Meal 1',
       items: [
-        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
-        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
+        { food: optimumNutritionGoldStandardWhey, quantity: 3, amountDisplay: '3 scoops shake' },
+        { food: krogerChunkyPB, quantity: 26, amountDisplay: '26g (~1.5 tbsp)' }
       ]
     },
     {
       time: 'Meal 2',
       name: 'Meal 2',
-      totalLabelSuffix: '(w/ green beans)',
       items: [
-        { food: bodyStrongWheyChocolate, quantity: 3, amountDisplay: '3 scoops shake' },
-        {
-          food: greenBeansCanned,
-          quantity: 1,
-          amountDisplay: '1 can',
-          optional: true,
-          optionalLabel: 'optional volume'
-        }
+        { food: optimumNutritionGoldStandardWhey, quantity: 3, amountDisplay: '3 scoops shake' },
+        { food: krogerChunkyPB, quantity: 26, amountDisplay: '26g (~1.5 tbsp)' }
       ]
     },
     {
       time: 'Meal 3',
       name: 'Meal 3',
       items: [
-        { food: bodyStrongWheyChocolate, quantity: 2, amountDisplay: '2 scoops shake' },
-        { food: krogerChunkyPB, quantity: 32, amountDisplay: '32g (2 tbsp)' }
+        { food: optimumNutritionGoldStandardWhey, quantity: 2, amountDisplay: '2 scoops shake' },
+        { food: krogerChunkyPB, quantity: 26, amountDisplay: '26g (~1.5 tbsp)' }
       ]
     }
   ]
