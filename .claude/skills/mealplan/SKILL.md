@@ -75,34 +75,48 @@ The nutrition app at `app/(routes)/nutrition/` is the single source of truth for
 
 When designing or adjusting a plan, the coach picks `bodyweightLb` and `calorieTarget` (those remain coaching judgments — sized via the RP tables in section 2); P/C/F follow automatically from `nutritionPlanCalculator.computeTargets`.
 
-| File                                                | What lives here                                                                                                                                                                                                   |
-| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `app/(routes)/nutrition/foods.ts`                   | One `Food` export per item, each with a reference `serving` (amount + unit + cal/P/C/F). Add new foods here when the user introduces them.                                                                        |
-| `app/(routes)/nutrition/plans.ts`                   | `nutritionPlans: NutritionPlan[]` — each plan declares `bodyweightLb`, `calorieTarget`, and `activityLevel`; macros are computed by `nutritionPlanCalculator.computeTargets` and shown by `pnpm nutrition:meals`. |
-| `app/(routes)/nutrition/weightHistory.ts`           | `weightHistory: WeightEntry[]`, oldest first. Append new measurements; never delete history.                                                                                                                      |
-| `app/(routes)/nutrition/types.ts`                   | Shapes for `Food`, `Meal`, `NutritionPlan`, etc. Reference if you need to add a field.                                                                                                                            |
-| `app/(routes)/nutrition/nutritionPlanCalculator.ts` | Singleton that scales servings and computes meal/day totals. The plan UI re-derives all numbers from this — keep plans declarative.                                                                               |
+These four files are what you edit during a coaching session:
 
-When you update any of these files, the nutrition page re-renders automatically. Run `pnpm lint` after edits.
+| File                                                | What lives here                                                                                                                                                                                                                                                         |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `app/(routes)/nutrition/util/foods.ts`              | One `Food` export per item, each with a reference `serving` (amount + unit + cal/P/C/F) and a stable `id` matching the export name. Add new foods here when the user introduces them.                                                                                  |
+| `app/(routes)/nutrition/util/weightHistory.ts`      | `weightHistory: WeightEntry[]`, oldest first. Append new measurements; never delete history.                                                                                                                                                                            |
+| `app/(routes)/nutrition/plans/planTemplates.ts`     | `planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>>` — the (phase × day-type) templates plus their `optionalFoods` / `categoryFoods` checkbox swap lists. Calorie targets, bodyweights, and new swap toggles all live here. Each template has its own `lastUpdatedAt` — bump it whenever you edit the template. |
+| `app/(routes)/nutrition/util/types.ts`              | Shapes for `Food`, `Meal`, `NutritionPlan`, plus the `DietPhase` / `DayType` / `FoodCategory` enums. Read the JSDoc here when wiring a new field on a food or a template.                                                                                               |
+
+The rest of the route — `plans/optimized-variants.json` (optimizer output), `plans/optimizedVariants.ts` (typed JSON wrapper), `services/*` (variant resolution, local-storage persistence, macro math, printer, optimizer internals), and the React components in `components/` — is plumbing the coach doesn't touch directly. The two scripts in section 5 are the only entry points you need.
+
+When you update `foods.ts` or `planTemplates.ts`, regenerate the affected variants with `pnpm nutrition:optimize` (see section 5) so `optimized-variants.json` matches. Run `pnpm lint --fix` and `pnpm check` after edits.
 
 ## 5. Evaluating food integrations and swaps
 
 You have two scripts. They answer different questions, so use both:
 
-- `pnpm nutrition:meals` — prints every plan as it currently stands in `plans.ts`. Run it at the start of the session to see what the user sees, and again after editing `plans.ts` to confirm totals.
-- `pnpm nutrition:optimize` — for each plan, treats the food pool (minus that plan's `excludedFoods`) as a search space and returns the macro-optimal daily quantities + meal layout, with a score and delta vs. target. This is your primary tool for "does this food fit?" and "what replaces this food if it's gone?". It runs against every plan automatically, so you never need to ask the question one plan at a time. If you see an issue with the output, DO NOT just discount the output completely, just adjust the parameters of the food / plan to more accurately reflect what is needed, and then run it again. The optimizer is very configurable. Also ACTUALLY LOOK AT THE OUTPUT OF THE OPTIMIZER. It doesn't just change 1 thing, it changes many things and adds variety + changes quantities to hit targets. DO NOT DISCOUNT THE OUTPUT OF THE OPTIMIZER. It is a very powerful tool WITH the source material logic built into it so you don't need to do calculations manually.
+- `pnpm nutrition:meals` — prints variants from `optimized-variants.json` exactly as the user sees them on the page. Run it at the start of the session, and again after `pnpm nutrition:optimize` to confirm totals.
+- `pnpm nutrition:optimize` — regenerates one or more entries in `optimized-variants.json`. For each (phase × day-type × swap-combo) in scope, it treats the food pool (minus the swap state's excluded foods) as a search space and returns the macro-optimal daily quantities + meal layout, with a score and delta vs. target. This is your primary tool for "does this food fit?" and "what replaces this food if it's gone?". If you see an issue with the output, DO NOT just discount it; adjust the food/template parameters and rerun. ACTUALLY LOOK AT THE OUTPUT — it changes quantities and meal composition together to hit targets.
+
+### Scoping flags (shared by both scripts)
+
+Both scripts are non-interactive from this skill's perspective — always pass flags explicitly. Running either script with no flags starts a prompt-driven session that this skill can't drive. The flag set is identical:
+
+- `<script> --phase cutting --day training --variant-id <key>` — exactly one entry. Use when only one user-facing checkbox combination needs to be touched.
+- `<script> --phase cutting --day training` — every swap-combo for that pair (the most common scope while iterating).
+- `<script> --phase cutting` — every (day-type × swap-combo) in that phase. Use after a food-pool change that affects the whole phase.
+
+`--day` requires `--phase`; `--variant-id` requires both `--phase` and `--day`. Variant keys are the literal JSON key strings from `optimized-variants.json` (form: `<Phase>:<DayType>:<sortedSwapParts>`); look them up there. The optimizer merges results into the existing JSON — untouched keys are preserved verbatim, so prefer the narrowest scope that covers your change. `nutrition:meals` is read-only and prints a small "(no optimized output yet — run …)" notice for any in-scope variant that isn't in the JSON.
 
 ### Division of labor
 
 - **Optimizer** owns the macro math: which foods earn a slot, at what daily quantity, and roughly how they distribute across meals (including pre-workout carb clustering and the RP fat floor).
-- **Coach** owns profile fit — meal windows, work schedule, hunger rules, prep effort — and translates the optimizer's output into `plans.ts` reshaped to match `personal-profile.md`. You should only be moving food around though from the optimizer. The optimizer knows best in every other way.
+- **Coach** owns profile fit — meal windows, work schedule, hunger rules, prep effort — and translates intent into `planTemplates.ts` (templates, calorie targets, swap toggles). Optimized meal output stays in `optimized-variants.json` and is the source of truth for what the user sees.
 
 ### Workflow
 
-1. **New food candidate.** Add it to `foods.ts` with the right constraints (`category`, `minServingAmountPerMeal`, `maxServingAmountPerMeal`, `maxServingAmountPerPlan`, `allowedStepServingAmountPerMeal`). Read the JSDoc on those fields in `types.ts` — that's where the rules for each constraint live. Then run `pnpm nutrition:optimize`. If the food lands in any optimized plan, integrate it; if it doesn't, the optimizer preferred existing foods on macros, and the honest answer to the user is that it doesn't earn a slot today.
-2. **Food temporarily unavailable.** Add it to `excludedFoods` on the affected plan(s), run the optimizer, and translate the result back into `plans.ts` reshaped for profile constraints.
-3. **Force a food in.** Add `{ food, quantity }` to the plan's `requiredFoods` — the optimizer will keep the daily total at or above `quantity` (rounded up to the food's step).
-4. **"Will X fit?" questions.** Don't mental-math across calories + 3 macros + multiple meals — that's unreliable and the optimizer exists for exactly this. Let it search, then read the score and delta to see the real cost of the constraint.
+1. **New food candidate.** Add it to `util/foods.ts` (with the right `id`, `category`, `minServingAmountPerMeal`, `maxServingAmountPerMeal`, `maxServingAmountPerPlan`, `allowedStepServingAmountPerMeal`). Read the JSDoc on those fields in `util/types.ts`. Then run `pnpm nutrition:optimize` for the affected (phase × day-type)s. If the food lands in any optimized variant, integrate it; if not, the optimizer preferred existing foods.
+2. **Food temporarily unavailable.** Either add it to the relevant plan template's swap list as an OFF-by-default toggle, or set `maxServingAmountPerPlan: 0` on the food in `util/foods.ts` and regenerate. Then translate the result back to the user.
+3. **New plan variant (per-phase × day-type toggle).** Add an `OptionalFood` or `CategoryFood` entry under the relevant `planTemplates[phase][dayType]` block in `plans/planTemplates.ts` and bump that template's `lastUpdatedAt`. Then run `pnpm nutrition:optimize --phase <p> --day <d>` to populate every new variant in `optimized-variants.json` before the UI can render it.
+4. **Calorie / bodyweight retarget for a phase.** Edit the relevant template's `calorieTarget` (and `bodyweightLb` if needed) in `plans/planTemplates.ts`, bump its `lastUpdatedAt`, then `pnpm nutrition:optimize --phase <p> --day <d>` for each affected pair.
+5. **"Will X fit?" questions.** Don't mental-math across calories + 3 macros + multiple meals — let the optimizer search and read the score and delta to see the real cost of the constraint.
 
 ## 6. Session kickoff
 
