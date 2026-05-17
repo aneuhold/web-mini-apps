@@ -1,10 +1,12 @@
 'use client';
 
 import Footer from '$components/Footer';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import nutritionPlanCalculator from './nutritionPlanCalculator';
 import { nutritionPlanGroups, nutritionPlans } from './plans';
 import type { MacroTotals } from './types';
+
+const STORAGE_KEY = 'v1-nutrition:selected-plan-id';
 
 /**
  * Render the four numeric cells (Cal / P / C / F) for a row of macro
@@ -29,7 +31,20 @@ const MacroCells = ({ totals }: { totals: MacroTotals }) => (
  * columns are computed at render time from the plan data.
  */
 export default function NutritionPage() {
-  const [selectedPlanId, setSelectedPlanId] = useState(nutritionPlans[0].id);
+  const [selectedPlanId, setSelectedPlanId] = useState(() => {
+    // Only so the dev server doesn't throw errors, this isn't an issue in prod.
+    if (typeof window === 'undefined') {
+      return nutritionPlans[0].id;
+    }
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved && nutritionPlans.some((candidate) => candidate.id === saved)
+      ? saved
+      : nutritionPlans[0].id;
+  });
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, selectedPlanId);
+  }, [selectedPlanId]);
+
   const plan =
     nutritionPlans.find((candidate) => candidate.id === selectedPlanId) ?? nutritionPlans[0];
   const dayTotals = nutritionPlanCalculator.computePlanTotals(plan);
