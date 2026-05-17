@@ -190,6 +190,14 @@ export interface Meal {
   name?: string;
   totalLabelSuffix?: string;
   items: MealItem[];
+  /**
+   * Relative calorie share for this meal during allocation. Defaults to 1.0.
+   * The allocator picks the meal with the lowest `currentCalories / weight`,
+   * so a meal with weight 1.2 ends up ~20% heavier than the others, and a
+   * meal with weight 0.7 ~30% lighter. Hard per-food per-meal caps and the
+   * carb-heavy pre-workout preference still apply on top.
+   */
+  calorieShareWeight?: number;
 }
 
 /**

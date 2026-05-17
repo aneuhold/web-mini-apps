@@ -35,6 +35,9 @@ class MealAllocator {
     const numMeals = mealTemplates.length;
     const mealItems: MealItem[][] = mealTemplates.map(() => []);
     const mealCalories = new Array<number>(numMeals).fill(0);
+    const mealWeights = mealTemplates.map((m) =>
+      m.calorieShareWeight !== undefined && m.calorieShareWeight > 0 ? m.calorieShareWeight : 1
+    );
 
     const activeFoods = [...dailyQuantities.entries()].filter(([, qty]) => qty > 0);
 
@@ -56,7 +59,8 @@ class MealAllocator {
         bounds,
         numMeals,
         preWorkoutMealIndex,
-        mealCalories
+        mealCalories,
+        mealWeights
       );
 
       const calPerUnit = food.serving.calories / food.serving.amount;
@@ -78,23 +82,25 @@ class MealAllocator {
   /**
    * Compute the per-meal portion array for a single food.
    *
-   * The k active meal slots are chosen by ascending current calorie load so
-   * each food naturally fills the lightest meals first. Carb-heavy foods
-   * place the pre-workout slot first before applying calorie-balance ordering
-   * to the rest.
+   * The k active meal slots are chosen by ascending weighted calorie load
+   * (`calories / weight`) so each food naturally fills the meals that are
+   * furthest from their share first. Carb-heavy foods place the pre-workout
+   * slot first before applying balance ordering to the rest.
    *
    * @param totalQty - Daily quantity to distribute.
    * @param bounds - Per-meal constraints for this food.
    * @param numMeals - Total number of meal slots.
    * @param preWorkoutMealIndex - Preferred index for carb-heavy foods.
    * @param mealCalories - Running calorie totals per meal at time of call.
+   * @param mealWeights - Per-meal calorie-share weights (default 1.0 per meal).
    */
   private computePortions(
     totalQty: number,
     bounds: FoodBounds,
     numMeals: number,
     preWorkoutMealIndex: number | undefined,
-    mealCalories: number[]
+    mealCalories: number[],
+    mealWeights: number[]
   ): number[] {
     const { step, perMealMin, perMealMax } = bounds;
     const n = Math.round(totalQty / step);
@@ -113,7 +119,8 @@ class MealAllocator {
       numMeals,
       preWorkoutMealIndex,
       this.isCarbHeavy(bounds.food),
-      mealCalories
+      mealCalories,
+      mealWeights
     );
 
     const portions = new Array<number>(numMeals).fill(0);
@@ -142,31 +149,35 @@ class MealAllocator {
 
   /**
    * Return meal indices ordered by assignment priority. Non-carb-heavy foods
-   * are sorted ascending by current calorie load so each food fills the
-   * lightest meals first. For carb-heavy foods the pre-workout slot leads,
-   * with remaining slots still sorted by calorie load.
+   * are sorted ascending by weighted calorie load (`calories / weight`) so
+   * each food fills the meals furthest from their share first. For
+   * carb-heavy foods the pre-workout slot leads, with remaining slots still
+   * sorted by weighted calorie load.
    *
    * @param numMeals - Total meal count.
    * @param preWorkoutMealIndex - Index of the pre-workout meal, if any.
    * @param carbHeavy - Whether to prioritise the pre-workout slot.
    * @param mealCalories - Current calorie totals per meal used for balancing.
+   * @param mealWeights - Per-meal calorie-share weights used to bias balance.
    */
   private buildMealOrder(
     numMeals: number,
     preWorkoutMealIndex: number | undefined,
     carbHeavy: boolean,
-    mealCalories: number[]
+    mealCalories: number[],
+    mealWeights: number[]
   ): number[] {
     const indices = Array.from({ length: numMeals }, (_, i) => i);
+    const weightedCalories = (i: number): number => mealCalories[i] / mealWeights[i];
 
     if (carbHeavy && preWorkoutMealIndex !== undefined) {
       const rest = indices
         .filter((i) => i !== preWorkoutMealIndex)
-        .sort((a, b) => mealCalories[a] - mealCalories[b]);
+        .sort((a, b) => weightedCalories(a) - weightedCalories(b));
       return [preWorkoutMealIndex, ...rest];
     }
 
-    return indices.sort((a, b) => mealCalories[a] - mealCalories[b]);
+    return indices.sort((a, b) => weightedCalories(a) - weightedCalories(b));
   }
 }
 
