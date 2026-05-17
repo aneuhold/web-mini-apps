@@ -1,5 +1,6 @@
 import {
   bodyStrongWheyChocolate,
+  caseinProteinShakeVanilla,
   chickenBreast,
   dannonLightFitGreekBlueberry,
   jifChunkyPB,
@@ -84,7 +85,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       },
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
-        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 }
+        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
+        { food: caseinProteinShakeVanilla, label: 'Casein Shake' }
       ],
       categoryFoods: [
         {
