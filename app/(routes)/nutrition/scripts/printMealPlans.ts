@@ -1,7 +1,7 @@
-import nutritionPlanPrinter from '../nutritionPlanPrinter';
-import { nutritionPlans } from '../plans';
+import optimizedVariants from '../plans/optimizedVariants';
+import nutritionPlanPrinter from '../services/nutritionPlanPrinter';
 
-for (const plan of nutritionPlans) {
+for (const plan of Object.values(optimizedVariants)) {
   nutritionPlanPrinter.printPlan(plan);
 }
 console.log('');

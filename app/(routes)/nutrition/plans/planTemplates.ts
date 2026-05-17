@@ -5,9 +5,26 @@ import {
   jifChunkyPB,
   krogerChunkyPB,
   optimumNutritionGoldStandardWhey
-} from '../foods';
-import type { Food, NutritionPlan } from '../types';
-import { ActivityLevel, DayType, DietPhase, FoodCategory } from '../types';
+} from '../util/foods';
+import type { Food, NutritionPlan } from '../util/types';
+import { ActivityLevel, DayType, DietPhase, FoodCategory } from '../util/types';
+
+/**
+ * Complete description of a (phase × day-type) plan: the baseline plan shell
+ * the optimizer reshapes, plus the swap toggles the UI exposes as
+ * checkboxes.
+ */
+export type PlanTemplate = {
+  /**
+   * Anchors the meal layout (times, names, count), calorie target, bodyweight,
+   * activity level, and phase. The meal `items` lists are a baseline food set
+   * the optimizer reshapes — the rendered plan reads optimized meals out of
+   * `optimized-variants.json` instead.
+   */
+  template: NutritionPlan;
+  optionalFoods: OptionalFood[];
+  categoryFoods: CategoryFood[];
+};
 
 /**
  * A boolean toggle for a food that has no `FoodCategory`. When the toggle is
@@ -39,23 +56,6 @@ export type CategoryFood = {
   alternateFood: Food;
   /** Checkbox label, e.g. "ON Whey (instead of BodyStrong)". */
   label: string;
-};
-
-/**
- * Complete description of a (phase × day-type) plan: the baseline plan shell
- * the optimizer reshapes, plus the swap toggles the UI exposes as
- * checkboxes.
- */
-export type PlanTemplate = {
-  /**
-   * Anchors the meal layout (times, names, count), calorie target, bodyweight,
-   * activity level, and phase. The meal `items` lists are a baseline food set
-   * the optimizer reshapes — the rendered plan reads optimized meals out of
-   * `optimized-variants.json` instead.
-   */
-  template: NutritionPlan;
-  optionalFoods: OptionalFood[];
-  categoryFoods: CategoryFood[];
 };
 
 /**
