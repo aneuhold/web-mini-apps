@@ -1,5 +1,5 @@
-import type { Food, MacroFloors, MacroTotals } from '../types';
-import { DietPhase, FoodCategory } from '../types';
+import type { Food, MacroFloors, MacroTotals } from '../../util/types';
+import { DietPhase, FoodCategory } from '../../util/types';
 import macroScorer from './macroScorer';
 import type { FoodBounds, ScoringConfig } from './optimizerTypes';
 

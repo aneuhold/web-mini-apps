@@ -1,4 +1,4 @@
-import type { MacroTotals, NutritionPlan } from './types';
+import type { MacroTotals, NutritionPlan } from '../util/types';
 import nutritionPlanCalculator from './nutritionPlanCalculator';
 
 /**

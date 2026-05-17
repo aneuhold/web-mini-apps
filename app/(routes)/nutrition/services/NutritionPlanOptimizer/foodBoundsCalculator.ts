@@ -1,4 +1,4 @@
-import type { Food, FoodTotal } from '../types';
+import type { Food, FoodTotal } from '../../util/types';
 import type { FoodBounds } from './optimizerTypes';
 
 /**

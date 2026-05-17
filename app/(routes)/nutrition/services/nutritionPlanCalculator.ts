@@ -1,4 +1,3 @@
-import macroScorer from './NutritionPlanOptimizer/macroScorer';
 import type {
   Food,
   FoodTotal,
@@ -7,8 +6,9 @@ import type {
   Meal,
   MealItem,
   NutritionPlan
-} from './types';
-import { ActivityLevel, DietPhase } from './types';
+} from '../util/types';
+import { ActivityLevel, DietPhase } from '../util/types';
+import macroScorer from './NutritionPlanOptimizer/macroScorer';
 
 const KCAL_PER_G_PROTEIN = 4;
 const KCAL_PER_G_CARBS = 4;
