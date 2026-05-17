@@ -19,6 +19,11 @@ export interface FoodServing {
  * `quantity / serving.amount`.
  */
 export interface Food {
+  /**
+   * Stable identifier for the food — matches the constant's export name
+   * (e.g. `chickenBreast`).
+   */
+  id: string;
   name: string;
   serving: FoodServing;
   /**
@@ -65,6 +70,15 @@ export enum DietPhase {
   Cutting = 'Cutting',
   Bulking = 'Bulking',
   Maintenance = 'Maintenance'
+}
+
+/**
+ * Whether a plan is sized for a lifting day or a rest day. Combined with
+ * `DietPhase` this is the two-axis split the checkbox UI presents.
+ */
+export enum DayType {
+  Training = 'Training',
+  NonTraining = 'NonTraining'
 }
 
 /**
@@ -183,4 +197,11 @@ export interface NutritionPlan {
   requiredFoods?: FoodTotal[];
   meals: Meal[];
   notes?: string;
+  /**
+   * ISO timestamp stamped by `nutrition:optimize` when this variant was last
+   * regenerated. Hand-authored templates in `swapDefinitions.ts` initialize
+   * it (e.g. to the date the template was authored); the optimizer
+   * overwrites it on each regeneration.
+   */
+  lastUpdatedAt: string;
 }
