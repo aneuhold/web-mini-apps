@@ -8,7 +8,7 @@ import {
   optimumNutritionGoldStandardWhey
 } from '../util/foods';
 import type { Food, NutritionPlan } from '../util/types';
-import { ActivityLevel, DayType, DietPhase, FoodCategory } from '../util/types';
+import { ActivityLevel, DayType, DietPhase, FoodCategory, MealName } from '../util/types';
 
 /**
  * Complete description of a (phase × day-type) plan: the baseline plan shell
@@ -76,11 +76,11 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         activityLevel: ActivityLevel.Moderate,
         lastUpdatedAt: '2026-05-17T00:00:00.000Z',
         meals: [
-          { time: '5:30 AM', name: 'Breakfast', items: [], calorieShareWeight: 1.15 },
-          { time: '8:30 AM', name: 'Break', items: [], calorieShareWeight: 0.7 },
-          { time: '11:00 AM', name: 'Lunch', items: [], calorieShareWeight: 1.15 },
-          { time: '2:40 PM', name: 'Pre-workout', items: [] },
-          { time: '4:50 PM', name: 'Dinner', items: [] }
+          { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
+          { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
+          { time: '11:00 AM', name: MealName.Lunch, items: [], calorieShareWeight: 1.15 },
+          { time: '2:40 PM', name: MealName.PreWorkout, items: [] },
+          { time: '4:50 PM', name: MealName.Dinner, items: [] }
         ]
       },
       optionalFoods: [
@@ -113,9 +113,9 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         activityLevel: ActivityLevel.NonTraining,
         lastUpdatedAt: '2026-05-17T00:00:00.000Z',
         meals: [
-          { time: 'Meal 1', name: 'Meal 1', items: [] },
-          { time: 'Meal 2', name: 'Meal 2', items: [] },
-          { time: 'Meal 3', name: 'Meal 3', items: [] }
+          { time: 'Meal 1', name: MealName.Meal1, items: [] },
+          { time: 'Meal 2', name: MealName.Meal2, items: [] },
+          { time: 'Meal 3', name: MealName.Meal3, items: [] }
         ]
       },
       optionalFoods: [
@@ -149,11 +149,11 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         activityLevel: ActivityLevel.Moderate,
         lastUpdatedAt: '2026-05-17T00:00:00.000Z',
         meals: [
-          { time: '5:30 AM', name: 'Breakfast', items: [], calorieShareWeight: 1.15 },
-          { time: '8:30 AM', name: 'Break', items: [], calorieShareWeight: 0.7 },
-          { time: '11:00 AM', name: 'Lunch', items: [], calorieShareWeight: 1.15 },
-          { time: '2:40 PM', name: 'Pre-workout', items: [] },
-          { time: '4:50 PM', name: 'Dinner', items: [] }
+          { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
+          { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
+          { time: '11:00 AM', name: MealName.Lunch, items: [], calorieShareWeight: 1.15 },
+          { time: '2:40 PM', name: MealName.PreWorkout, items: [] },
+          { time: '4:50 PM', name: MealName.Dinner, items: [] }
         ]
       },
       optionalFoods: [
@@ -185,9 +185,9 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         activityLevel: ActivityLevel.NonTraining,
         lastUpdatedAt: '2026-05-17T00:00:00.000Z',
         meals: [
-          { time: 'Meal 1', name: 'Meal 1', items: [] },
-          { time: 'Meal 2', name: 'Meal 2', items: [] },
-          { time: 'Meal 3', name: 'Meal 3', items: [] }
+          { time: 'Meal 1', name: MealName.Meal1, items: [] },
+          { time: 'Meal 2', name: MealName.Meal2, items: [] },
+          { time: 'Meal 3', name: MealName.Meal3, items: [] }
         ]
       },
       optionalFoods: [
@@ -221,11 +221,11 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         activityLevel: ActivityLevel.Moderate,
         lastUpdatedAt: '2026-05-17T00:00:00.000Z',
         meals: [
-          { time: '5:30 AM', name: 'Breakfast', items: [], calorieShareWeight: 1.15 },
-          { time: '8:30 AM', name: 'Break', items: [], calorieShareWeight: 0.7 },
-          { time: '11:00 AM', name: 'Lunch', items: [], calorieShareWeight: 1.15 },
-          { time: '2:40 PM', name: 'Pre-workout', items: [] },
-          { time: '4:50 PM', name: 'Dinner', items: [] }
+          { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
+          { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
+          { time: '11:00 AM', name: MealName.Lunch, items: [], calorieShareWeight: 1.15 },
+          { time: '2:40 PM', name: MealName.PreWorkout, items: [] },
+          { time: '4:50 PM', name: MealName.Dinner, items: [] }
         ]
       },
       optionalFoods: [
@@ -257,9 +257,9 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         activityLevel: ActivityLevel.NonTraining,
         lastUpdatedAt: '2026-05-17T00:00:00.000Z',
         meals: [
-          { time: 'Meal 1', name: 'Meal 1', items: [] },
-          { time: 'Meal 2', name: 'Meal 2', items: [] },
-          { time: 'Meal 3', name: 'Meal 3', items: [] }
+          { time: 'Meal 1', name: MealName.Meal1, items: [] },
+          { time: 'Meal 2', name: MealName.Meal2, items: [] },
+          { time: 'Meal 3', name: MealName.Meal3, items: [] }
         ]
       },
       optionalFoods: [

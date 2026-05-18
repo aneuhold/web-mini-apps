@@ -1,4 +1,4 @@
-import type { Food, Meal, MealItem } from '../../util/types';
+import type { Food, Meal, MealItem, MealName } from '../../util/types';
 import type { FoodBounds } from './optimizerTypes';
 
 /**
@@ -54,10 +54,12 @@ class MealAllocator {
       const bounds = boundsMap.get(food);
       if (bounds === undefined) continue;
 
+      const allowedMealIndices = this.computeAllowedMealIndices(food, mealTemplates);
+
       const portions = this.computePortions(
         totalQty,
         bounds,
-        numMeals,
+        allowedMealIndices,
         preWorkoutMealIndex,
         mealCalories,
         mealWeights
@@ -85,11 +87,12 @@ class MealAllocator {
    * The k active meal slots are chosen by ascending weighted calorie load
    * (`calories / weight`) so each food naturally fills the meals that are
    * furthest from their share first. Carb-heavy foods place the pre-workout
-   * slot first before applying balance ordering to the rest.
+   * slot first before applying balance ordering to the rest. Meals listed
+   * in the food's `excludedMealNames` are removed from consideration.
    *
    * @param totalQty - Daily quantity to distribute.
    * @param bounds - Per-meal constraints for this food.
-   * @param numMeals - Total number of meal slots.
+   * @param allowedMealIndices - Indices of meals this food is permitted to land in.
    * @param preWorkoutMealIndex - Preferred index for carb-heavy foods.
    * @param mealCalories - Running calorie totals per meal at time of call.
    * @param mealWeights - Per-meal calorie-share weights (default 1.0 per meal).
@@ -97,33 +100,35 @@ class MealAllocator {
   private computePortions(
     totalQty: number,
     bounds: FoodBounds,
-    numMeals: number,
+    allowedMealIndices: number[],
     preWorkoutMealIndex: number | undefined,
     mealCalories: number[],
     mealWeights: number[]
   ): number[] {
     const { step, perMealMin, perMealMax } = bounds;
     const n = Math.round(totalQty / step);
+    const numAllowedMeals = allowedMealIndices.length;
+    const portions = new Array<number>(mealCalories.length).fill(0);
+    if (numAllowedMeals === 0) return portions;
 
     const minUnitsPerMeal = perMealMin > 0 ? Math.ceil(perMealMin / step) : 1;
     const maxUnitsPerMeal = Math.floor(perMealMax / step);
 
-    const kMax = Math.min(numMeals, Math.floor(n / minUnitsPerMeal));
+    const kMax = Math.min(numAllowedMeals, Math.floor(n / minUnitsPerMeal));
     const kMin = Math.ceil(n / maxUnitsPerMeal);
-    const k = Math.max(kMin, Math.min(kMax, numMeals));
+    const k = Math.max(kMin, Math.min(kMax, numAllowedMeals));
 
     const base = Math.floor(n / k);
     const extra = n - base * k;
 
     const mealOrder = this.buildMealOrder(
-      numMeals,
+      allowedMealIndices,
       preWorkoutMealIndex,
       this.isCarbHeavy(bounds.food),
       mealCalories,
       mealWeights
     );
 
-    const portions = new Array<number>(numMeals).fill(0);
     let extraRemaining = extra;
 
     for (let rank = 0; rank < k; rank++) {
@@ -134,6 +139,26 @@ class MealAllocator {
     }
 
     return portions;
+  }
+
+  /**
+   * Return the meal indices this food is permitted to land in. A meal is
+   * allowed when its name is undefined or not present in the food's
+   * `excludedMealNames`.
+   *
+   * @param food - The food being placed.
+   * @param mealTemplates - Ordered meal shells from the plan.
+   */
+  private computeAllowedMealIndices(food: Food, mealTemplates: Meal[]): number[] {
+    const excluded = food.excludedMealNames;
+    if (excluded === undefined || excluded.length === 0) {
+      return mealTemplates.map((_, i) => i);
+    }
+    const excludedSet = new Set<MealName>(excluded);
+    return mealTemplates
+      .map((m, i) => ({ name: m.name, i }))
+      .filter(({ name }) => name === undefined || !excludedSet.has(name))
+      .map(({ i }) => i);
   }
 
   /**
@@ -148,36 +173,40 @@ class MealAllocator {
   }
 
   /**
-   * Return meal indices ordered by assignment priority. Non-carb-heavy foods
-   * are sorted ascending by weighted calorie load (`calories / weight`) so
-   * each food fills the meals furthest from their share first. For
-   * carb-heavy foods the pre-workout slot leads, with remaining slots still
-   * sorted by weighted calorie load.
+   * Return meal indices ordered by assignment priority, restricted to the
+   * food's allowed meal set. Non-carb-heavy foods are sorted ascending by
+   * weighted calorie load (`calories / weight`) so each food fills the
+   * meals furthest from their share first. For carb-heavy foods the
+   * pre-workout slot leads (when it is in the allowed set), with remaining
+   * slots still sorted by weighted calorie load.
    *
-   * @param numMeals - Total meal count.
+   * @param allowedMealIndices - Meal indices this food may occupy.
    * @param preWorkoutMealIndex - Index of the pre-workout meal, if any.
    * @param carbHeavy - Whether to prioritise the pre-workout slot.
    * @param mealCalories - Current calorie totals per meal used for balancing.
    * @param mealWeights - Per-meal calorie-share weights used to bias balance.
    */
   private buildMealOrder(
-    numMeals: number,
+    allowedMealIndices: number[],
     preWorkoutMealIndex: number | undefined,
     carbHeavy: boolean,
     mealCalories: number[],
     mealWeights: number[]
   ): number[] {
-    const indices = Array.from({ length: numMeals }, (_, i) => i);
     const weightedCalories = (i: number): number => mealCalories[i] / mealWeights[i];
 
-    if (carbHeavy && preWorkoutMealIndex !== undefined) {
-      const rest = indices
+    if (
+      carbHeavy &&
+      preWorkoutMealIndex !== undefined &&
+      allowedMealIndices.includes(preWorkoutMealIndex)
+    ) {
+      const rest = allowedMealIndices
         .filter((i) => i !== preWorkoutMealIndex)
         .sort((a, b) => weightedCalories(a) - weightedCalories(b));
       return [preWorkoutMealIndex, ...rest];
     }
 
-    return indices.sort((a, b) => weightedCalories(a) - weightedCalories(b));
+    return [...allowedMealIndices].sort((a, b) => weightedCalories(a) - weightedCalories(b));
   }
 }
 

@@ -63,6 +63,15 @@ export interface Food {
    * the constrains of `minServingAmountPerMeal` and `maxServingAmountPerMeal` if those are set.
    */
   allowedStepServingAmountPerMeal?: number;
+  /**
+   * Meal slots this food must not be placed in when the allocator
+   * distributes portions across the day. Use for foods that are
+   * inappropriate for certain feeding slots regardless of macro fit —
+   * e.g. a 200g chicken serving is too substantial for a quick
+   * pre-workout or break feeding. Meals with no `name` or with a name
+   * not in this list remain eligible.
+   */
+  excludedMealNames?: MealName[];
 }
 
 /** The current diet phase, which drives macro priorities and scoring weights in the optimizer. */
@@ -144,6 +153,40 @@ export const isFoodCategory = (value: unknown): value is FoodCategory =>
   typeof value === 'string' && value in FoodCategory;
 
 /**
+ * Canonical name of a meal slot in a plan. Used wherever code needs to
+ * identify a specific feeding (e.g. the optimizer's pre-workout carb
+ * cluster, a food's `excludedMealNames`). The display string for each
+ * value lives in `MEAL_NAME_LABEL` — keep enum values PascalCase so the
+ * JSON storage stays type-safe.
+ */
+export enum MealName {
+  Breakfast = 'Breakfast',
+  Break = 'Break',
+  Lunch = 'Lunch',
+  PreWorkout = 'PreWorkout',
+  Dinner = 'Dinner',
+  Meal1 = 'Meal1',
+  Meal2 = 'Meal2',
+  Meal3 = 'Meal3'
+}
+
+/**
+ * Human-facing display string for each `MealName`. The printer and
+ * `VariantTable` use this so the UI can render "Pre-workout" while the
+ * code references `MealName.PreWorkout`.
+ */
+export const MEAL_NAME_LABEL: Record<MealName, string> = {
+  [MealName.Breakfast]: 'Breakfast',
+  [MealName.Break]: 'Break',
+  [MealName.Lunch]: 'Lunch',
+  [MealName.PreWorkout]: 'Pre-workout',
+  [MealName.Dinner]: 'Dinner',
+  [MealName.Meal1]: 'Meal 1',
+  [MealName.Meal2]: 'Meal 2',
+  [MealName.Meal3]: 'Meal 3'
+};
+
+/**
  * A serving of a food inside a meal. `quantity` is expressed in the food's
  * `serving.unitLabel`. `amountDisplay` overrides the rendered amount text
  * when the default `${quantity}${unitLabel}` is not descriptive enough
@@ -187,7 +230,7 @@ export interface MacroFloors {
  */
 export interface Meal {
   time: string;
-  name?: string;
+  name?: MealName;
   totalLabelSuffix?: string;
   items: MealItem[];
   /**

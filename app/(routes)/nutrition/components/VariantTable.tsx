@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import nutritionPlanCalculator from '../services/nutritionPlanCalculator';
 import type { NutritionPlan } from '../util/types';
+import { MEAL_NAME_LABEL } from '../util/types';
 import MacroCells from './MacroCells';
 
 /**
@@ -77,7 +78,7 @@ const VariantTable = ({ plan }: { plan: NutritionPlan }) => {
             {plan.meals.map((meal, mealIdx) => {
               const mealTotals = nutritionPlanCalculator.computeMealTotals(meal);
               const totalLabel = meal.name
-                ? `${meal.name} total${meal.totalLabelSuffix ? ` ${meal.totalLabelSuffix}` : ''}`
+                ? `${MEAL_NAME_LABEL[meal.name]} total${meal.totalLabelSuffix ? ` ${meal.totalLabelSuffix}` : ''}`
                 : null;
 
               return (
