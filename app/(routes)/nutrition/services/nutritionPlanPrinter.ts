@@ -1,4 +1,5 @@
 import type { MacroTotals, NutritionPlan } from '../util/types';
+import { MEAL_NAME_LABEL } from '../util/types';
 import nutritionPlanCalculator from './nutritionPlanCalculator';
 
 /**
@@ -58,7 +59,7 @@ class NutritionPlanPrinter {
     console.log('\nMeals:');
     for (const meal of plan.meals) {
       const mealTotals = nutritionPlanCalculator.computeMealTotals(meal);
-      const label = meal.name ? `${meal.time} — ${meal.name}` : meal.time;
+      const label = meal.name ? `${meal.time} — ${MEAL_NAME_LABEL[meal.name]}` : meal.time;
       const suffix = meal.totalLabelSuffix ? ` ${meal.totalLabelSuffix}` : '';
       console.log(`  ${label}${suffix}`);
       console.log(`    ${this.formatMacros(mealTotals)}`);

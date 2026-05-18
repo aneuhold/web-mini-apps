@@ -8,7 +8,7 @@ import nutritionPlanPrinter from '../services/nutritionPlanPrinter';
 import nutritionVariants from '../services/nutritionVariants';
 import { allFoods } from '../util/foods';
 import type { NutritionPlan } from '../util/types';
-import { DayType, DietPhase } from '../util/types';
+import { DayType, DietPhase, MealName } from '../util/types';
 import { isInteractive, parseCliArgs, resolveScope } from './variantScope';
 
 const VARIANTS_PATH = resolve(import.meta.dirname, '..', 'plans', 'optimized-variants.json');
@@ -28,15 +28,13 @@ const writeVariants = (variants: Record<string, NutritionPlan>): void => {
 };
 
 /**
- * Return the index of the first meal whose name contains "pre-workout"
- * (case-insensitive), or undefined if no such meal exists.
+ * Return the index of the `MealName.PreWorkout` slot in the plan, or
+ * undefined if the plan has no pre-workout meal.
  *
  * @param plan
  */
 const findPreWorkoutMealIndex = (plan: NutritionPlan): number | undefined => {
-  const idx = plan.meals.findIndex(
-    (m) => m.name !== undefined && m.name.toLowerCase().includes('pre-workout')
-  );
+  const idx = plan.meals.findIndex((m) => m.name === MealName.PreWorkout);
   return idx === -1 ? undefined : idx;
 };
 

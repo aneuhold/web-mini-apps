@@ -1,4 +1,4 @@
-import type { Food, Meal, MealItem } from '../../util/types';
+import type { Food, Meal, MealItem, MealName } from '../../util/types';
 import type { FoodBounds } from './optimizerTypes';
 
 /**
@@ -154,7 +154,7 @@ class MealAllocator {
     if (excluded === undefined || excluded.length === 0) {
       return mealTemplates.map((_, i) => i);
     }
-    const excludedSet = new Set(excluded);
+    const excludedSet = new Set<MealName>(excluded);
     return mealTemplates
       .map((m, i) => ({ name: m.name, i }))
       .filter(({ name }) => name === undefined || !excludedSet.has(name))

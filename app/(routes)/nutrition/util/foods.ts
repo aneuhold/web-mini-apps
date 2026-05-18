@@ -1,5 +1,5 @@
 import type { Food } from './types';
-import { FoodCategory } from './types';
+import { FoodCategory, MealName } from './types';
 
 export const chickenBreast: Food = {
   id: 'chickenBreast',
@@ -9,9 +9,9 @@ export const chickenBreast: Food = {
   // Only because I don't have enough chicken in the week to support more than this per day.
   maxServingAmountPerPlan: 400,
   allowedStepServingAmountPerMeal: 25,
-  // 200g chunks belong in the substantial meals, not the quick "Break" snack
-  // or the carb-focused "Pre-workout" feeding.
-  excludedMealNames: ['Pre-workout', 'Break']
+  // 200g chunks belong in the substantial meals, not the quick break snack
+  // or the carb-focused pre-workout feeding.
+  excludedMealNames: [MealName.PreWorkout, MealName.Break]
 };
 
 export const bodyStrongWheyChocolate: Food = {
