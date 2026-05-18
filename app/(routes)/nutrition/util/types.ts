@@ -63,6 +63,16 @@ export interface Food {
    * the constrains of `minServingAmountPerMeal` and `maxServingAmountPerMeal` if those are set.
    */
   allowedStepServingAmountPerMeal?: number;
+  /**
+   * Meal names this food must not be placed in when the allocator
+   * distributes portions across the day. Use for foods that are
+   * inappropriate for certain feeding slots regardless of macro fit —
+   * e.g. a 200g chicken serving is too substantial for a quick
+   * "Pre-workout" or "Break" feeding. Names are matched against
+   * `Meal.name`; meals with no name or with a name not in this list
+   * remain eligible.
+   */
+  excludedMealNames?: string[];
 }
 
 /** The current diet phase, which drives macro priorities and scoring weights in the optimizer. */

@@ -8,7 +8,10 @@ export const chickenBreast: Food = {
   minServingAmountPerMeal: 200,
   // Only because I don't have enough chicken in the week to support more than this per day.
   maxServingAmountPerPlan: 400,
-  allowedStepServingAmountPerMeal: 25
+  allowedStepServingAmountPerMeal: 25,
+  // 200g chunks belong in the substantial meals, not the quick "Break" snack
+  // or the carb-focused "Pre-workout" feeding.
+  excludedMealNames: ['Pre-workout', 'Break']
 };
 
 export const bodyStrongWheyChocolate: Food = {
