@@ -143,13 +143,21 @@ class NutritionPlanCalculator {
    * @param plan - The plan to aggregate.
    */
   computeFoodTotals(plan: NutritionPlan): FoodTotal[] {
-    const totals = new Map<Food, number>();
+    // Key by `food.id` rather than the `Food` object reference: plans
+    // deserialized from JSON have a fresh `Food` instance per meal item,
+    // so reference-keyed grouping would split identical foods across rows.
+    const totals = new Map<string, FoodTotal>();
     for (const meal of plan.meals) {
       for (const item of meal.items) {
-        totals.set(item.food, (totals.get(item.food) ?? 0) + item.quantity);
+        const existing = totals.get(item.food.id);
+        if (existing) {
+          existing.quantity += item.quantity;
+        } else {
+          totals.set(item.food.id, { food: item.food, quantity: item.quantity });
+        }
       }
     }
-    return Array.from(totals, ([food, quantity]) => ({ food, quantity }));
+    return Array.from(totals.values());
   }
 
   /**
