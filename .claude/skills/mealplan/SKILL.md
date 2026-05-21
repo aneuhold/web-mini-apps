@@ -71,33 +71,34 @@ Treat anything in that file as durable context: it describes who the user is, no
 
 ## 4. Locate the project data
 
-The nutrition app at `app/(routes)/nutrition/` is the single source of truth for the user's food database, weight log, and active plan(s). Read each of these files at the start of the session so you know the current picture, then edit them directly when the user reports new information. The user reviews changes via git, so you don't need to summarize what you changed — just make the edit cleanly. Also run `pnpm nutrition:meals` before discussing with the user so you can see what the user sees as far as totals and their current meal breakdowns. Section 5 covers when to reach for the optimizer instead.
+The nutrition app at `app/(routes)/nutrition/` is the single source of truth for the user's food database, weight log, and active plan(s). Read each of these files at the start of the session so you know the current picture, then edit them directly when the user reports new information. The user reviews changes via git, so you don't need to summarize what you changed — just make the edit cleanly.
 
 When designing or adjusting a plan, the coach picks `bodyweightLb` and `calorieTarget` (those remain coaching judgments — sized via the RP tables in section 2); P/C/F follow automatically from `nutritionPlanCalculator.computeTargets`.
 
 These four files are what you edit during a coaching session:
 
-| File                                                | What lives here                                                                                                                                                                                                                                                         |
-| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `app/(routes)/nutrition/util/foods.ts`              | One `Food` export per item, each with a reference `serving` (amount + unit + cal/P/C/F) and a stable `id` matching the export name. Add new foods here when the user introduces them.                                                                                  |
-| `app/(routes)/nutrition/util/weightHistory.ts`      | `weightHistory: WeightEntry[]`, oldest first. Append new measurements; never delete history.                                                                                                                                                                            |
-| `app/(routes)/nutrition/plans/planTemplates.ts`     | `planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>>` — the (phase × day-type) templates plus their `optionalFoods` / `categoryFoods` checkbox swap lists. Calorie targets, bodyweights, and new swap toggles all live here. Each template has its own `lastUpdatedAt` — bump it whenever you edit the template. |
-| `app/(routes)/nutrition/util/types.ts`              | Shapes for `Food`, `Meal`, `NutritionPlan`, plus the `DietPhase` / `DayType` / `FoodCategory` enums. Read the JSDoc here when wiring a new field on a food or a template.                                                                                               |
+| File                                            | What lives here                                                                                                                                                                                                                                                                                                              |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `app/(routes)/nutrition/util/foods.ts`          | One `Food` export per item, each with a reference `serving` (amount + unit + cal/P/C/F) and a stable `id` matching the export name. Add new foods here when the user introduces them.                                                                                                                                        |
+| `app/(routes)/nutrition/util/weightHistory.ts`  | `weightHistory: WeightEntry[]`, oldest first. Append new measurements; never delete history.                                                                                                                                                                                                                                 |
+| `app/(routes)/nutrition/plans/planTemplates.ts` | `planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>>` — the (phase × day-type) templates plus their `optionalFoods` / `categoryFoods` checkbox swap lists. Calorie targets, bodyweights, and new swap toggles all live here. Each template has its own `lastUpdatedAt` — bump it whenever you edit the template. |
+| `app/(routes)/nutrition/util/types.ts`          | Shapes for `Food`, `Meal`, `NutritionPlan`, plus the `DietPhase` / `DayType` / `FoodCategory` enums. Read the JSDoc here when wiring a new field on a food or a template.                                                                                                                                                    |
 
-The rest of the route — `plans/optimized-variants.json` (optimizer output), `plans/optimizedVariants.ts` (typed JSON wrapper), `services/*` (variant resolution, local-storage persistence, macro math, printer, optimizer internals), and the React components in `components/` — is plumbing the coach doesn't touch directly. The two scripts in section 5 are the only entry points you need.
+The rest of the route — `plans/optimized-variants.json` (optimizer output), `plans/optimizedVariants.ts` (typed JSON wrapper), `services/*` (variant resolution, local-storage persistence, macro math, printer, optimizer internals), and the React components in `components/` — is plumbing the coach doesn't touch directly. The three scripts in section 5 are the only entry points you need.
 
 When you update `foods.ts` or `planTemplates.ts`, regenerate the affected variants with `pnpm nutrition:optimize` (see section 5) so `optimized-variants.json` matches. Run `pnpm lint --fix` and `pnpm check` after edits.
 
-## 5. Evaluating food integrations and swaps
+## 5. Scripts
 
-You have two scripts. They answer different questions, so use both:
+Three scripts. They answer different questions, so pick the right one:
 
-- `pnpm nutrition:meals` — prints variants from `optimized-variants.json` exactly as the user sees them on the page. Run it at the start of the session, and again after `pnpm nutrition:optimize` to confirm totals.
+- `pnpm nutrition:targets` — **Run this at the start of every session.** Prints the rolling weekly-average weight trend, the RP Table 10.1 calorie reference at the current weekly-avg bodyweight (one row per `ActivityLevel`, with maintenance / cutting / bulking columns), and a configured-vs-recommended analysis for every (phase × day-type) template in `planTemplates.ts`. The analysis Δ column uses `recommended − configured`: positive means "add calories to align," negative means "cut calories to align." Optional flags: `--cut-rate <pct>` (default 0.75), `--bulk-rate <pct>` (default 0.375), `--bodyweight <lb>` (override the trend-derived weight for hypotheticals), `--weeks <n>` (trend windows shown, default 4).
+- `pnpm nutrition:meals` — prints variants from `optimized-variants.json` exactly as the user sees them on the page. Run after `pnpm nutrition:optimize` to confirm totals, or whenever you need to inspect a specific variant's `Target` line + meal breakdown.
 - `pnpm nutrition:optimize` — regenerates one or more entries in `optimized-variants.json`. For each (phase × day-type × swap-combo) in scope, it treats the food pool (minus the swap state's excluded foods) as a search space and returns the macro-optimal daily quantities + meal layout, with a score and delta vs. target. This is your primary tool for "does this food fit?" and "what replaces this food if it's gone?". If you see an issue with the output, DO NOT just discount it; adjust the food/template parameters and rerun. ACTUALLY LOOK AT THE OUTPUT — it changes quantities and meal composition together to hit targets.
 
-### Scoping flags (shared by both scripts)
+### Scoping flags (shared by `nutrition:meals` and `nutrition:optimize`)
 
-Both scripts are non-interactive from this skill's perspective — always pass flags explicitly. Running either script with no flags starts a prompt-driven session that this skill can't drive. The flag set is identical:
+Both `nutrition:meals` and `nutrition:optimize` are non-interactive from this skill's perspective — always pass flags explicitly. Running either with no flags starts a prompt-driven session that this skill can't drive. (`nutrition:targets` uses its own flags listed above and is fine to run with no flags.) The flag set below is identical for the two variant scripts:
 
 - `<script> --phase cutting --day training --variant-id <key>` — exactly one entry. Use when only one user-facing checkbox combination needs to be touched.
 - `<script> --phase cutting --day training` — every swap-combo for that pair (the most common scope while iterating).
@@ -120,6 +121,6 @@ Both scripts are non-interactive from this skill's perspective — always pass f
 
 ## 6. Session kickoff
 
-After reading the profile and the data files, ask the user what they want to do this session — log weight, adjust the plan, add a food, review trend, design a new phase, etc.
+After reading the profile and the data files, **run `pnpm nutrition:targets`** so you walk into the conversation with the current trend, RP-recommended targets, and any configured-vs-recommended drift in hand. Then ask the user what they want to do this session — log weight, adjust the plan, add a food, review trend, design a new phase, etc.
 
-Do not start dispensing advice before you've read the RP diet tables, the profile, and the data files — coaching without the current numbers in hand is exactly the "single feeling" anti-pattern flagged in the Coach's Algorithm.
+Do not start dispensing advice before you've read the RP diet tables, the profile, the data files, and run `nutrition:targets` — coaching without the current numbers in hand is exactly the "single feeling" anti-pattern flagged in the Coach's Algorithm.
