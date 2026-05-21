@@ -1,6 +1,7 @@
 'use client';
 
 import Footer from '$components/Footer';
+import NextLink from 'next/link';
 import { useEffect, useState } from 'react';
 import VariantSection from './components/VariantSection';
 import type { NutritionViewState } from './services/nutritionLocalData';
@@ -106,6 +107,10 @@ export default function NutritionPage() {
           onSwapStateChange={updateSwapState}
         />
       </div>
+
+      <NextLink href="/nutrition/stats" data-stats-button>
+        View Stats →
+      </NextLink>
 
       <Footer />
     </article>
