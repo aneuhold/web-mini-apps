@@ -1,6 +1,5 @@
 import {
   bodyStrongWheyChocolate,
-  caseinProteinShakeVanilla,
   chickenBreast,
   dannonLightFitGreekBlueberry,
   jifChunkyPB,
@@ -74,7 +73,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         bodyweightLb: 183,
         calorieTarget: 1700,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-05-20T12:00:00.000Z',
+        lastUpdatedAt: '2026-05-26T00:00:00.000Z',
         meals: [
           { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
           { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
@@ -85,8 +84,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       },
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
-        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
-        { food: caseinProteinShakeVanilla, label: 'Casein Shake' }
+        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 }
       ],
       categoryFoods: [
         {
