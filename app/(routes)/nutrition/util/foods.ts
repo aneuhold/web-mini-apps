@@ -39,8 +39,8 @@ export const caseinProteinShakeVanilla: Food = {
   name: 'Casein Protein Shake, Vanilla',
   serving: { amount: 1, unitLabel: 'bottle', calories: 170, protein: 30, carbs: 8, fat: 3.5 },
   maxServingAmountPerMeal: 2,
-  // Max amount in a day because of amount available
-  maxServingAmountPerPlan: 2,
+  // Currently out
+  maxServingAmountPerPlan: 0,
   allowedStepServingAmountPerMeal: 1
 };
 
