@@ -17,12 +17,15 @@ export const DAY_TYPE_CLI_FLAG: Record<DayType, string> = {
 
 /**
  * Parsed `--phase` / `--day` / `--variant-id` flags. Both `nutrition:meals`
- * and `nutrition:optimize` accept the same flag set.
+ * and `nutrition:optimize` accept the same flag set. `reconcile` is honored
+ * only by `nutrition:optimize` (it re-keys/prunes cached variants without
+ * re-running the optimizer); `nutrition:meals` ignores it.
  */
 export type CliArgs = {
   phase?: DietPhase;
   day?: DayType;
   variantId?: string;
+  reconcile: boolean;
 };
 
 /**
@@ -45,11 +48,12 @@ export const parseCliArgs = (): CliArgs => {
     options: {
       phase: { type: 'string' },
       day: { type: 'string' },
-      'variant-id': { type: 'string' }
+      'variant-id': { type: 'string' },
+      reconcile: { type: 'boolean' }
     },
     strict: true
   });
-  const { phase: phaseInput, day: dayInput, 'variant-id': variantId } = values;
+  const { phase: phaseInput, day: dayInput, 'variant-id': variantId, reconcile } = values;
 
   let phase: DietPhase | undefined;
   if (phaseInput !== undefined) {
@@ -75,7 +79,7 @@ export const parseCliArgs = (): CliArgs => {
   if (variantId && (!phase || !day)) {
     throw new Error('--variant-id requires both --phase and --day');
   }
-  return { phase, day, variantId };
+  return { phase, day, variantId, reconcile: reconcile === true };
 };
 
 /**
