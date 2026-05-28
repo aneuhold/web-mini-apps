@@ -21,6 +21,8 @@ export const bodyStrongWheyChocolate: Food = {
   category: FoodCategory.ProteinPowder,
   minServingAmountPerMeal: 2,
   maxServingAmountPerMeal: 4,
+  // Currently out
+  maxServingAmountPerPlan: 0,
   allowedStepServingAmountPerMeal: 1
 };
 
