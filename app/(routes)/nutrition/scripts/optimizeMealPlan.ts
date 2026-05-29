@@ -93,7 +93,7 @@ const resolveReconcilePairs = (args: CliArgs): VariantPair[] => {
 /**
  * Re-key and prune the cached variants against the current templates without
  * re-optimizing, then write the result and print a summary of what moved,
- * what was dropped, and which canonical keys still need `nutrition:optimize`.
+ * what was dropped, and which template keys still need `nutrition:optimize`.
  *
  * @param args
  */

@@ -4,9 +4,6 @@ import { allFoods } from '../util/foods';
 import type { Food, FoodTotal, NutritionPlan } from '../util/types';
 import { DayType, DietPhase, FoodCategory } from '../util/types';
 
-/** A (phase × day-type) pair, used to scope a reconcile pass. */
-export type VariantPair = { phase: DietPhase; dayType: DayType };
-
 /**
  * Outcome of `reconcileVariants`: the rewritten variant record plus a
  * breakdown of what happened to every in-scope cached entry so callers can
@@ -15,18 +12,18 @@ export type VariantPair = { phase: DietPhase; dayType: DayType };
 export type ReconcileResult = {
   /** Full variant record after reconciliation (out-of-scope keys untouched). */
   variants: Record<string, NutritionPlan>;
-  /** Entries whose key changed to match the current canonical format. */
+  /** Entries whose key changed to match the current key format. */
   remapped: { from: string; to: string }[];
-  /** Entries already stored under their canonical key. */
+  /** Entries already stored under the key their swap state produces. */
   unchanged: string[];
   /** Entries dropped because their meals reference a removed/unavailable food. */
   prunedStale: { key: string; reason: string }[];
   /**
-   * Entries dropped because another entry already claimed the canonical key
-   * they resolve to (the first one encountered wins).
+   * Entries dropped because another entry already claimed the key they
+   * resolve to (the first one encountered wins).
    */
   prunedCollision: { key: string; target: string }[];
-  /** Canonical keys with no surviving entry — these still need `nutrition:optimize`. */
+  /** Template keys with no surviving entry. These still need `nutrition:optimize`. */
   missing: string[];
 };
 
@@ -54,15 +51,18 @@ const ASSIGN_SEPARATOR = '=';
 
 type Toggle = { kind: 'optional'; foodId: string } | { kind: 'category'; category: FoodCategory };
 
+/** A (phase × day-type) pair, used to scope a reconcile pass. */
+export type VariantPair = { phase: DietPhase; dayType: DayType };
+
 /**
- * Single entry point for everything variant-shaped: canonical key building,
+ * Single entry point for everything variant-shaped: key building,
  * default swap states, enumeration across a (phase × day-type), and plan
  * resolution against both the hand-authored templates and the optimizer's
  * cached output.
  */
 class NutritionVariants {
   /**
-   * Build the canonical variant key from a (phase, dayType, swapState)
+   * Build the variant key from a (phase, dayType, swapState)
    * triple. Parts are sorted alphabetically so the same logical state
    * always produces the same key.
    *
@@ -236,10 +236,10 @@ class NutritionVariants {
    * the current templates *without* re-optimizing. Each in-scope entry's swap
    * state is inferred from the foods actually present in its meals — the same
    * ground truth `getOptimizedPlan` reads — and the entry is rewritten under
-   * the canonical key that state produces. Entries whose meals reference a
+   * the key that state produces. Entries whose meals reference a
    * food that no longer exists or is no longer allocatable (e.g.
    * `maxServingAmountPerPlan: 0`) are dropped, as are entries that collide on
-   * a canonical key already claimed. Keys outside the scoped pairs are
+   * a key already claimed. Keys outside the scoped pairs are
    * preserved verbatim. Use after a template edit that changes the swap-toggle
    * shape (adding/removing a toggle, retiring a food) but leaves the meals
    * themselves valid.

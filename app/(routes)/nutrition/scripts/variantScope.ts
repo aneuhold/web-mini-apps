@@ -30,7 +30,7 @@ export type CliArgs = {
 
 /**
  * One concrete variant the active script will operate on: the phase + day
- * type pair and its canonical key into `optimized-variants.json`.
+ * type pair and its key into `optimized-variants.json`.
  */
 export type VariantScope = {
   phase: DietPhase;
