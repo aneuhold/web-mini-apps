@@ -91,8 +91,8 @@ export const isDietPhase = (value: unknown): value is DietPhase =>
   typeof value === 'string' && value in DietPhase;
 
 /**
- * Whether a plan is sized for a lifting day or a rest day. Combined with
- * `DietPhase` this is the two-axis split the checkbox UI presents.
+ * The type of day the plan is created for. This is arbitrary and can be basically whatever
+ * the plan template wants to be named.
  */
 export enum DayType {
   Training = 'Training',

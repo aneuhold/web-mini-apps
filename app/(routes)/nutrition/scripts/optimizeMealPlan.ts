@@ -6,10 +6,11 @@ import nutritionPlanCalculator from '../services/nutritionPlanCalculator';
 import nutritionPlanOptimizer from '../services/NutritionPlanOptimizer/nutritionPlanOptimizer';
 import nutritionPlanPrinter from '../services/nutritionPlanPrinter';
 import nutritionVariants from '../services/nutritionVariants';
+import type { VariantPair } from '../services/nutritionVariants';
 import { allFoods } from '../util/foods';
 import type { NutritionPlan } from '../util/types';
 import { DayType, DietPhase, MealName } from '../util/types';
-import { isInteractive, parseCliArgs, resolveScope } from './variantScope';
+import { isInteractive, parseCliArgs, resolveScope, type CliArgs } from './variantScope';
 
 const VARIANTS_PATH = resolve(import.meta.dirname, '..', 'plans', 'optimized-variants.json');
 
@@ -76,8 +77,59 @@ const optimizeVariant = (phase: DietPhase, dayType: DayType, key: string): Nutri
   };
 };
 
+/**
+ * Expand the scoping flags into the (phase × day-type) pairs a reconcile pass
+ * should touch: a single pair when both `--phase` and `--day` are given, every
+ * day for one phase when only `--phase` is given, and the full grid otherwise.
+ *
+ * @param args
+ */
+const resolveReconcilePairs = (args: CliArgs): VariantPair[] => {
+  const phases = args.phase ? [args.phase] : Object.values(DietPhase);
+  const days = args.day ? [args.day] : Object.values(DayType);
+  return phases.flatMap((phase) => days.map((dayType): VariantPair => ({ phase, dayType })));
+};
+
+/**
+ * Re-key and prune the cached variants against the current templates without
+ * re-optimizing, then write the result and print a summary of what moved,
+ * what was dropped, and which template keys still need `nutrition:optimize`.
+ *
+ * @param args
+ */
+const runReconcile = (args: CliArgs): void => {
+  const pairs = resolveReconcilePairs(args);
+  const result = nutritionVariants.reconcileVariants(optimizedVariants, pairs);
+  writeVariants(result.variants);
+
+  console.log(`\nReconciled ${pairs.length} (phase × day-type) pair(s) against current templates:`);
+  for (const { phase, dayType } of pairs) console.log(`  ${phase} · ${dayType}`);
+
+  console.log(`\nRemapped (${result.remapped.length}):`);
+  for (const { from, to } of result.remapped) console.log(`  ${from}\n    → ${to}`);
+  console.log(`Unchanged: ${result.unchanged.length}`);
+
+  console.log(`Pruned — stale food (${result.prunedStale.length}):`);
+  for (const { key, reason } of result.prunedStale) console.log(`  ${key} — ${reason}`);
+
+  console.log(`Pruned — key collision (${result.prunedCollision.length}):`);
+  for (const { key, target } of result.prunedCollision) console.log(`  ${key} → ${target}`);
+
+  console.log(`Missing — run nutrition:optimize (${result.missing.length}):`);
+  for (const key of result.missing) console.log(`  ${key}`);
+
+  console.log(
+    `\nWrote ${Object.keys(result.variants).length} variant(s) to optimized-variants.json`
+  );
+};
+
 const main = async (): Promise<void> => {
   const args = parseCliArgs();
+  if (args.reconcile) {
+    runReconcile(args);
+    return;
+  }
+
   const scope = await resolveScope(args);
   if (scope.length === 0) {
     console.log('No variants selected — nothing to do.');
