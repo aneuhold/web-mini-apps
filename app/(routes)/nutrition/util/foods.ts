@@ -53,6 +53,13 @@ export const riceCakeWhiteCheddar: Food = {
   allowedStepServingAmountPerMeal: 1
 };
 
+export const riceCakeAppleCinnamon: Food = {
+  id: 'riceCakeAppleCinnamon',
+  name: 'Rice cake (apple cinnamon)',
+  serving: { amount: 1, unitLabel: 'rice cake', calories: 50, protein: 0.5, carbs: 11, fat: 0 },
+  allowedStepServingAmountPerMeal: 1
+};
+
 export const banana: Food = {
   id: 'banana',
   name: 'Banana (110g average)',
@@ -166,6 +173,7 @@ export const allFoods: Food[] = [
   optimumNutritionGoldStandardWhey,
   caseinProteinShakeVanilla,
   riceCakeWhiteCheddar,
+  riceCakeAppleCinnamon,
   banana,
   kindThinsPBDarkChocolate,
   clifBuildersMiniChocMint,
