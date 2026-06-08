@@ -1,9 +1,4 @@
-import {
-  chickenBreast,
-  dannonLightFitGreekBlueberry,
-  jifChunkyPB,
-  krogerChunkyPB
-} from '../util/foods';
+import { chickenBreast, jifChunkyPB, krogerChunkyPB, oikosTripleZeroYogurt } from '../util/foods';
 import type { Food, NutritionPlan } from '../util/types';
 import { ActivityLevel, DayType, DietPhase, FoodCategory, MealName } from '../util/types';
 
@@ -71,7 +66,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         bodyweightLb: 183,
         calorieTarget: 1700,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-05-28T00:00:00.000Z',
+        lastUpdatedAt: '2026-06-08T00:00:00.000Z',
         meals: [
           { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
           { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
@@ -82,7 +77,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       },
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
-        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 }
+        { food: oikosTripleZeroYogurt, label: 'Oikos Yogurt', requiredDailyQuantity: 1 }
       ],
       categoryFoods: [
         {
@@ -101,7 +96,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         bodyweightLb: 183,
         calorieTarget: 1400,
         activityLevel: ActivityLevel.NonTraining,
-        lastUpdatedAt: '2026-05-28T00:00:00.000Z',
+        lastUpdatedAt: '2026-06-08T00:00:00.000Z',
         meals: [
           { time: 'Meal 1', name: MealName.Meal1, items: [] },
           { time: 'Meal 2', name: MealName.Meal2, items: [] },
@@ -110,7 +105,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       },
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
-        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 }
+        { food: oikosTripleZeroYogurt, label: 'Oikos Yogurt', requiredDailyQuantity: 1 }
       ],
       categoryFoods: [
         {
@@ -131,7 +126,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         bodyweightLb: 183,
         calorieTarget: 2550,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-05-28T00:00:00.000Z',
+        lastUpdatedAt: '2026-06-08T00:00:00.000Z',
         meals: [
           { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
           { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
@@ -142,7 +137,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       },
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
-        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 }
+        { food: oikosTripleZeroYogurt, label: 'Oikos Yogurt', requiredDailyQuantity: 1 }
       ],
       categoryFoods: [
         {
@@ -161,7 +156,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         bodyweightLb: 183,
         calorieTarget: 2300,
         activityLevel: ActivityLevel.NonTraining,
-        lastUpdatedAt: '2026-05-28T00:00:00.000Z',
+        lastUpdatedAt: '2026-06-08T00:00:00.000Z',
         meals: [
           { time: 'Meal 1', name: MealName.Meal1, items: [] },
           { time: 'Meal 2', name: MealName.Meal2, items: [] },
@@ -170,7 +165,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       },
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
-        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 }
+        { food: oikosTripleZeroYogurt, label: 'Oikos Yogurt', requiredDailyQuantity: 1 }
       ],
       categoryFoods: [
         {
@@ -191,7 +186,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         bodyweightLb: 183,
         calorieTarget: 2200,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-05-28T00:00:00.000Z',
+        lastUpdatedAt: '2026-06-08T00:00:00.000Z',
         meals: [
           { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
           { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
@@ -202,7 +197,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       },
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
-        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 }
+        { food: oikosTripleZeroYogurt, label: 'Oikos Yogurt', requiredDailyQuantity: 1 }
       ],
       categoryFoods: [
         {
@@ -221,7 +216,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         bodyweightLb: 183,
         calorieTarget: 1950,
         activityLevel: ActivityLevel.NonTraining,
-        lastUpdatedAt: '2026-05-28T00:00:00.000Z',
+        lastUpdatedAt: '2026-06-08T00:00:00.000Z',
         meals: [
           { time: 'Meal 1', name: MealName.Meal1, items: [] },
           { time: 'Meal 2', name: MealName.Meal2, items: [] },
@@ -230,7 +225,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       },
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
-        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 }
+        { food: oikosTripleZeroYogurt, label: 'Oikos Yogurt', requiredDailyQuantity: 1 }
       ],
       categoryFoods: [
         {
