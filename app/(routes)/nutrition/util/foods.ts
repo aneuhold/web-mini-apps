@@ -89,6 +89,10 @@ export const krogerChunkyPB: Food = {
   serving: { amount: 32, unitLabel: 'g', calories: 180, protein: 7, carbs: 9, fat: 15 },
   category: FoodCategory.PeanutButter,
   minServingAmountPerMeal: 10,
+  // Per-meal PB ceiling (~1 tbsp) so no single meal gets a giant glob; the
+  // optimizer fills remaining fat with cheese/almonds. Daily total is left
+  // free — the complaint was per-meal portion size, not total PB.
+  maxServingAmountPerMeal: 30,
   allowedStepServingAmountPerMeal: 1
 };
 
@@ -98,6 +102,8 @@ export const jifChunkyPB: Food = {
   serving: { amount: 32, unitLabel: 'g', calories: 190, protein: 7, carbs: 8, fat: 16 },
   category: FoodCategory.PeanutButter,
   minServingAmountPerMeal: 10,
+  // Same per-meal PB ceiling as the Kroger jar — see krogerChunkyPB.
+  maxServingAmountPerMeal: 30,
   allowedStepServingAmountPerMeal: 1
 };
 
@@ -175,6 +181,30 @@ export const oikosTripleZeroYogurt: Food = {
   allowedStepServingAmountPerMeal: 1
 };
 
+export const krogerStringCheese: Food = {
+  id: 'krogerStringCheese',
+  name: 'Kroger Mozzarella String Cheese',
+  serving: { amount: 1, unitLabel: 'stick', calories: 80, protein: 7, carbs: 1, fat: 6 },
+  // Carries fat + protein together, so it can offload fat from peanut butter
+  // without being a pure-fat add. No category: it is allowed to coexist with PB.
+  maxServingAmountPerMeal: 3,
+  maxServingAmountPerPlan: 6,
+  allowedStepServingAmountPerMeal: 1
+};
+
+export const krogerAlmonds: Food = {
+  id: 'krogerAlmonds',
+  name: 'Kroger Lightly Salted Roasted Almonds',
+  serving: { amount: 28, unitLabel: 'g', calories: 170, protein: 6, carbs: 6, fat: 15 },
+  // A second dense fat source so the optimizer is not forced to pour all the
+  // day's fat into peanut butter. Intentionally NOT in the PeanutButter
+  // category — the goal is to reduce PB, not replace it outright.
+  minServingAmountPerMeal: 14,
+  maxServingAmountPerMeal: 28,
+  maxServingAmountPerPlan: 56,
+  allowedStepServingAmountPerMeal: 7
+};
+
 /** Every food defined in this module; used as the default candidate pool for the optimizer. */
 export const allFoods: Food[] = [
   chickenBreast,
@@ -194,5 +224,7 @@ export const allFoods: Food[] = [
   krogerChunkLightTunaPouch,
   starkistTunaCreationsBaconRanch,
   dannonLightFitGreekBlueberry,
-  oikosTripleZeroYogurt
+  oikosTripleZeroYogurt,
+  krogerStringCheese,
+  krogerAlmonds
 ];
