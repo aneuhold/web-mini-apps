@@ -1,6 +1,6 @@
 {
-  "Bulking:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off": {
-    "id": "Bulking:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off",
+  "Bulking:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off": {
+    "id": "Bulking:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off",
     "title": "Bulking · Non-Training Day",
     "phase": "Bulking",
     "bodyweightLb": 183,
@@ -305,8 +305,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:23.942Z"
   },
-  "Bulking:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on": {
-    "id": "Bulking:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on",
+  "Bulking:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on": {
+    "id": "Bulking:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on",
     "title": "Bulking · Non-Training Day",
     "phase": "Bulking",
     "bodyweightLb": 183,
@@ -338,22 +338,6 @@
           },
           {
             "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
               "id": "riceCakeAppleCinnamon",
               "name": "Rice cake (apple cinnamon)",
               "serving": {
@@ -366,40 +350,7 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "banana",
-              "name": "Banana (110g average)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "banana",
-                "calories": 97,
-                "protein": 0.8,
-                "carbs": 25.3,
-                "fat": 0.4
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
-                "fat": 0
-              },
-              "maxServingAmountPerPlan": 1,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
+            "quantity": 4
           },
           {
             "food": {
@@ -417,7 +368,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 24
+            "quantity": 25
           }
         ]
       },
@@ -446,22 +397,6 @@
           },
           {
             "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
               "id": "riceCakeAppleCinnamon",
               "name": "Rice cake (apple cinnamon)",
               "serving": {
@@ -474,7 +409,7 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 1
+            "quantity": 4
           },
           {
             "food": {
@@ -563,7 +498,7 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 1
+            "quantity": 4
           },
           {
             "food": {
@@ -579,7 +514,7 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 2
+            "quantity": 1
           },
           {
             "food": {
@@ -600,17 +535,35 @@
           },
           {
             "food": {
-              "id": "cornCanned",
-              "name": "Corn (canned)",
+              "id": "greenBeansCanned",
+              "name": "Green beans (canned)",
               "serving": {
                 "amount": 1,
                 "unitLabel": "can",
-                "calories": 245,
-                "protein": 7,
-                "carbs": 42,
-                "fat": 1
+                "calories": 52.5,
+                "protein": 3.5,
+                "carbs": 10.5,
+                "fat": 0
               },
               "category": "CannedVegetable",
+              "maxServingAmountPerPlan": 2,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "container",
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
+                "fat": 0
+              },
+              "maxServingAmountPerPlan": 1,
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -631,15 +584,15 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 23
+            "quantity": 25
           }
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:25.592Z"
+    "lastUpdatedAt": "2026-06-08T01:45:44.558Z"
   },
-  "Bulking:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off": {
-    "id": "Bulking:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off",
+  "Bulking:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off": {
+    "id": "Bulking:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off",
     "title": "Bulking · Non-Training Day",
     "phase": "Bulking",
     "bodyweightLb": 183,
@@ -961,8 +914,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:24.765Z"
   },
-  "Bulking:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on": {
-    "id": "Bulking:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on",
+  "Bulking:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on": {
+    "id": "Bulking:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on",
     "title": "Bulking · Non-Training Day",
     "phase": "Bulking",
     "bodyweightLb": 183,
@@ -1006,6 +959,22 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
+            "quantity": 2
+          },
+          {
+            "food": {
+              "id": "riceCakeAppleCinnamon",
+              "name": "Rice cake (apple cinnamon)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "rice cake",
+                "calories": 50,
+                "protein": 0.5,
+                "carbs": 11,
+                "fat": 0
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
             "quantity": 1
           },
           {
@@ -1022,7 +991,7 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 2
+            "quantity": 1
           },
           {
             "food": {
@@ -1040,7 +1009,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 21
+            "quantity": 19
           },
           {
             "food": {
@@ -1084,7 +1053,7 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 1
+            "quantity": 3
           },
           {
             "food": {
@@ -1120,31 +1089,32 @@
           },
           {
             "food": {
-              "id": "clifBuildersMiniChocMint",
-              "name": "Clif Builders Mini Choc Mint",
+              "id": "greenBeansCanned",
+              "name": "Green beans (canned)",
               "serving": {
                 "amount": 1,
-                "unitLabel": "bar",
-                "calories": 140,
-                "protein": 10,
-                "carbs": 15,
-                "fat": 4.5
+                "unitLabel": "can",
+                "calories": 52.5,
+                "protein": 3.5,
+                "carbs": 10.5,
+                "fat": 0
               },
-              "category": "ProteinBar",
+              "category": "CannedVegetable",
+              "maxServingAmountPerPlan": 2,
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
           },
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
                 "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
               "maxServingAmountPerPlan": 1,
@@ -1168,80 +1138,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 21
-          }
-        ]
-      },
-      {
-        "time": "Meal 3",
-        "name": "Meal3",
-        "items": [
-          {
-            "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "banana",
-              "name": "Banana (110g average)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "banana",
-                "calories": 97,
-                "protein": 0.8,
-                "carbs": 25.3,
-                "fat": 0.4
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 3
-          },
-          {
-            "food": {
-              "id": "peasCanned",
-              "name": "Peas (canned)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "can",
-                "calories": 175,
-                "protein": 10.5,
-                "carbs": 30.5,
-                "fat": 0
-              },
-              "category": "CannedVegetable",
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "jifChunkyPB",
-              "name": "JIF Chunky PB",
-              "serving": {
-                "amount": 32,
-                "unitLabel": "g",
-                "calories": 190,
-                "protein": 7,
-                "carbs": 8,
-                "fat": 16
-              },
-              "category": "PeanutButter",
-              "minServingAmountPerMeal": 10,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 20
+            "quantity": 19
           },
           {
             "food": {
@@ -1266,12 +1163,119 @@
             "quantity": 200
           }
         ]
+      },
+      {
+        "time": "Meal 3",
+        "name": "Meal3",
+        "items": [
+          {
+            "food": {
+              "id": "riceCakeWhiteCheddar",
+              "name": "Rice cake (white cheddar)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "rice cake",
+                "calories": 45,
+                "protein": 1,
+                "carbs": 9,
+                "fat": 0.5
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 2
+          },
+          {
+            "food": {
+              "id": "riceCakeAppleCinnamon",
+              "name": "Rice cake (apple cinnamon)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "rice cake",
+                "calories": 50,
+                "protein": 0.5,
+                "carbs": 11,
+                "fat": 0
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 2
+          },
+          {
+            "food": {
+              "id": "banana",
+              "name": "Banana (110g average)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "banana",
+                "calories": 97,
+                "protein": 0.8,
+                "carbs": 25.3,
+                "fat": 0.4
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 2
+          },
+          {
+            "food": {
+              "id": "greenBeansCanned",
+              "name": "Green beans (canned)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "can",
+                "calories": 52.5,
+                "protein": 3.5,
+                "carbs": 10.5,
+                "fat": 0
+              },
+              "category": "CannedVegetable",
+              "maxServingAmountPerPlan": 2,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
+              "serving": {
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
+              },
+              "category": "ProteinBar",
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "jifChunkyPB",
+              "name": "JIF Chunky PB",
+              "serving": {
+                "amount": 32,
+                "unitLabel": "g",
+                "calories": 190,
+                "protein": 7,
+                "carbs": 8,
+                "fat": 16
+              },
+              "category": "PeanutButter",
+              "minServingAmountPerMeal": 10,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 18
+          }
+        ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:26.462Z"
+    "lastUpdatedAt": "2026-06-08T01:45:45.399Z"
   },
-  "Bulking:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off": {
-    "id": "Bulking:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off",
+  "Bulking:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off": {
+    "id": "Bulking:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off",
     "title": "Bulking · Non-Training Day",
     "phase": "Bulking",
     "bodyweightLb": 183,
@@ -1574,8 +1578,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:20.643Z"
   },
-  "Bulking:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on": {
-    "id": "Bulking:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on",
+  "Bulking:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on": {
+    "id": "Bulking:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on",
     "title": "Bulking · Non-Training Day",
     "phase": "Bulking",
     "bodyweightLb": 183,
@@ -1619,7 +1623,7 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 3
+            "quantity": 1
           },
           {
             "food": {
@@ -1635,7 +1639,41 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 2
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "peasCanned",
+              "name": "Peas (canned)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "can",
+                "calories": 175,
+                "protein": 10.5,
+                "carbs": 30.5,
+                "fat": 0
+              },
+              "category": "CannedVegetable",
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
+              "serving": {
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
+              },
+              "category": "ProteinBar",
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
           },
           {
             "food": {
@@ -1653,7 +1691,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 23
+            "quantity": 11
           }
         ]
       },
@@ -1694,7 +1732,7 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 3
+            "quantity": 2
           },
           {
             "food": {
@@ -1730,20 +1768,20 @@
           },
           {
             "food": {
-              "id": "clifBuildersMiniChocMint",
-              "name": "Clif Builders Mini Choc Mint",
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
               "serving": {
-                "amount": 1,
+                "amount": 2,
                 "unitLabel": "bar",
-                "calories": 140,
-                "protein": 10,
-                "carbs": 15,
-                "fat": 4.5
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
               },
               "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 1
+            "quantity": 2
           },
           {
             "food": {
@@ -1761,7 +1799,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 23
+            "quantity": 11
           }
         ]
       },
@@ -1783,7 +1821,7 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 3
+            "quantity": 2
           },
           {
             "food": {
@@ -1819,52 +1857,51 @@
           },
           {
             "food": {
-              "id": "clifBuildersMiniChocMint",
-              "name": "Clif Builders Mini Choc Mint",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "bar",
-                "calories": 140,
-                "protein": 10,
-                "carbs": 15,
-                "fat": 4.5
-              },
-              "category": "ProteinBar",
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "greenBeansCanned",
-              "name": "Green beans (canned)",
+              "id": "peasCanned",
+              "name": "Peas (canned)",
               "serving": {
                 "amount": 1,
                 "unitLabel": "can",
-                "calories": 52.5,
-                "protein": 3.5,
-                "carbs": 10.5,
+                "calories": 175,
+                "protein": 10.5,
+                "carbs": 30.5,
                 "fat": 0
               },
               "category": "CannedVegetable",
-              "maxServingAmountPerPlan": 2,
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
           },
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
                 "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
               "maxServingAmountPerPlan": 1,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
+              "serving": {
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
+              },
+              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -1885,15 +1922,15 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 23
+            "quantity": 12
           }
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:22.280Z"
+    "lastUpdatedAt": "2026-06-08T01:45:41.221Z"
   },
-  "Bulking:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off": {
-    "id": "Bulking:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off",
+  "Bulking:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off": {
+    "id": "Bulking:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off",
     "title": "Bulking · Non-Training Day",
     "phase": "Bulking",
     "bodyweightLb": 183,
@@ -2217,8 +2254,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:21.449Z"
   },
-  "Bulking:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on": {
-    "id": "Bulking:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on",
+  "Bulking:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on": {
+    "id": "Bulking:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on",
     "title": "Bulking · Non-Training Day",
     "phase": "Bulking",
     "bodyweightLb": 183,
@@ -2262,23 +2299,23 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 4
+            "quantity": 3
           },
           {
             "food": {
-              "id": "banana",
-              "name": "Banana (110g average)",
+              "id": "riceCakeAppleCinnamon",
+              "name": "Rice cake (apple cinnamon)",
               "serving": {
                 "amount": 1,
-                "unitLabel": "banana",
-                "calories": 97,
-                "protein": 0.8,
-                "carbs": 25.3,
-                "fat": 0.4
+                "unitLabel": "rice cake",
+                "calories": 50,
+                "protein": 0.5,
+                "carbs": 11,
+                "fat": 0
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 1
+            "quantity": 2
           },
           {
             "food": {
@@ -2296,7 +2333,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 19
+            "quantity": 26
           },
           {
             "food": {
@@ -2340,80 +2377,23 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 4
+            "quantity": 3
           },
           {
             "food": {
-              "id": "banana",
-              "name": "Banana (110g average)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "banana",
-                "calories": 97,
-                "protein": 0.8,
-                "carbs": 25.3,
-                "fat": 0.4
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 2
-          },
-          {
-            "food": {
-              "id": "clifBuildersMiniChocMint",
-              "name": "Clif Builders Mini Choc Mint",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "bar",
-                "calories": 140,
-                "protein": 10,
-                "carbs": 15,
-                "fat": 4.5
-              },
-              "category": "ProteinBar",
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "krogerChunkyPB",
-              "name": "Kroger Chunky PB",
-              "serving": {
-                "amount": 32,
-                "unitLabel": "g",
-                "calories": 180,
-                "protein": 7,
-                "carbs": 9,
-                "fat": 15
-              },
-              "category": "PeanutButter",
-              "minServingAmountPerMeal": 10,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 20
-          }
-        ]
-      },
-      {
-        "time": "Meal 3",
-        "name": "Meal3",
-        "items": [
-          {
-            "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
+              "id": "riceCakeAppleCinnamon",
+              "name": "Rice cake (apple cinnamon)",
               "serving": {
                 "amount": 1,
                 "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
+                "calories": 50,
+                "protein": 0.5,
+                "carbs": 11,
+                "fat": 0
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 4
+            "quantity": 3
           },
           {
             "food": {
@@ -2429,7 +2409,7 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 2
+            "quantity": 1
           },
           {
             "food": {
@@ -2451,14 +2431,14 @@
           },
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
                 "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
               "maxServingAmountPerPlan": 1,
@@ -2482,7 +2462,97 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 20
+            "quantity": 25
+          }
+        ]
+      },
+      {
+        "time": "Meal 3",
+        "name": "Meal3",
+        "items": [
+          {
+            "food": {
+              "id": "riceCakeWhiteCheddar",
+              "name": "Rice cake (white cheddar)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "rice cake",
+                "calories": 45,
+                "protein": 1,
+                "carbs": 9,
+                "fat": 0.5
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 3
+          },
+          {
+            "food": {
+              "id": "riceCakeAppleCinnamon",
+              "name": "Rice cake (apple cinnamon)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "rice cake",
+                "calories": 50,
+                "protein": 0.5,
+                "carbs": 11,
+                "fat": 0
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 3
+          },
+          {
+            "food": {
+              "id": "banana",
+              "name": "Banana (110g average)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "banana",
+                "calories": 97,
+                "protein": 0.8,
+                "carbs": 25.3,
+                "fat": 0.4
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "greenBeansCanned",
+              "name": "Green beans (canned)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "can",
+                "calories": 52.5,
+                "protein": 3.5,
+                "carbs": 10.5,
+                "fat": 0
+              },
+              "category": "CannedVegetable",
+              "maxServingAmountPerPlan": 2,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "krogerChunkyPB",
+              "name": "Kroger Chunky PB",
+              "serving": {
+                "amount": 32,
+                "unitLabel": "g",
+                "calories": 180,
+                "protein": 7,
+                "carbs": 9,
+                "fat": 15
+              },
+              "category": "PeanutButter",
+              "minServingAmountPerMeal": 10,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 26
           },
           {
             "food": {
@@ -2509,10 +2579,10 @@
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:23.143Z"
+    "lastUpdatedAt": "2026-06-08T01:45:42.037Z"
   },
-  "Bulking:Training:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off": {
-    "id": "Bulking:Training:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off",
+  "Bulking:Training:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off": {
+    "id": "Bulking:Training:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off",
     "title": "Bulking · Training Day",
     "phase": "Bulking",
     "bodyweightLb": 183,
@@ -2907,8 +2977,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:17.361Z"
   },
-  "Bulking:Training:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on": {
-    "id": "Bulking:Training:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on",
+  "Bulking:Training:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on": {
+    "id": "Bulking:Training:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on",
     "title": "Bulking · Training Day",
     "phase": "Bulking",
     "bodyweightLb": 183,
@@ -2940,32 +3010,17 @@
           },
           {
             "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
+              "id": "clifBuildersMiniChocMint",
+              "name": "Clif Builders Mini Choc Mint",
               "serving": {
                 "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
+                "unitLabel": "bar",
+                "calories": 140,
+                "protein": 10,
+                "carbs": 15,
+                "fat": 4.5
               },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 2
-          },
-          {
-            "food": {
-              "id": "riceCakeAppleCinnamon",
-              "name": "Rice cake (apple cinnamon)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 50,
-                "protein": 0.5,
-                "carbs": 11,
-                "fat": 0
-              },
+              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -2986,24 +3041,6 @@
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
-          },
-          {
-            "food": {
-              "id": "jifChunkyPB",
-              "name": "JIF Chunky PB",
-              "serving": {
-                "amount": 32,
-                "unitLabel": "g",
-                "calories": 190,
-                "protein": 7,
-                "carbs": 8,
-                "fat": 16
-              },
-              "category": "PeanutButter",
-              "minServingAmountPerMeal": 10,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 17
           }
         ]
       },
@@ -3013,56 +3050,36 @@
         "items": [
           {
             "food": {
-              "id": "optimumNutritionGoldStandardWhey",
-              "name": "Optimum Nutrition Gold Standard Whey",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "scoop",
-                "calories": 120,
-                "protein": 24,
-                "carbs": 3,
-                "fat": 1.5
-              },
-              "category": "ProteinPowder",
-              "minServingAmountPerMeal": 2,
-              "maxServingAmountPerMeal": 4,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 2
-          },
-          {
-            "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
+              "id": "riceCakeAppleCinnamon",
+              "name": "Rice cake (apple cinnamon)",
               "serving": {
                 "amount": 1,
                 "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
+                "calories": 50,
+                "protein": 0.5,
+                "carbs": 11,
+                "fat": 0
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 2
+            "quantity": 1
           },
           {
             "food": {
-              "id": "jifChunkyPB",
-              "name": "JIF Chunky PB",
+              "id": "clifBuildersMiniChocMint",
+              "name": "Clif Builders Mini Choc Mint",
               "serving": {
-                "amount": 32,
-                "unitLabel": "g",
-                "calories": 190,
-                "protein": 7,
-                "carbs": 8,
-                "fat": 16
+                "amount": 1,
+                "unitLabel": "bar",
+                "calories": 140,
+                "protein": 10,
+                "carbs": 15,
+                "fat": 4.5
               },
-              "category": "PeanutButter",
-              "minServingAmountPerMeal": 10,
+              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 17
+            "quantity": 2
           }
         ]
       },
@@ -3070,22 +3087,6 @@
         "time": "11:00 AM",
         "name": "Lunch",
         "items": [
-          {
-            "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 3
-          },
           {
             "food": {
               "id": "riceCakeAppleCinnamon",
@@ -3104,31 +3105,47 @@
           },
           {
             "food": {
-              "id": "peasCanned",
-              "name": "Peas (canned)",
+              "id": "banana",
+              "name": "Banana (110g average)",
               "serving": {
                 "amount": 1,
-                "unitLabel": "can",
-                "calories": 175,
-                "protein": 10.5,
-                "carbs": 30.5,
-                "fat": 0
+                "unitLabel": "banana",
+                "calories": 97,
+                "protein": 0.8,
+                "carbs": 25.3,
+                "fat": 0.4
               },
-              "category": "CannedVegetable",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
           },
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "clifBuildersMiniChocMint",
+              "name": "Clif Builders Mini Choc Mint",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "bar",
+                "calories": 140,
+                "protein": 10,
+                "carbs": 15,
+                "fat": 4.5
+              },
+              "category": "ProteinBar",
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 2
+          },
+          {
+            "food": {
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
                 "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
               "maxServingAmountPerPlan": 1,
@@ -3152,7 +3169,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 17
+            "quantity": 10
           }
         ]
       },
@@ -3162,22 +3179,6 @@
         "items": [
           {
             "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 3
-          },
-          {
-            "food": {
               "id": "riceCakeAppleCinnamon",
               "name": "Rice cake (apple cinnamon)",
               "serving": {
@@ -3191,6 +3192,39 @@
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
+          },
+          {
+            "food": {
+              "id": "banana",
+              "name": "Banana (110g average)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "banana",
+                "calories": 97,
+                "protein": 0.8,
+                "carbs": 25.3,
+                "fat": 0.4
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "clifBuildersMiniChocMint",
+              "name": "Clif Builders Mini Choc Mint",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "bar",
+                "calories": 140,
+                "protein": 10,
+                "carbs": 15,
+                "fat": 4.5
+              },
+              "category": "ProteinBar",
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 2
           },
           {
             "food": {
@@ -3208,24 +3242,6 @@
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
-          },
-          {
-            "food": {
-              "id": "jifChunkyPB",
-              "name": "JIF Chunky PB",
-              "serving": {
-                "amount": 32,
-                "unitLabel": "g",
-                "calories": 190,
-                "protein": 7,
-                "carbs": 8,
-                "fat": 16
-              },
-              "category": "PeanutButter",
-              "minServingAmountPerMeal": 10,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 17
           }
         ]
       },
@@ -3235,22 +3251,6 @@
         "items": [
           {
             "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 3
-          },
-          {
-            "food": {
               "id": "riceCakeAppleCinnamon",
               "name": "Rice cake (apple cinnamon)",
               "serving": {
@@ -3267,20 +3267,36 @@
           },
           {
             "food": {
-              "id": "peasCanned",
-              "name": "Peas (canned)",
+              "id": "banana",
+              "name": "Banana (110g average)",
               "serving": {
                 "amount": 1,
-                "unitLabel": "can",
-                "calories": 175,
-                "protein": 10.5,
-                "carbs": 30.5,
-                "fat": 0
+                "unitLabel": "banana",
+                "calories": 97,
+                "protein": 0.8,
+                "carbs": 25.3,
+                "fat": 0.4
               },
-              "category": "CannedVegetable",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
+          },
+          {
+            "food": {
+              "id": "clifBuildersMiniChocMint",
+              "name": "Clif Builders Mini Choc Mint",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "bar",
+                "calories": 140,
+                "protein": 10,
+                "carbs": 15,
+                "fat": 4.5
+              },
+              "category": "ProteinBar",
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 2
           },
           {
             "food": {
@@ -3298,15 +3314,15 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 17
+            "quantity": 10
           }
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:18.994Z"
+    "lastUpdatedAt": "2026-06-08T01:45:37.863Z"
   },
-  "Bulking:Training:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off": {
-    "id": "Bulking:Training:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off",
+  "Bulking:Training:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off": {
+    "id": "Bulking:Training:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off",
     "title": "Bulking · Training Day",
     "phase": "Bulking",
     "bodyweightLb": 183,
@@ -3740,8 +3756,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:18.170Z"
   },
-  "Bulking:Training:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on": {
-    "id": "Bulking:Training:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on",
+  "Bulking:Training:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on": {
+    "id": "Bulking:Training:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on",
     "title": "Bulking · Training Day",
     "phase": "Bulking",
     "bodyweightLb": 183,
@@ -3819,7 +3835,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 11
+            "quantity": 14
           }
         ]
       },
@@ -3875,7 +3891,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 11
+            "quantity": 15
           }
         ]
       },
@@ -3897,7 +3913,7 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 1
+            "quantity": 2
           },
           {
             "food": {
@@ -3917,40 +3933,6 @@
           },
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
-                "fat": 0
-              },
-              "maxServingAmountPerPlan": 1,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "kindThinsPBDarkChocolate",
-              "name": "Kind Thins PB Dark Chocolate",
-              "serving": {
-                "amount": 2,
-                "unitLabel": "bar",
-                "calories": 200,
-                "protein": 6,
-                "carbs": 20,
-                "fat": 14
-              },
-              "category": "ProteinBar",
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
               "id": "jifChunkyPB",
               "name": "JIF Chunky PB",
               "serving": {
@@ -3965,7 +3947,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 11
+            "quantity": 15
           },
           {
             "food": {
@@ -4029,36 +4011,38 @@
           },
           {
             "food": {
-              "id": "banana",
-              "name": "Banana (110g average)",
+              "id": "cornCanned",
+              "name": "Corn (canned)",
               "serving": {
                 "amount": 1,
-                "unitLabel": "banana",
-                "calories": 97,
-                "protein": 0.8,
-                "carbs": 25.3,
-                "fat": 0.4
+                "unitLabel": "can",
+                "calories": 245,
+                "protein": 7,
+                "carbs": 42,
+                "fat": 1
               },
+              "category": "CannedVegetable",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
           },
           {
             "food": {
-              "id": "peasCanned",
-              "name": "Peas (canned)",
+              "id": "jifChunkyPB",
+              "name": "JIF Chunky PB",
               "serving": {
-                "amount": 1,
-                "unitLabel": "can",
-                "calories": 175,
-                "protein": 10.5,
-                "carbs": 30.5,
-                "fat": 0
+                "amount": 32,
+                "unitLabel": "g",
+                "calories": 190,
+                "protein": 7,
+                "carbs": 8,
+                "fat": 16
               },
-              "category": "CannedVegetable",
+              "category": "PeanutButter",
+              "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 1
+            "quantity": 14
           }
         ]
       },
@@ -4100,17 +4084,17 @@
           },
           {
             "food": {
-              "id": "kindThinsPBDarkChocolate",
-              "name": "Kind Thins PB Dark Chocolate",
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
-                "amount": 2,
-                "unitLabel": "bar",
-                "calories": 200,
-                "protein": 6,
-                "carbs": 20,
-                "fat": 14
+                "amount": 1,
+                "unitLabel": "container",
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
+                "fat": 0
               },
-              "category": "ProteinBar",
+              "maxServingAmountPerPlan": 1,
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -4131,7 +4115,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 11
+            "quantity": 15
           },
           {
             "food": {
@@ -4158,10 +4142,10 @@
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:19.846Z"
+    "lastUpdatedAt": "2026-06-08T01:45:38.701Z"
   },
-  "Bulking:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off": {
-    "id": "Bulking:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off",
+  "Bulking:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off": {
+    "id": "Bulking:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off",
     "title": "Bulking · Training Day",
     "phase": "Bulking",
     "bodyweightLb": 183,
@@ -4585,8 +4569,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:14.059Z"
   },
-  "Bulking:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on": {
-    "id": "Bulking:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on",
+  "Bulking:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on": {
+    "id": "Bulking:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on",
     "title": "Bulking · Training Day",
     "phase": "Bulking",
     "bodyweightLb": 183,
@@ -4614,7 +4598,7 @@
               "maxServingAmountPerMeal": 4,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 2
+            "quantity": 3
           },
           {
             "food": {
@@ -4630,7 +4614,7 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 1
+            "quantity": 2
           },
           {
             "food": {
@@ -4646,21 +4630,20 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 2
+            "quantity": 1
           },
           {
             "food": {
-              "id": "clifBuildersMiniChocMint",
-              "name": "Clif Builders Mini Choc Mint",
+              "id": "banana",
+              "name": "Banana (110g average)",
               "serving": {
                 "amount": 1,
-                "unitLabel": "bar",
-                "calories": 140,
-                "protein": 10,
-                "carbs": 15,
-                "fat": 4.5
+                "unitLabel": "banana",
+                "calories": 97,
+                "protein": 0.8,
+                "carbs": 25.3,
+                "fat": 0.4
               },
-              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -4681,7 +4664,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 10
+            "quantity": 15
           }
         ]
       },
@@ -4722,7 +4705,7 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 1
+            "quantity": 2
           },
           {
             "food": {
@@ -4738,21 +4721,20 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 2
+            "quantity": 1
           },
           {
             "food": {
-              "id": "clifBuildersMiniChocMint",
-              "name": "Clif Builders Mini Choc Mint",
+              "id": "banana",
+              "name": "Banana (110g average)",
               "serving": {
                 "amount": 1,
-                "unitLabel": "bar",
-                "calories": 140,
-                "protein": 10,
-                "carbs": 15,
-                "fat": 4.5
+                "unitLabel": "banana",
+                "calories": 97,
+                "protein": 0.8,
+                "carbs": 25.3,
+                "fat": 0.4
               },
-              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -4773,7 +4755,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 10
+            "quantity": 15
           }
         ]
       },
@@ -4811,35 +4793,34 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 2
+            "quantity": 1
           },
           {
             "food": {
-              "id": "clifBuildersMiniChocMint",
-              "name": "Clif Builders Mini Choc Mint",
+              "id": "banana",
+              "name": "Banana (110g average)",
               "serving": {
                 "amount": 1,
-                "unitLabel": "bar",
-                "calories": 140,
-                "protein": 10,
-                "carbs": 15,
-                "fat": 4.5
+                "unitLabel": "banana",
+                "calories": 97,
+                "protein": 0.8,
+                "carbs": 25.3,
+                "fat": 0.4
               },
-              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
           },
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
                 "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
               "maxServingAmountPerPlan": 1,
@@ -4863,7 +4844,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 10
+            "quantity": 16
           }
         ]
       },
@@ -4938,6 +4919,24 @@
           },
           {
             "food": {
+              "id": "greenBeansCanned",
+              "name": "Green beans (canned)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "can",
+                "calories": 52.5,
+                "protein": 3.5,
+                "carbs": 10.5,
+                "fat": 0
+              },
+              "category": "CannedVegetable",
+              "maxServingAmountPerPlan": 2,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
               "id": "krogerChunkyPB",
               "name": "Kroger Chunky PB",
               "serving": {
@@ -4952,7 +4951,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 10
+            "quantity": 15
           }
         ]
       },
@@ -4974,7 +4973,7 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 1
+            "quantity": 2
           },
           {
             "food": {
@@ -4990,7 +4989,7 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 2
+            "quantity": 1
           },
           {
             "food": {
@@ -5004,23 +5003,6 @@
                 "carbs": 25.3,
                 "fat": 0.4
               },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "clifBuildersMiniChocMint",
-              "name": "Clif Builders Mini Choc Mint",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "bar",
-                "calories": 140,
-                "protein": 10,
-                "carbs": 15,
-                "fat": 4.5
-              },
-              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -5041,15 +5023,15 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 10
+            "quantity": 16
           }
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:15.702Z"
+    "lastUpdatedAt": "2026-06-08T01:45:34.471Z"
   },
-  "Bulking:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off": {
-    "id": "Bulking:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off",
+  "Bulking:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off": {
+    "id": "Bulking:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off",
     "title": "Bulking · Training Day",
     "phase": "Bulking",
     "bodyweightLb": 183,
@@ -5437,8 +5419,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:14.883Z"
   },
-  "Bulking:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on": {
-    "id": "Bulking:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on",
+  "Bulking:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on": {
+    "id": "Bulking:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on",
     "title": "Bulking · Training Day",
     "phase": "Bulking",
     "bodyweightLb": 183,
@@ -5451,25 +5433,6 @@
         "items": [
           {
             "food": {
-              "id": "optimumNutritionGoldStandardWhey",
-              "name": "Optimum Nutrition Gold Standard Whey",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "scoop",
-                "calories": 120,
-                "protein": 24,
-                "carbs": 3,
-                "fat": 1.5
-              },
-              "category": "ProteinPowder",
-              "minServingAmountPerMeal": 2,
-              "maxServingAmountPerMeal": 4,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 2
-          },
-          {
-            "food": {
               "id": "riceCakeWhiteCheddar",
               "name": "Rice cake (white cheddar)",
               "serving": {
@@ -5482,89 +5445,35 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 3
+            "quantity": 1
           },
           {
             "food": {
-              "id": "riceCakeAppleCinnamon",
-              "name": "Rice cake (apple cinnamon)",
+              "id": "peasCanned",
+              "name": "Peas (canned)",
               "serving": {
                 "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 50,
-                "protein": 0.5,
-                "carbs": 11,
+                "unitLabel": "can",
+                "calories": 175,
+                "protein": 10.5,
+                "carbs": 30.5,
                 "fat": 0
               },
+              "category": "CannedVegetable",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
           },
           {
             "food": {
-              "id": "kindThinsPBDarkChocolate",
-              "name": "Kind Thins PB Dark Chocolate",
-              "serving": {
-                "amount": 2,
-                "unitLabel": "bar",
-                "calories": 200,
-                "protein": 6,
-                "carbs": 20,
-                "fat": 14
-              },
-              "category": "ProteinBar",
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          }
-        ]
-      },
-      {
-        "time": "8:30 AM",
-        "name": "Break",
-        "items": [
-          {
-            "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 3
-          },
-          {
-            "food": {
-              "id": "riceCakeAppleCinnamon",
-              "name": "Rice cake (apple cinnamon)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 50,
-                "protein": 0.5,
-                "carbs": 11,
-                "fat": 0
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
                 "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
               "maxServingAmountPerPlan": 1,
@@ -5588,96 +5497,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 11
-          }
-        ]
-      },
-      {
-        "time": "11:00 AM",
-        "name": "Lunch",
-        "items": [
-          {
-            "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 3
-          },
-          {
-            "food": {
-              "id": "riceCakeAppleCinnamon",
-              "name": "Rice cake (apple cinnamon)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 50,
-                "protein": 0.5,
-                "carbs": 11,
-                "fat": 0
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 2
-          },
-          {
-            "food": {
-              "id": "banana",
-              "name": "Banana (110g average)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "banana",
-                "calories": 97,
-                "protein": 0.8,
-                "carbs": 25.3,
-                "fat": 0.4
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "kindThinsPBDarkChocolate",
-              "name": "Kind Thins PB Dark Chocolate",
-              "serving": {
-                "amount": 2,
-                "unitLabel": "bar",
-                "calories": 200,
-                "protein": 6,
-                "carbs": 20,
-                "fat": 14
-              },
-              "category": "ProteinBar",
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "krogerChunkyPB",
-              "name": "Kroger Chunky PB",
-              "serving": {
-                "amount": 32,
-                "unitLabel": "g",
-                "calories": 180,
-                "protein": 7,
-                "carbs": 9,
-                "fat": 15
-              },
-              "category": "PeanutButter",
-              "minServingAmountPerMeal": 10,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 11
+            "quantity": 15
           },
           {
             "food": {
@@ -5704,41 +5524,9 @@
         ]
       },
       {
-        "time": "2:40 PM",
-        "name": "PreWorkout",
+        "time": "8:30 AM",
+        "name": "Break",
         "items": [
-          {
-            "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 3
-          },
-          {
-            "food": {
-              "id": "riceCakeAppleCinnamon",
-              "name": "Rice cake (apple cinnamon)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 50,
-                "protein": 0.5,
-                "carbs": 11,
-                "fat": 0
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 2
-          },
           {
             "food": {
               "id": "banana",
@@ -5757,74 +5545,74 @@
           },
           {
             "food": {
-              "id": "greenBeansCanned",
-              "name": "Green beans (canned)",
+              "id": "peasCanned",
+              "name": "Peas (canned)",
               "serving": {
                 "amount": 1,
                 "unitLabel": "can",
-                "calories": 52.5,
-                "protein": 3.5,
-                "carbs": 10.5,
+                "calories": 175,
+                "protein": 10.5,
+                "carbs": 30.5,
                 "fat": 0
               },
               "category": "CannedVegetable",
-              "maxServingAmountPerPlan": 2,
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
+          },
+          {
+            "food": {
+              "id": "krogerChunkyPB",
+              "name": "Kroger Chunky PB",
+              "serving": {
+                "amount": 32,
+                "unitLabel": "g",
+                "calories": 180,
+                "protein": 7,
+                "carbs": 9,
+                "fat": 15
+              },
+              "category": "PeanutButter",
+              "minServingAmountPerMeal": 10,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 14
           }
         ]
       },
       {
-        "time": "4:50 PM",
-        "name": "Dinner",
+        "time": "11:00 AM",
+        "name": "Lunch",
         "items": [
           {
             "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
+              "id": "banana",
+              "name": "Banana (110g average)",
               "serving": {
                 "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
+                "unitLabel": "banana",
+                "calories": 97,
+                "protein": 0.8,
+                "carbs": 25.3,
+                "fat": 0.4
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 3
+            "quantity": 1
           },
           {
             "food": {
-              "id": "riceCakeAppleCinnamon",
-              "name": "Rice cake (apple cinnamon)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 50,
-                "protein": 0.5,
-                "carbs": 11,
-                "fat": 0
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 2
-          },
-          {
-            "food": {
-              "id": "greenBeansCanned",
-              "name": "Green beans (canned)",
+              "id": "peasCanned",
+              "name": "Peas (canned)",
               "serving": {
                 "amount": 1,
                 "unitLabel": "can",
-                "calories": 52.5,
-                "protein": 3.5,
-                "carbs": 10.5,
+                "calories": 175,
+                "protein": 10.5,
+                "carbs": 30.5,
                 "fat": 0
               },
               "category": "CannedVegetable",
-              "maxServingAmountPerPlan": 2,
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -5845,6 +5633,154 @@
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
+          },
+          {
+            "food": {
+              "id": "krogerChunkyPB",
+              "name": "Kroger Chunky PB",
+              "serving": {
+                "amount": 32,
+                "unitLabel": "g",
+                "calories": 180,
+                "protein": 7,
+                "carbs": 9,
+                "fat": 15
+              },
+              "category": "PeanutButter",
+              "minServingAmountPerMeal": 10,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 14
+          }
+        ]
+      },
+      {
+        "time": "2:40 PM",
+        "name": "PreWorkout",
+        "items": [
+          {
+            "food": {
+              "id": "riceCakeWhiteCheddar",
+              "name": "Rice cake (white cheddar)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "rice cake",
+                "calories": 45,
+                "protein": 1,
+                "carbs": 9,
+                "fat": 0.5
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "banana",
+              "name": "Banana (110g average)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "banana",
+                "calories": 97,
+                "protein": 0.8,
+                "carbs": 25.3,
+                "fat": 0.4
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "peasCanned",
+              "name": "Peas (canned)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "can",
+                "calories": 175,
+                "protein": 10.5,
+                "carbs": 30.5,
+                "fat": 0
+              },
+              "category": "CannedVegetable",
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 2
+          },
+          {
+            "food": {
+              "id": "krogerChunkyPB",
+              "name": "Kroger Chunky PB",
+              "serving": {
+                "amount": 32,
+                "unitLabel": "g",
+                "calories": 180,
+                "protein": 7,
+                "carbs": 9,
+                "fat": 15
+              },
+              "category": "PeanutButter",
+              "minServingAmountPerMeal": 10,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 14
+          }
+        ]
+      },
+      {
+        "time": "4:50 PM",
+        "name": "Dinner",
+        "items": [
+          {
+            "food": {
+              "id": "banana",
+              "name": "Banana (110g average)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "banana",
+                "calories": 97,
+                "protein": 0.8,
+                "carbs": 25.3,
+                "fat": 0.4
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "peasCanned",
+              "name": "Peas (canned)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "can",
+                "calories": 175,
+                "protein": 10.5,
+                "carbs": 30.5,
+                "fat": 0
+              },
+              "category": "CannedVegetable",
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "krogerChunkyPB",
+              "name": "Kroger Chunky PB",
+              "serving": {
+                "amount": 32,
+                "unitLabel": "g",
+                "calories": 180,
+                "protein": 7,
+                "carbs": 9,
+                "fat": 15
+              },
+              "category": "PeanutButter",
+              "minServingAmountPerMeal": 10,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 14
           },
           {
             "food": {
@@ -5871,10 +5807,10 @@
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:16.560Z"
+    "lastUpdatedAt": "2026-06-08T01:45:35.319Z"
   },
-  "Cutting:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off": {
-    "id": "Cutting:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off",
+  "Cutting:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off": {
+    "id": "Cutting:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off",
     "title": "Cutting · Non-Training Day",
     "phase": "Cutting",
     "bodyweightLb": 183,
@@ -6013,8 +5949,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:00.778Z"
   },
-  "Cutting:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on": {
-    "id": "Cutting:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on",
+  "Cutting:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on": {
+    "id": "Cutting:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on",
     "title": "Cutting · Non-Training Day",
     "phase": "Cutting",
     "bodyweightLb": 183,
@@ -6060,7 +5996,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 27
+            "quantity": 26
           }
         ]
       },
@@ -6089,14 +6025,14 @@
           },
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
                 "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
               "maxServingAmountPerPlan": 1,
@@ -6120,7 +6056,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 27
+            "quantity": 26
           }
         ]
       },
@@ -6168,10 +6104,10 @@
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:02.396Z"
+    "lastUpdatedAt": "2026-06-08T01:45:25.331Z"
   },
-  "Cutting:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off": {
-    "id": "Cutting:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off",
+  "Cutting:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off": {
+    "id": "Cutting:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off",
     "title": "Cutting · Non-Training Day",
     "phase": "Cutting",
     "bodyweightLb": 183,
@@ -6335,8 +6271,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:01.588Z"
   },
-  "Cutting:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on": {
-    "id": "Cutting:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on",
+  "Cutting:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on": {
+    "id": "Cutting:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on",
     "title": "Cutting · Non-Training Day",
     "phase": "Cutting",
     "bodyweightLb": 183,
@@ -6382,7 +6318,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 23
+            "quantity": 22
           },
           {
             "food": {
@@ -6447,7 +6383,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 23
+            "quantity": 22
           }
         ]
       },
@@ -6457,14 +6393,14 @@
         "items": [
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
                 "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
               "maxServingAmountPerPlan": 1,
@@ -6515,10 +6451,10 @@
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:03.227Z"
+    "lastUpdatedAt": "2026-06-08T01:45:26.143Z"
   },
-  "Cutting:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off": {
-    "id": "Cutting:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off",
+  "Cutting:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off": {
+    "id": "Cutting:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off",
     "title": "Cutting · Non-Training Day",
     "phase": "Cutting",
     "bodyweightLb": 183,
@@ -6657,8 +6593,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:46:57.565Z"
   },
-  "Cutting:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on": {
-    "id": "Cutting:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on",
+  "Cutting:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on": {
+    "id": "Cutting:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on",
     "title": "Cutting · Non-Training Day",
     "phase": "Cutting",
     "bodyweightLb": 183,
@@ -6704,7 +6640,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 21
+            "quantity": 28
           }
         ]
       },
@@ -6729,7 +6665,24 @@
               "maxServingAmountPerMeal": 4,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 3
+            "quantity": 2
+          },
+          {
+            "food": {
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "container",
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
+                "fat": 0
+              },
+              "maxServingAmountPerPlan": 1,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
           },
           {
             "food": {
@@ -6747,7 +6700,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 21
+            "quantity": 28
           }
         ]
       },
@@ -6776,23 +6729,6 @@
           },
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
-                "fat": 0
-              },
-              "maxServingAmountPerPlan": 1,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
               "id": "krogerChunkyPB",
               "name": "Kroger Chunky PB",
               "serving": {
@@ -6807,15 +6743,15 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 22
+            "quantity": 28
           }
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:46:59.171Z"
+    "lastUpdatedAt": "2026-06-08T01:45:21.988Z"
   },
-  "Cutting:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off": {
-    "id": "Cutting:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off",
+  "Cutting:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off": {
+    "id": "Cutting:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off",
     "title": "Cutting · Non-Training Day",
     "phase": "Cutting",
     "bodyweightLb": 183,
@@ -6979,8 +6915,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:46:58.361Z"
   },
-  "Cutting:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on": {
-    "id": "Cutting:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on",
+  "Cutting:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on": {
+    "id": "Cutting:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on",
     "title": "Cutting · Non-Training Day",
     "phase": "Cutting",
     "bodyweightLb": 183,
@@ -7027,28 +6963,6 @@
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 24
-          },
-          {
-            "food": {
-              "id": "chickenBreast",
-              "name": "Chicken breast",
-              "serving": {
-                "amount": 476,
-                "unitLabel": "g",
-                "calories": 514,
-                "protein": 96.9,
-                "carbs": 0,
-                "fat": 14.6
-              },
-              "minServingAmountPerMeal": 200,
-              "maxServingAmountPerPlan": 400,
-              "allowedStepServingAmountPerMeal": 25,
-              "excludedMealNames": [
-                "PreWorkout",
-                "Break"
-              ]
-            },
-            "quantity": 200
           }
         ]
       },
@@ -7091,7 +7005,29 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 24
+            "quantity": 23
+          },
+          {
+            "food": {
+              "id": "chickenBreast",
+              "name": "Chicken breast",
+              "serving": {
+                "amount": 476,
+                "unitLabel": "g",
+                "calories": 514,
+                "protein": 96.9,
+                "carbs": 0,
+                "fat": 14.6
+              },
+              "minServingAmountPerMeal": 200,
+              "maxServingAmountPerPlan": 400,
+              "allowedStepServingAmountPerMeal": 25,
+              "excludedMealNames": [
+                "PreWorkout",
+                "Break"
+              ]
+            },
+            "quantity": 200
           }
         ]
       },
@@ -7101,14 +7037,14 @@
         "items": [
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
                 "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
               "maxServingAmountPerPlan": 1,
@@ -7132,7 +7068,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 25
+            "quantity": 24
           },
           {
             "food": {
@@ -7159,10 +7095,10 @@
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:00.013Z"
+    "lastUpdatedAt": "2026-06-08T01:45:22.827Z"
   },
-  "Cutting:Training:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off": {
-    "id": "Cutting:Training:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off",
+  "Cutting:Training:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off": {
+    "id": "Cutting:Training:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off",
     "title": "Cutting · Training Day",
     "phase": "Cutting",
     "bodyweightLb": 183,
@@ -7436,8 +7372,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:46:54.305Z"
   },
-  "Cutting:Training:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on": {
-    "id": "Cutting:Training:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on",
+  "Cutting:Training:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on": {
+    "id": "Cutting:Training:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on",
     "title": "Cutting · Training Day",
     "phase": "Cutting",
     "bodyweightLb": 183,
@@ -7465,7 +7401,24 @@
               "maxServingAmountPerMeal": 4,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 3
+            "quantity": 2
+          },
+          {
+            "food": {
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
+              "serving": {
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
+              },
+              "category": "ProteinBar",
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
           },
           {
             "food": {
@@ -7509,24 +7462,6 @@
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 2
-          },
-          {
-            "food": {
-              "id": "jifChunkyPB",
-              "name": "JIF Chunky PB",
-              "serving": {
-                "amount": 32,
-                "unitLabel": "g",
-                "calories": 190,
-                "protein": 7,
-                "carbs": 8,
-                "fat": 16
-              },
-              "category": "PeanutButter",
-              "minServingAmountPerMeal": 10,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 13
           }
         ]
       },
@@ -7555,21 +7490,20 @@
           },
           {
             "food": {
-              "id": "jifChunkyPB",
-              "name": "JIF Chunky PB",
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
               "serving": {
-                "amount": 32,
-                "unitLabel": "g",
-                "calories": 190,
-                "protein": 7,
-                "carbs": 8,
-                "fat": 16
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
               },
-              "category": "PeanutButter",
-              "minServingAmountPerMeal": 10,
+              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 14
+            "quantity": 1
           }
         ]
       },
@@ -7579,15 +7513,34 @@
         "items": [
           {
             "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
+              "id": "optimumNutritionGoldStandardWhey",
+              "name": "Optimum Nutrition Gold Standard Whey",
               "serving": {
                 "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
+                "unitLabel": "scoop",
+                "calories": 120,
+                "protein": 24,
+                "carbs": 3,
+                "fat": 1.5
+              },
+              "category": "ProteinPowder",
+              "minServingAmountPerMeal": 2,
+              "maxServingAmountPerMeal": 4,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 2
+          },
+          {
+            "food": {
+              "id": "banana",
+              "name": "Banana (110g average)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "banana",
+                "calories": 97,
+                "protein": 0.8,
+                "carbs": 25.3,
+                "fat": 0.4
               },
               "allowedStepServingAmountPerMeal": 1
             },
@@ -7595,56 +7548,20 @@
           },
           {
             "food": {
-              "id": "clifBuildersMiniChocMint",
-              "name": "Clif Builders Mini Choc Mint",
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
               "serving": {
-                "amount": 1,
+                "amount": 2,
                 "unitLabel": "bar",
-                "calories": 140,
-                "protein": 10,
-                "carbs": 15,
-                "fat": 4.5
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
               },
               "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
-          },
-          {
-            "food": {
-              "id": "greenBeansCanned",
-              "name": "Green beans (canned)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "can",
-                "calories": 52.5,
-                "protein": 3.5,
-                "carbs": 10.5,
-                "fat": 0
-              },
-              "category": "CannedVegetable",
-              "maxServingAmountPerPlan": 2,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "jifChunkyPB",
-              "name": "JIF Chunky PB",
-              "serving": {
-                "amount": 32,
-                "unitLabel": "g",
-                "calories": 190,
-                "protein": 7,
-                "carbs": 8,
-                "fat": 16
-              },
-              "category": "PeanutButter",
-              "minServingAmountPerMeal": 10,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 14
           }
         ]
       },
@@ -7654,34 +7571,34 @@
         "items": [
           {
             "food": {
-              "id": "clifBuildersMiniChocMint",
-              "name": "Clif Builders Mini Choc Mint",
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
-                "unitLabel": "bar",
-                "calories": 140,
-                "protein": 10,
-                "carbs": 15,
-                "fat": 4.5
+                "unitLabel": "container",
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
+                "fat": 0
               },
-              "category": "ProteinBar",
+              "maxServingAmountPerPlan": 1,
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
           },
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
               "serving": {
-                "amount": 1,
-                "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
-                "fat": 0
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
               },
-              "maxServingAmountPerPlan": 1,
+              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -7702,15 +7619,15 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 14
+            "quantity": 13
           }
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:46:55.928Z"
+    "lastUpdatedAt": "2026-06-08T01:45:18.712Z"
   },
-  "Cutting:Training:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off": {
-    "id": "Cutting:Training:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off",
+  "Cutting:Training:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off": {
+    "id": "Cutting:Training:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off",
     "title": "Cutting · Training Day",
     "phase": "Cutting",
     "bodyweightLb": 183,
@@ -8003,8 +7920,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:46:55.120Z"
   },
-  "Cutting:Training:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on": {
-    "id": "Cutting:Training:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on",
+  "Cutting:Training:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on": {
+    "id": "Cutting:Training:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on",
     "title": "Cutting · Training Day",
     "phase": "Cutting",
     "bodyweightLb": 183,
@@ -8050,7 +7967,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 13
+            "quantity": 12
           }
         ]
       },
@@ -8103,14 +8020,30 @@
         "items": [
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "riceCakeWhiteCheddar",
+              "name": "Rice cake (white cheddar)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "rice cake",
+                "calories": 45,
+                "protein": 1,
+                "carbs": 9,
+                "fat": 0.5
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
                 "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
               "maxServingAmountPerPlan": 1,
@@ -8182,15 +8115,15 @@
           },
           {
             "food": {
-              "id": "banana",
-              "name": "Banana (110g average)",
+              "id": "riceCakeAppleCinnamon",
+              "name": "Rice cake (apple cinnamon)",
               "serving": {
                 "amount": 1,
-                "unitLabel": "banana",
-                "calories": 97,
-                "protein": 0.8,
-                "carbs": 25.3,
-                "fat": 0.4
+                "unitLabel": "rice cake",
+                "calories": 50,
+                "protein": 0.5,
+                "carbs": 11,
+                "fat": 0
               },
               "allowedStepServingAmountPerMeal": 1
             },
@@ -8209,24 +8142,6 @@
                 "fat": 4.5
               },
               "category": "ProteinBar",
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "greenBeansCanned",
-              "name": "Green beans (canned)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "can",
-                "calories": 52.5,
-                "protein": 3.5,
-                "carbs": 10.5,
-                "fat": 0
-              },
-              "category": "CannedVegetable",
-              "maxServingAmountPerPlan": 2,
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -8255,6 +8170,22 @@
         "time": "4:50 PM",
         "name": "Dinner",
         "items": [
+          {
+            "food": {
+              "id": "riceCakeAppleCinnamon",
+              "name": "Rice cake (apple cinnamon)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "rice cake",
+                "calories": 50,
+                "protein": 0.5,
+                "carbs": 11,
+                "fat": 0
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
           {
             "food": {
               "id": "jifChunkyPB",
@@ -8298,10 +8229,10 @@
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:46:56.796Z"
+    "lastUpdatedAt": "2026-06-08T01:45:19.541Z"
   },
-  "Cutting:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off": {
-    "id": "Cutting:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off",
+  "Cutting:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off": {
+    "id": "Cutting:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off",
     "title": "Cutting · Training Day",
     "phase": "Cutting",
     "bodyweightLb": 183,
@@ -8593,8 +8524,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:46:50.977Z"
   },
-  "Cutting:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on": {
-    "id": "Cutting:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on",
+  "Cutting:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on": {
+    "id": "Cutting:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on",
     "title": "Cutting · Training Day",
     "phase": "Cutting",
     "bodyweightLb": 183,
@@ -8640,7 +8571,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 14
+            "quantity": 17
           }
         ]
       },
@@ -8683,7 +8614,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 14
+            "quantity": 17
           }
         ]
       },
@@ -8726,7 +8657,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 15
+            "quantity": 17
           }
         ]
       },
@@ -8769,14 +8700,74 @@
           },
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "greenBeansCanned",
+              "name": "Green beans (canned)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "can",
+                "calories": 52.5,
+                "protein": 3.5,
+                "carbs": 10.5,
+                "fat": 0
+              },
+              "category": "CannedVegetable",
+              "maxServingAmountPerPlan": 2,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "krogerChunkyPB",
+              "name": "Kroger Chunky PB",
+              "serving": {
+                "amount": 32,
+                "unitLabel": "g",
+                "calories": 180,
+                "protein": 7,
+                "carbs": 9,
+                "fat": 15
+              },
+              "category": "PeanutButter",
+              "minServingAmountPerMeal": 10,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 17
+          }
+        ]
+      },
+      {
+        "time": "4:50 PM",
+        "name": "Dinner",
+        "items": [
+          {
+            "food": {
+              "id": "greenBeansCanned",
+              "name": "Green beans (canned)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "can",
+                "calories": 52.5,
+                "protein": 3.5,
+                "carbs": 10.5,
+                "fat": 0
+              },
+              "category": "CannedVegetable",
+              "maxServingAmountPerPlan": 2,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
                 "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
               "maxServingAmountPerPlan": 1,
@@ -8800,72 +8791,15 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 15
-          }
-        ]
-      },
-      {
-        "time": "4:50 PM",
-        "name": "Dinner",
-        "items": [
-          {
-            "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "clifBuildersMiniChocMint",
-              "name": "Clif Builders Mini Choc Mint",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "bar",
-                "calories": 140,
-                "protein": 10,
-                "carbs": 15,
-                "fat": 4.5
-              },
-              "category": "ProteinBar",
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "krogerChunkyPB",
-              "name": "Kroger Chunky PB",
-              "serving": {
-                "amount": 32,
-                "unitLabel": "g",
-                "calories": 180,
-                "protein": 7,
-                "carbs": 9,
-                "fat": 15
-              },
-              "category": "PeanutButter",
-              "minServingAmountPerMeal": 10,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 15
+            "quantity": 17
           }
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:46:52.633Z"
+    "lastUpdatedAt": "2026-06-08T01:45:15.190Z"
   },
-  "Cutting:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off": {
-    "id": "Cutting:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off",
+  "Cutting:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off": {
+    "id": "Cutting:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off",
     "title": "Cutting · Training Day",
     "phase": "Cutting",
     "bodyweightLb": 183,
@@ -9157,8 +9091,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:46:51.825Z"
   },
-  "Cutting:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on": {
-    "id": "Cutting:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on",
+  "Cutting:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on": {
+    "id": "Cutting:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on",
     "title": "Cutting · Training Day",
     "phase": "Cutting",
     "bodyweightLb": 183,
@@ -9204,7 +9138,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 12
+            "quantity": 13
           }
         ]
       },
@@ -9247,7 +9181,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 12
+            "quantity": 13
           }
         ]
       },
@@ -9273,23 +9207,6 @@
           },
           {
             "food": {
-              "id": "kindThinsPBDarkChocolate",
-              "name": "Kind Thins PB Dark Chocolate",
-              "serving": {
-                "amount": 2,
-                "unitLabel": "bar",
-                "calories": 200,
-                "protein": 6,
-                "carbs": 20,
-                "fat": 14
-              },
-              "category": "ProteinBar",
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
               "id": "krogerChunkyPB",
               "name": "Kroger Chunky PB",
               "serving": {
@@ -9304,7 +9221,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 12
+            "quantity": 14
           },
           {
             "food": {
@@ -9352,17 +9269,33 @@
           },
           {
             "food": {
-              "id": "peasCanned",
-              "name": "Peas (canned)",
+              "id": "banana",
+              "name": "Banana (110g average)",
               "serving": {
                 "amount": 1,
-                "unitLabel": "can",
-                "calories": 175,
-                "protein": 10.5,
-                "carbs": 30.5,
-                "fat": 0
+                "unitLabel": "banana",
+                "calories": 97,
+                "protein": 0.8,
+                "carbs": 25.3,
+                "fat": 0.4
               },
-              "category": "CannedVegetable",
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "clifBuildersMiniChocMint",
+              "name": "Clif Builders Mini Choc Mint",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "bar",
+                "calories": 140,
+                "protein": 10,
+                "carbs": 15,
+                "fat": 4.5
+              },
+              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -9383,7 +9316,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 12
+            "quantity": 13
           }
         ]
       },
@@ -9393,14 +9326,14 @@
         "items": [
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
                 "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
               "maxServingAmountPerPlan": 1,
@@ -9451,10 +9384,10 @@
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:46:53.501Z"
+    "lastUpdatedAt": "2026-06-08T01:45:16.041Z"
   },
-  "Maintenance:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off": {
-    "id": "Maintenance:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off",
+  "Maintenance:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off": {
+    "id": "Maintenance:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off",
     "title": "Maintenance · Non-Training Day",
     "phase": "Maintenance",
     "bodyweightLb": 183,
@@ -9642,8 +9575,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:38.314Z"
   },
-  "Maintenance:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on": {
-    "id": "Maintenance:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on",
+  "Maintenance:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on": {
+    "id": "Maintenance:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on",
     "title": "Maintenance · Non-Training Day",
     "phase": "Maintenance",
     "bodyweightLb": 183,
@@ -9689,7 +9622,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 56
+            "quantity": 65
           }
         ]
       },
@@ -9718,23 +9651,6 @@
           },
           {
             "food": {
-              "id": "clifBuildersMiniChocMint",
-              "name": "Clif Builders Mini Choc Mint",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "bar",
-                "calories": 140,
-                "protein": 10,
-                "carbs": 15,
-                "fat": 4.5
-              },
-              "category": "ProteinBar",
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
               "id": "jifChunkyPB",
               "name": "JIF Chunky PB",
               "serving": {
@@ -9749,7 +9665,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 55
+            "quantity": 65
           }
         ]
       },
@@ -9759,31 +9675,48 @@
         "items": [
           {
             "food": {
-              "id": "clifBuildersMiniChocMint",
-              "name": "Clif Builders Mini Choc Mint",
+              "id": "riceCakeAppleCinnamon",
+              "name": "Rice cake (apple cinnamon)",
               "serving": {
                 "amount": 1,
-                "unitLabel": "bar",
-                "calories": 140,
-                "protein": 10,
-                "carbs": 15,
-                "fat": 4.5
+                "unitLabel": "rice cake",
+                "calories": 50,
+                "protein": 0.5,
+                "carbs": 11,
+                "fat": 0
               },
-              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
           },
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "greenBeansCanned",
+              "name": "Green beans (canned)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "can",
+                "calories": 52.5,
+                "protein": 3.5,
+                "carbs": 10.5,
+                "fat": 0
+              },
+              "category": "CannedVegetable",
+              "maxServingAmountPerPlan": 2,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
                 "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
               "maxServingAmountPerPlan": 1,
@@ -9807,15 +9740,15 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 56
+            "quantity": 65
           }
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:39.891Z"
+    "lastUpdatedAt": "2026-06-08T01:45:59.770Z"
   },
-  "Maintenance:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off": {
-    "id": "Maintenance:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off",
+  "Maintenance:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off": {
+    "id": "Maintenance:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off",
     "title": "Maintenance · Non-Training Day",
     "phase": "Maintenance",
     "bodyweightLb": 183,
@@ -10027,8 +9960,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:39.092Z"
   },
-  "Maintenance:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on": {
-    "id": "Maintenance:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on",
+  "Maintenance:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on": {
+    "id": "Maintenance:NonTraining:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on",
     "title": "Maintenance · Non-Training Day",
     "phase": "Maintenance",
     "bodyweightLb": 183,
@@ -10060,6 +9993,23 @@
           },
           {
             "food": {
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
+              "serving": {
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
+              },
+              "category": "ProteinBar",
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
               "id": "jifChunkyPB",
               "name": "JIF Chunky PB",
               "serving": {
@@ -10074,7 +10024,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 58
+            "quantity": 38
           }
         ]
       },
@@ -10084,37 +10034,37 @@
         "items": [
           {
             "food": {
-              "id": "riceCakeAppleCinnamon",
-              "name": "Rice cake (apple cinnamon)",
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 50,
-                "protein": 0.5,
-                "carbs": 11,
+                "unitLabel": "container",
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
+              "maxServingAmountPerPlan": 1,
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
           },
           {
             "food": {
-              "id": "greenBeansCanned",
-              "name": "Green beans (canned)",
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
               "serving": {
-                "amount": 1,
-                "unitLabel": "can",
-                "calories": 52.5,
-                "protein": 3.5,
-                "carbs": 10.5,
-                "fat": 0
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
               },
-              "category": "CannedVegetable",
-              "maxServingAmountPerPlan": 2,
+              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 1
+            "quantity": 2
           },
           {
             "food": {
@@ -10132,7 +10082,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 59
+            "quantity": 39
           },
           {
             "food": {
@@ -10164,36 +10114,20 @@
         "items": [
           {
             "food": {
-              "id": "riceCakeAppleCinnamon",
-              "name": "Rice cake (apple cinnamon)",
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
               "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 50,
-                "protein": 0.5,
-                "carbs": 11,
-                "fat": 0
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
               },
+              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
-                "fat": 0
-              },
-              "maxServingAmountPerPlan": 1,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
+            "quantity": 2
           },
           {
             "food": {
@@ -10211,7 +10145,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 59
+            "quantity": 39
           },
           {
             "food": {
@@ -10238,10 +10172,10 @@
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:40.713Z"
+    "lastUpdatedAt": "2026-06-08T01:46:00.674Z"
   },
-  "Maintenance:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off": {
-    "id": "Maintenance:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off",
+  "Maintenance:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off": {
+    "id": "Maintenance:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off",
     "title": "Maintenance · Non-Training Day",
     "phase": "Maintenance",
     "bodyweightLb": 183,
@@ -10413,8 +10347,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:35.151Z"
   },
-  "Maintenance:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on": {
-    "id": "Maintenance:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on",
+  "Maintenance:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on": {
+    "id": "Maintenance:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on",
     "title": "Maintenance · Non-Training Day",
     "phase": "Maintenance",
     "bodyweightLb": 183,
@@ -10460,7 +10394,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 72
+            "quantity": 71
           }
         ]
       },
@@ -10503,7 +10437,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 73
+            "quantity": 72
           }
         ]
       },
@@ -10513,30 +10447,32 @@
         "items": [
           {
             "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
+              "id": "greenBeansCanned",
+              "name": "Green beans (canned)",
               "serving": {
                 "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
+                "unitLabel": "can",
+                "calories": 52.5,
+                "protein": 3.5,
+                "carbs": 10.5,
+                "fat": 0
               },
+              "category": "CannedVegetable",
+              "maxServingAmountPerPlan": 2,
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
           },
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
                 "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
               "maxServingAmountPerPlan": 1,
@@ -10560,15 +10496,15 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 73
+            "quantity": 72
           }
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:36.730Z"
+    "lastUpdatedAt": "2026-06-08T01:45:56.346Z"
   },
-  "Maintenance:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off": {
-    "id": "Maintenance:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off",
+  "Maintenance:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off": {
+    "id": "Maintenance:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off",
     "title": "Maintenance · Non-Training Day",
     "phase": "Maintenance",
     "bodyweightLb": 183,
@@ -10763,8 +10699,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:35.943Z"
   },
-  "Maintenance:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on": {
-    "id": "Maintenance:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on",
+  "Maintenance:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on": {
+    "id": "Maintenance:NonTraining:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on",
     "title": "Maintenance · Non-Training Day",
     "phase": "Maintenance",
     "bodyweightLb": 183,
@@ -10796,6 +10732,23 @@
           },
           {
             "food": {
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
+              "serving": {
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
+              },
+              "category": "ProteinBar",
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
               "id": "krogerChunkyPB",
               "name": "Kroger Chunky PB",
               "serving": {
@@ -10810,7 +10763,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 62
+            "quantity": 46
           }
         ]
       },
@@ -10820,32 +10773,34 @@
         "items": [
           {
             "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
+                "unitLabel": "container",
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
+                "fat": 0
               },
+              "maxServingAmountPerPlan": 1,
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
           },
           {
             "food": {
-              "id": "riceCakeAppleCinnamon",
-              "name": "Rice cake (apple cinnamon)",
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
               "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 50,
-                "protein": 0.5,
-                "carbs": 11,
-                "fat": 0
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
               },
+              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -10866,7 +10821,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 63
+            "quantity": 47
           },
           {
             "food": {
@@ -10898,36 +10853,20 @@
         "items": [
           {
             "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
               "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
               },
+              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
-                "fat": 0
-              },
-              "maxServingAmountPerPlan": 1,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
+            "quantity": 2
           },
           {
             "food": {
@@ -10945,7 +10884,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 63
+            "quantity": 47
           },
           {
             "food": {
@@ -10972,10 +10911,10 @@
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:37.564Z"
+    "lastUpdatedAt": "2026-06-08T01:45:57.195Z"
   },
-  "Maintenance:Training:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off": {
-    "id": "Maintenance:Training:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off",
+  "Maintenance:Training:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off": {
+    "id": "Maintenance:Training:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off",
     "title": "Maintenance · Training Day",
     "phase": "Maintenance",
     "bodyweightLb": 183,
@@ -11324,8 +11263,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:31.884Z"
   },
-  "Maintenance:Training:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on": {
-    "id": "Maintenance:Training:PeanutButter=jifChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on",
+  "Maintenance:Training:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on": {
+    "id": "Maintenance:Training:PeanutButter=jifChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on",
     "title": "Maintenance · Training Day",
     "phase": "Maintenance",
     "bodyweightLb": 183,
@@ -11371,7 +11310,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 32
+            "quantity": 26
           }
         ]
       },
@@ -11414,7 +11353,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 32
+            "quantity": 26
           }
         ]
       },
@@ -11456,6 +11395,23 @@
           },
           {
             "food": {
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
+              "serving": {
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
+              },
+              "category": "ProteinBar",
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
               "id": "jifChunkyPB",
               "name": "JIF Chunky PB",
               "serving": {
@@ -11470,7 +11426,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 33
+            "quantity": 27
           }
         ]
       },
@@ -11528,17 +11484,35 @@
           },
           {
             "food": {
-              "id": "peasCanned",
-              "name": "Peas (canned)",
+              "id": "greenBeansCanned",
+              "name": "Green beans (canned)",
               "serving": {
                 "amount": 1,
                 "unitLabel": "can",
-                "calories": 175,
-                "protein": 10.5,
-                "carbs": 30.5,
+                "calories": 52.5,
+                "protein": 3.5,
+                "carbs": 10.5,
                 "fat": 0
               },
               "category": "CannedVegetable",
+              "maxServingAmountPerPlan": 2,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
+              "serving": {
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
+              },
+              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -11559,7 +11533,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 32
+            "quantity": 26
           }
         ]
       },
@@ -11569,15 +11543,15 @@
         "items": [
           {
             "food": {
-              "id": "riceCakeAppleCinnamon",
-              "name": "Rice cake (apple cinnamon)",
+              "id": "riceCakeWhiteCheddar",
+              "name": "Rice cake (white cheddar)",
               "serving": {
                 "amount": 1,
                 "unitLabel": "rice cake",
-                "calories": 50,
-                "protein": 0.5,
-                "carbs": 11,
-                "fat": 0
+                "calories": 45,
+                "protein": 1,
+                "carbs": 9,
+                "fat": 0.5
               },
               "allowedStepServingAmountPerMeal": 1
             },
@@ -11585,17 +11559,34 @@
           },
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
                 "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
               "maxServingAmountPerPlan": 1,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
+              "serving": {
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
+              },
+              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -11616,15 +11607,15 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 33
+            "quantity": 26
           }
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:33.531Z"
+    "lastUpdatedAt": "2026-06-08T01:45:52.959Z"
   },
-  "Maintenance:Training:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off": {
-    "id": "Maintenance:Training:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off",
+  "Maintenance:Training:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off": {
+    "id": "Maintenance:Training:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off",
     "title": "Maintenance · Training Day",
     "phase": "Maintenance",
     "bodyweightLb": 183,
@@ -11981,8 +11972,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:32.711Z"
   },
-  "Maintenance:Training:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on": {
-    "id": "Maintenance:Training:PeanutButter=jifChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on",
+  "Maintenance:Training:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on": {
+    "id": "Maintenance:Training:PeanutButter=jifChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on",
     "title": "Maintenance · Training Day",
     "phase": "Maintenance",
     "bodyweightLb": 183,
@@ -12014,6 +12005,22 @@
           },
           {
             "food": {
+              "id": "riceCakeAppleCinnamon",
+              "name": "Rice cake (apple cinnamon)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "rice cake",
+                "calories": 50,
+                "protein": 0.5,
+                "carbs": 11,
+                "fat": 0
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
               "id": "kindThinsPBDarkChocolate",
               "name": "Kind Thins PB Dark Chocolate",
               "serving": {
@@ -12045,7 +12052,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 10
+            "quantity": 15
           }
         ]
       },
@@ -12069,47 +12076,6 @@
             },
             "quantity": 1
           },
-          {
-            "food": {
-              "id": "kindThinsPBDarkChocolate",
-              "name": "Kind Thins PB Dark Chocolate",
-              "serving": {
-                "amount": 2,
-                "unitLabel": "bar",
-                "calories": 200,
-                "protein": 6,
-                "carbs": 20,
-                "fat": 14
-              },
-              "category": "ProteinBar",
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 2
-          },
-          {
-            "food": {
-              "id": "jifChunkyPB",
-              "name": "JIF Chunky PB",
-              "serving": {
-                "amount": 32,
-                "unitLabel": "g",
-                "calories": 190,
-                "protein": 7,
-                "carbs": 8,
-                "fat": 16
-              },
-              "category": "PeanutButter",
-              "minServingAmountPerMeal": 10,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 10
-          }
-        ]
-      },
-      {
-        "time": "11:00 AM",
-        "name": "Lunch",
-        "items": [
           {
             "food": {
               "id": "riceCakeAppleCinnamon",
@@ -12141,7 +12107,7 @@
               "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 2
+            "quantity": 1
           },
           {
             "food": {
@@ -12159,7 +12125,97 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 11
+            "quantity": 15
+          }
+        ]
+      },
+      {
+        "time": "11:00 AM",
+        "name": "Lunch",
+        "items": [
+          {
+            "food": {
+              "id": "riceCakeWhiteCheddar",
+              "name": "Rice cake (white cheddar)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "rice cake",
+                "calories": 45,
+                "protein": 1,
+                "carbs": 9,
+                "fat": 0.5
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "riceCakeAppleCinnamon",
+              "name": "Rice cake (apple cinnamon)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "rice cake",
+                "calories": 50,
+                "protein": 0.5,
+                "carbs": 11,
+                "fat": 0
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "container",
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
+                "fat": 0
+              },
+              "maxServingAmountPerPlan": 1,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
+              "serving": {
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
+              },
+              "category": "ProteinBar",
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "jifChunkyPB",
+              "name": "JIF Chunky PB",
+              "serving": {
+                "amount": 32,
+                "unitLabel": "g",
+                "calories": 190,
+                "protein": 7,
+                "carbs": 8,
+                "fat": 16
+              },
+              "category": "PeanutButter",
+              "minServingAmountPerMeal": 10,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 15
           },
           {
             "food": {
@@ -12219,41 +12275,7 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "banana",
-              "name": "Banana (110g average)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "banana",
-                "calories": 97,
-                "protein": 0.8,
-                "carbs": 25.3,
-                "fat": 0.4
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "greenBeansCanned",
-              "name": "Green beans (canned)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "can",
-                "calories": 52.5,
-                "protein": 3.5,
-                "carbs": 10.5,
-                "fat": 0
-              },
-              "category": "CannedVegetable",
-              "maxServingAmountPerPlan": 2,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
+            "quantity": 2
           },
           {
             "food": {
@@ -12288,7 +12310,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 10
+            "quantity": 16
           }
         ]
       },
@@ -12298,17 +12320,32 @@
         "items": [
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "riceCakeWhiteCheddar",
+              "name": "Rice cake (white cheddar)",
               "serving": {
                 "amount": 1,
-                "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "unitLabel": "rice cake",
+                "calories": 45,
+                "protein": 1,
+                "carbs": 9,
+                "fat": 0.5
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "riceCakeAppleCinnamon",
+              "name": "Rice cake (apple cinnamon)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "rice cake",
+                "calories": 50,
+                "protein": 0.5,
+                "carbs": 11,
                 "fat": 0
               },
-              "maxServingAmountPerPlan": 1,
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -12328,7 +12365,7 @@
               "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 2
+            "quantity": 1
           },
           {
             "food": {
@@ -12346,7 +12383,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 11
+            "quantity": 16
           },
           {
             "food": {
@@ -12373,10 +12410,10 @@
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:34.374Z"
+    "lastUpdatedAt": "2026-06-08T01:45:53.846Z"
   },
-  "Maintenance:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off": {
-    "id": "Maintenance:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=off",
+  "Maintenance:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off": {
+    "id": "Maintenance:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=off",
     "title": "Maintenance · Training Day",
     "phase": "Maintenance",
     "bodyweightLb": 183,
@@ -12725,8 +12762,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:28.632Z"
   },
-  "Maintenance:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on": {
-    "id": "Maintenance:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,dannonLightFitGreekBlueberry=on",
+  "Maintenance:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on": {
+    "id": "Maintenance:Training:PeanutButter=krogerChunkyPB,chickenBreast=off,oikosTripleZeroYogurt=on",
     "title": "Maintenance · Training Day",
     "phase": "Maintenance",
     "bodyweightLb": 183,
@@ -12789,7 +12826,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 17
+            "quantity": 27
           }
         ]
       },
@@ -12818,23 +12855,6 @@
           },
           {
             "food": {
-              "id": "kindThinsPBDarkChocolate",
-              "name": "Kind Thins PB Dark Chocolate",
-              "serving": {
-                "amount": 2,
-                "unitLabel": "bar",
-                "calories": 200,
-                "protein": 6,
-                "carbs": 20,
-                "fat": 14
-              },
-              "category": "ProteinBar",
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
               "id": "krogerChunkyPB",
               "name": "Kroger Chunky PB",
               "serving": {
@@ -12849,7 +12869,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 16
+            "quantity": 27
           }
         ]
       },
@@ -12857,81 +12877,6 @@
         "time": "11:00 AM",
         "name": "Lunch",
         "items": [
-          {
-            "food": {
-              "id": "greenBeansCanned",
-              "name": "Green beans (canned)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "can",
-                "calories": 52.5,
-                "protein": 3.5,
-                "carbs": 10.5,
-                "fat": 0
-              },
-              "category": "CannedVegetable",
-              "maxServingAmountPerPlan": 2,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
-              "id": "kindThinsPBDarkChocolate",
-              "name": "Kind Thins PB Dark Chocolate",
-              "serving": {
-                "amount": 2,
-                "unitLabel": "bar",
-                "calories": 200,
-                "protein": 6,
-                "carbs": 20,
-                "fat": 14
-              },
-              "category": "ProteinBar",
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 2
-          },
-          {
-            "food": {
-              "id": "krogerChunkyPB",
-              "name": "Kroger Chunky PB",
-              "serving": {
-                "amount": 32,
-                "unitLabel": "g",
-                "calories": 180,
-                "protein": 7,
-                "carbs": 9,
-                "fat": 15
-              },
-              "category": "PeanutButter",
-              "minServingAmountPerMeal": 10,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 17
-          }
-        ]
-      },
-      {
-        "time": "2:40 PM",
-        "name": "PreWorkout",
-        "items": [
-          {
-            "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
           {
             "food": {
               "id": "banana",
@@ -12950,24 +12895,6 @@
           },
           {
             "food": {
-              "id": "greenBeansCanned",
-              "name": "Green beans (canned)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "can",
-                "calories": 52.5,
-                "protein": 3.5,
-                "carbs": 10.5,
-                "fat": 0
-              },
-              "category": "CannedVegetable",
-              "maxServingAmountPerPlan": 2,
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
               "id": "kindThinsPBDarkChocolate",
               "name": "Kind Thins PB Dark Chocolate",
               "serving": {
@@ -12981,7 +12908,7 @@
               "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 2
+            "quantity": 1
           },
           {
             "food": {
@@ -12999,7 +12926,64 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 17
+            "quantity": 28
+          }
+        ]
+      },
+      {
+        "time": "2:40 PM",
+        "name": "PreWorkout",
+        "items": [
+          {
+            "food": {
+              "id": "banana",
+              "name": "Banana (110g average)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "banana",
+                "calories": 97,
+                "protein": 0.8,
+                "carbs": 25.3,
+                "fat": 0.4
+              },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "cornCanned",
+              "name": "Corn (canned)",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "can",
+                "calories": 245,
+                "protein": 7,
+                "carbs": 42,
+                "fat": 1
+              },
+              "category": "CannedVegetable",
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "krogerChunkyPB",
+              "name": "Kroger Chunky PB",
+              "serving": {
+                "amount": 32,
+                "unitLabel": "g",
+                "calories": 180,
+                "protein": 7,
+                "carbs": 9,
+                "fat": 15
+              },
+              "category": "PeanutButter",
+              "minServingAmountPerMeal": 10,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 27
           }
         ]
       },
@@ -13009,14 +12993,14 @@
         "items": [
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
               "serving": {
                 "amount": 1,
                 "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
                 "fat": 0
               },
               "maxServingAmountPerPlan": 1,
@@ -13039,7 +13023,7 @@
               "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 2
+            "quantity": 1
           },
           {
             "food": {
@@ -13057,15 +13041,15 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 17
+            "quantity": 28
           }
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:30.279Z"
+    "lastUpdatedAt": "2026-06-08T01:45:49.509Z"
   },
-  "Maintenance:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off": {
-    "id": "Maintenance:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=off",
+  "Maintenance:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off": {
+    "id": "Maintenance:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=off",
     "title": "Maintenance · Training Day",
     "phase": "Maintenance",
     "bodyweightLb": 183,
@@ -13421,8 +13405,8 @@
     ],
     "lastUpdatedAt": "2026-06-05T21:47:29.447Z"
   },
-  "Maintenance:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on": {
-    "id": "Maintenance:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,dannonLightFitGreekBlueberry=on",
+  "Maintenance:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on": {
+    "id": "Maintenance:Training:PeanutButter=krogerChunkyPB,chickenBreast=on,oikosTripleZeroYogurt=on",
     "title": "Maintenance · Training Day",
     "phase": "Maintenance",
     "bodyweightLb": 183,
@@ -13484,7 +13468,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 30
+            "quantity": 21
           }
         ]
       },
@@ -13494,22 +13478,6 @@
         "items": [
           {
             "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
               "id": "riceCakeAppleCinnamon",
               "name": "Rice cake (apple cinnamon)",
               "serving": {
@@ -13520,6 +13488,23 @@
                 "carbs": 11,
                 "fat": 0
               },
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
+              "serving": {
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
+              },
+              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -13540,7 +13525,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 31
+            "quantity": 21
           }
         ]
       },
@@ -13550,22 +13535,6 @@
         "items": [
           {
             "food": {
-              "id": "riceCakeWhiteCheddar",
-              "name": "Rice cake (white cheddar)",
-              "serving": {
-                "amount": 1,
-                "unitLabel": "rice cake",
-                "calories": 45,
-                "protein": 1,
-                "carbs": 9,
-                "fat": 0.5
-              },
-              "allowedStepServingAmountPerMeal": 1
-            },
-            "quantity": 1
-          },
-          {
-            "food": {
               "id": "riceCakeAppleCinnamon",
               "name": "Rice cake (apple cinnamon)",
               "serving": {
@@ -13578,7 +13547,41 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 2
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "oikosTripleZeroYogurt",
+              "name": "Oikos Triple Zero Greek Yogurt",
+              "serving": {
+                "amount": 1,
+                "unitLabel": "container",
+                "calories": 90,
+                "protein": 15,
+                "carbs": 7,
+                "fat": 0
+              },
+              "maxServingAmountPerPlan": 1,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
+              "serving": {
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
+              },
+              "category": "ProteinBar",
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
           },
           {
             "food": {
@@ -13596,7 +13599,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 31
+            "quantity": 21
           },
           {
             "food": {
@@ -13660,18 +13663,33 @@
           },
           {
             "food": {
-              "id": "greenBeansCanned",
-              "name": "Green beans (canned)",
+              "id": "banana",
+              "name": "Banana (110g average)",
               "serving": {
                 "amount": 1,
-                "unitLabel": "can",
-                "calories": 52.5,
-                "protein": 3.5,
-                "carbs": 10.5,
-                "fat": 0
+                "unitLabel": "banana",
+                "calories": 97,
+                "protein": 0.8,
+                "carbs": 25.3,
+                "fat": 0.4
               },
-              "category": "CannedVegetable",
-              "maxServingAmountPerPlan": 2,
+              "allowedStepServingAmountPerMeal": 1
+            },
+            "quantity": 1
+          },
+          {
+            "food": {
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
+              "serving": {
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
+              },
+              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -13692,7 +13710,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 30
+            "quantity": 21
           }
         ]
       },
@@ -13714,21 +13732,21 @@
               },
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 2
+            "quantity": 1
           },
           {
             "food": {
-              "id": "dannonLightFitGreekBlueberry",
-              "name": "Dannon Light + Fit Greek Yogurt (Blueberry)",
+              "id": "kindThinsPBDarkChocolate",
+              "name": "Kind Thins PB Dark Chocolate",
               "serving": {
-                "amount": 1,
-                "unitLabel": "container",
-                "calories": 80,
-                "protein": 12,
-                "carbs": 8,
-                "fat": 0
+                "amount": 2,
+                "unitLabel": "bar",
+                "calories": 200,
+                "protein": 6,
+                "carbs": 20,
+                "fat": 14
               },
-              "maxServingAmountPerPlan": 1,
+              "category": "ProteinBar",
               "allowedStepServingAmountPerMeal": 1
             },
             "quantity": 1
@@ -13749,7 +13767,7 @@
               "minServingAmountPerMeal": 10,
               "allowedStepServingAmountPerMeal": 1
             },
-            "quantity": 31
+            "quantity": 22
           },
           {
             "food": {
@@ -13776,6 +13794,6 @@
         ]
       }
     ],
-    "lastUpdatedAt": "2026-06-05T21:47:31.128Z"
+    "lastUpdatedAt": "2026-06-08T01:45:50.357Z"
   }
 }
