@@ -89,9 +89,6 @@ export const krogerChunkyPB: Food = {
   serving: { amount: 32, unitLabel: 'g', calories: 180, protein: 7, carbs: 9, fat: 15 },
   category: FoodCategory.PeanutButter,
   minServingAmountPerMeal: 10,
-  // Per-meal PB ceiling (~1 tbsp) so no single meal gets a giant glob; the
-  // optimizer fills remaining fat with cheese/almonds. Daily total is left
-  // free — the complaint was per-meal portion size, not total PB.
   maxServingAmountPerMeal: 30,
   allowedStepServingAmountPerMeal: 1
 };
@@ -102,7 +99,6 @@ export const jifChunkyPB: Food = {
   serving: { amount: 32, unitLabel: 'g', calories: 190, protein: 7, carbs: 8, fat: 16 },
   category: FoodCategory.PeanutButter,
   minServingAmountPerMeal: 10,
-  // Same per-meal PB ceiling as the Kroger jar — see krogerChunkyPB.
   maxServingAmountPerMeal: 30,
   allowedStepServingAmountPerMeal: 1
 };
@@ -185,10 +181,6 @@ export const stringCheese: Food = {
   id: 'stringCheese',
   name: 'Mozzarella String Cheese',
   serving: { amount: 1, unitLabel: 'stick', calories: 90, protein: 7, carbs: 0, fat: 7 },
-  // Carries fat + protein together, so it can offload fat from peanut butter
-  // without being a pure-fat add. No category: it is allowed to coexist with PB.
-  maxServingAmountPerMeal: 3,
-  maxServingAmountPerPlan: 6,
   allowedStepServingAmountPerMeal: 1
 };
 
@@ -196,12 +188,6 @@ export const almonds: Food = {
   id: 'almonds',
   name: 'Roasted Salted Almonds',
   serving: { amount: 28, unitLabel: 'g', calories: 170, protein: 6, carbs: 5, fat: 16 },
-  // A second dense fat source so the optimizer is not forced to pour all the
-  // day's fat into peanut butter. Intentionally NOT in the PeanutButter
-  // category — the goal is to reduce PB, not replace it outright.
-  minServingAmountPerMeal: 14,
-  maxServingAmountPerMeal: 28,
-  maxServingAmountPerPlan: 56,
   allowedStepServingAmountPerMeal: 7
 };
 
