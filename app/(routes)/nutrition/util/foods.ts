@@ -188,7 +188,8 @@ export const almonds: Food = {
   id: 'almonds',
   name: 'Roasted Salted Almonds',
   serving: { amount: 28, unitLabel: 'g', calories: 170, protein: 6, carbs: 5, fat: 16 },
-  allowedStepServingAmountPerMeal: 7
+  minServingAmountPerMeal: 10,
+  allowedStepServingAmountPerMeal: 1
 };
 
 /** Every food defined in this module; used as the default candidate pool for the optimizer. */
