@@ -181,10 +181,10 @@ export const oikosTripleZeroYogurt: Food = {
   allowedStepServingAmountPerMeal: 1
 };
 
-export const krogerStringCheese: Food = {
-  id: 'krogerStringCheese',
-  name: 'Kroger Mozzarella String Cheese',
-  serving: { amount: 1, unitLabel: 'stick', calories: 80, protein: 7, carbs: 1, fat: 6 },
+export const stringCheese: Food = {
+  id: 'stringCheese',
+  name: 'Mozzarella String Cheese',
+  serving: { amount: 1, unitLabel: 'stick', calories: 90, protein: 7, carbs: 0, fat: 7 },
   // Carries fat + protein together, so it can offload fat from peanut butter
   // without being a pure-fat add. No category: it is allowed to coexist with PB.
   maxServingAmountPerMeal: 3,
@@ -192,10 +192,10 @@ export const krogerStringCheese: Food = {
   allowedStepServingAmountPerMeal: 1
 };
 
-export const krogerAlmonds: Food = {
-  id: 'krogerAlmonds',
-  name: 'Kroger Lightly Salted Roasted Almonds',
-  serving: { amount: 28, unitLabel: 'g', calories: 170, protein: 6, carbs: 6, fat: 15 },
+export const almonds: Food = {
+  id: 'almonds',
+  name: 'Roasted Salted Almonds',
+  serving: { amount: 28, unitLabel: 'g', calories: 170, protein: 6, carbs: 5, fat: 16 },
   // A second dense fat source so the optimizer is not forced to pour all the
   // day's fat into peanut butter. Intentionally NOT in the PeanutButter
   // category — the goal is to reduce PB, not replace it outright.
@@ -225,6 +225,6 @@ export const allFoods: Food[] = [
   starkistTunaCreationsBaconRanch,
   dannonLightFitGreekBlueberry,
   oikosTripleZeroYogurt,
-  krogerStringCheese,
-  krogerAlmonds
+  stringCheese,
+  almonds
 ];
