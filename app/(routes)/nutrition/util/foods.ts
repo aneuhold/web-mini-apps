@@ -118,6 +118,8 @@ export const peasCanned: Food = {
   name: 'Peas (canned)',
   serving: { amount: 1, unitLabel: 'can', calories: 175, protein: 10.5, carbs: 30.5, fat: 0 },
   category: FoodCategory.CannedVegetable,
+  // Currently out
+  maxServingAmountPerPlan: 0,
   allowedStepServingAmountPerMeal: 1
 };
 
