@@ -17,7 +17,7 @@ export type NutritionViewState = {
 
 const defaultViewState = (): NutritionViewState => ({
   swapStates: nutritionVariants.defaultAllSwapStates(),
-  activePhase: DietPhase.Cutting,
+  activePhase: DietPhase.Maintenance,
   activeDayType: DayType.Training
 });
 
@@ -50,7 +50,7 @@ class NutritionLocalData {
     if (!isPlainObject(stored)) return defaultViewState();
     return {
       swapStates: this.mergeWithDefaultSwapStates(stored.swapStates),
-      activePhase: isDietPhase(stored.activePhase) ? stored.activePhase : DietPhase.Cutting,
+      activePhase: isDietPhase(stored.activePhase) ? stored.activePhase : DietPhase.Maintenance,
       activeDayType: isDayType(stored.activeDayType) ? stored.activeDayType : DayType.Training
     };
   }
