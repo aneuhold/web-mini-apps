@@ -165,8 +165,8 @@ export const dannonLightFitGreekBlueberry: Food = {
   id: 'dannonLightFitGreekBlueberry',
   name: 'Dannon Light + Fit Greek Yogurt (Blueberry)',
   serving: { amount: 1, unitLabel: 'container', calories: 80, protein: 12, carbs: 8, fat: 0 },
-  // Currently out
-  maxServingAmountPerPlan: 0,
+  // Max amount in a day because of amount available
+  maxServingAmountPerPlan: 1,
   allowedStepServingAmountPerMeal: 1
 };
 
@@ -174,8 +174,8 @@ export const oikosTripleZeroYogurt: Food = {
   id: 'oikosTripleZeroYogurt',
   name: 'Oikos Triple Zero Greek Yogurt',
   serving: { amount: 1, unitLabel: 'container', calories: 90, protein: 15, carbs: 7, fat: 0 },
-  // Max amount in a day because of amount available
-  maxServingAmountPerPlan: 1,
+  // Currently out
+  maxServingAmountPerPlan: 0,
   allowedStepServingAmountPerMeal: 1
 };
 
