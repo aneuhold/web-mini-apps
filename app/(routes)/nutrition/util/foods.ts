@@ -183,6 +183,8 @@ export const stringCheese: Food = {
   id: 'stringCheese',
   name: 'Mozzarella String Cheese',
   serving: { amount: 1, unitLabel: 'stick', calories: 90, protein: 7, carbs: 0, fat: 7 },
+  // Currently out
+  maxServingAmountPerPlan: 0,
   allowedStepServingAmountPerMeal: 1
 };
 
