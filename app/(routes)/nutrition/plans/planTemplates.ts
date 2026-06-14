@@ -3,7 +3,8 @@ import {
   chickenBreast,
   dannonLightFitGreekBlueberry,
   jifChunkyPB,
-  krogerChunkyPB
+  krogerChunkyPB,
+  stringCheese
 } from '../util/foods';
 import type { Food, NutritionPlan } from '../util/types';
 import { ActivityLevel, DayType, DietPhase, FoodCategory, MealName } from '../util/types';
@@ -192,7 +193,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         bodyweightLb: 183,
         calorieTarget: 2200,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-06-14T00:00:00.000Z',
+        lastUpdatedAt: '2026-06-14T17:50:00.000Z',
         meals: [
           { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
           { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
@@ -204,6 +205,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
         { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
+        { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
         { food: almonds, label: 'Almonds' }
       ],
       categoryFoods: [
@@ -223,7 +225,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         bodyweightLb: 183,
         calorieTarget: 1950,
         activityLevel: ActivityLevel.NonTraining,
-        lastUpdatedAt: '2026-06-14T00:00:00.000Z',
+        lastUpdatedAt: '2026-06-14T17:50:00.000Z',
         meals: [
           { time: 'Meal 1', name: MealName.Meal1, items: [] },
           { time: 'Meal 2', name: MealName.Meal2, items: [] },
@@ -233,6 +235,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
         { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
+        { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
         { food: almonds, label: 'Almonds' }
       ],
       categoryFoods: [
