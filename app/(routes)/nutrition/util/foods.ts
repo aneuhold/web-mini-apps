@@ -50,6 +50,8 @@ export const riceCakeWhiteCheddar: Food = {
   id: 'riceCakeWhiteCheddar',
   name: 'Rice cake (white cheddar)',
   serving: { amount: 1, unitLabel: 'rice cake', calories: 45, protein: 1, carbs: 9, fat: 0.5 },
+  // Currently out
+  maxServingAmountPerPlan: 0,
   allowedStepServingAmountPerMeal: 1
 };
 
