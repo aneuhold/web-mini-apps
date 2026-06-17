@@ -82,6 +82,7 @@ export const clifBuildersMiniChocMint: Food = {
   name: 'Clif Builders Mini Choc Mint',
   serving: { amount: 1, unitLabel: 'bar', calories: 140, protein: 10, carbs: 15, fat: 4.5 },
   category: FoodCategory.ProteinBar,
+  maxServingAmountPerPlan: 3,
   allowedStepServingAmountPerMeal: 1
 };
 
