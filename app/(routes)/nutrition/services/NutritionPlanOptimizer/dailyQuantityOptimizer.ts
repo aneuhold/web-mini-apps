@@ -1,43 +1,73 @@
-import type { Food, MacroFloors, MacroTotals } from '../../util/types';
-import { DietPhase, FoodCategory } from '../../util/types';
+import type { DietPhase, Food, FoodCategory, MacroFloors, MacroTotals } from '../../util/types';
 import macroScorer from './macroScorer';
-import type { FoodBounds, ScoringConfig } from './optimizerTypes';
+import type { FoodBounds, ScoringConfig, ScoringWeights } from './optimizerTypes';
 
 /**
- * Starting temperature for simulated annealing. High enough that a move
- * worsening the score by ~38 000 (the protein-deficit penalty at target) is
- * accepted with ≈46% probability, letting the search escape local optima
- * where hitting the calorie ceiling blocks further protein additions.
+ * Pre-expanded candidate: a food plus the macro contribution of each of its
+ * valid daily quantities. Arrays are index-aligned with `quantities` and the
+ * quantities are sorted ascending, so index 0 is the smallest valid amount
+ * (0 for optional foods, the required minimum otherwise) and the last index is
+ * the per-day maximum.
  */
-const SA_T_INIT = 50_000;
+type Candidate = {
+  food: Food;
+  category: FoodCategory | undefined;
+  quantities: number[];
+  calories: number[];
+  protein: number[];
+  carbs: number[];
+  fat: number[];
+};
 
 /**
- * Terminal temperature. At T = 0.1, exp(-any_positive_delta / 0.1) ≈ 0 for
- * any meaningful score delta, so the search is effectively greedy by the end.
- */
-const SA_T_FINAL = 0.1;
-
-/**
- * Geometric cooling factor applied once per temperature level.
- * 0.9987 ≈ 10 000 levels between T_INIT and T_FINAL.
- */
-const SA_COOLING = 0.9987;
-
-/**
- * Finds the optimal daily quantity for each food via simulated annealing
- * (Phase 2 of the optimization), followed by a greedy hill-climb to polish
- * any residual single-step improvements.
+ * Lower bound on the minimum of a convex, per-macro penalty term over an
+ * interval `[lo, hi]` of reachable values, given the target `t` and the
+ * asymmetric below/above weights. Because the term is convex with its minimum
+ * at `t`, the closest reachable point governs: 0 when `t` is inside the
+ * interval, otherwise the squared distance to the nearer endpoint.
  *
- * Greedy hill-climbing alone gets trapped in local optima where hitting the
- * calorie target prevents adding more protein (every +protein move
- * temporarily overshoots calories). SA escapes by accepting uphill moves
- * probabilistically, with acceptance rate controlled by the temperature
- * schedule.
+ * @param lo - Smallest reachable value for this macro.
+ * @param hi - Largest reachable value for this macro.
+ * @param t - Target value for this macro.
+ * @param weightBelow - Penalty weight applied when below target.
+ * @param weightAbove - Penalty weight applied when above target.
+ */
+const termLowerBound = (
+  lo: number,
+  hi: number,
+  t: number,
+  weightBelow: number,
+  weightAbove: number
+): number => {
+  if (t <= lo) {
+    const d = lo - t;
+    return weightAbove * d * d;
+  }
+  if (t >= hi) {
+    const d = hi - t;
+    return weightBelow * d * d;
+  }
+  return 0;
+};
+
+/**
+ * Finds the daily quantity for each food that globally minimizes the weighted
+ * macro penalty (Phase 2 of the optimization), exactly and deterministically.
  *
- * Category exclusivity is enforced as a hard constraint in both phases: any
- * move that would introduce a second food from the same FoodCategory while
- * another is already non-zero is rejected outright before the score is
- * even evaluated.
+ * The problem is a small mixed-integer program: pick one quantity per food
+ * from its discrete valid set to bring the four macro totals closest to target
+ * (under `macroScorer`'s convex penalty), subject to at most one food per
+ * `FoodCategory`. The penalty is convex in the quantities, so the only sources
+ * of non-convexity are the discrete steps and the category choice — both
+ * finite. Branch-and-bound with an admissible per-macro lower bound therefore
+ * returns the provable global optimum, identical on every run.
+ *
+ * This replaced an earlier simulated-annealing + hill-climb search, which was
+ * stochastic (best-of-N noisy runs, so regenerating churned the output) and
+ * could leave the true optimum on the table. The local-optimum trap that search
+ * worked around — hitting the calorie ceiling blocks adding more protein — was
+ * an artifact of its single-step move set, not of the problem, which has no
+ * spurious local optima once searched globally.
  */
 class DailyQuantityOptimizer {
   /**
@@ -48,232 +78,395 @@ class DailyQuantityOptimizer {
    * @param targets - Macro targets for the day.
    * @param floors - RP hard minimums per macro (0 when no floor applies).
    * @param phase - Diet phase; drives scoring weights and penalty shapes.
-   * @param saRuns - Number of independent SA runs; best result is returned.
    */
   optimize(
     bounds: FoodBounds[],
     targets: MacroTotals,
     floors: MacroFloors,
-    phase: DietPhase,
-    saRuns = 5
+    phase: DietPhase
   ): Map<Food, number> {
     const config: ScoringConfig = { targets, floors, phase };
-    const categoryGroups = this.buildCategoryGroups(bounds);
+    // Most calorie-impactful foods first: tightens the calorie term of the
+    // bound early, so overshoot branches are pruned near the root.
+    let candidates = this.buildCandidates(bounds).sort(
+      (a, b) => this.maxCalories(b) - this.maxCalories(a)
+    );
 
-    let bestQuantities = new Map<Food, number>();
-    let bestScore = Infinity;
-
-    for (let r = 0; r < saRuns; r++) {
-      const quantities = this.simulatedAnnealing(bounds, config, categoryGroups);
-      this.hillClimb(quantities, bounds, config, categoryGroups);
-      const sc = macroScorer.score(macroScorer.computeTotals(quantities), config);
-      if (sc < bestScore) {
-        bestScore = sc;
-        bestQuantities = quantities;
-      }
+    // Domain reduction: drop any quantity that, even with every other food at
+    // its minimum, already overshoots calories enough to score worse than a
+    // greedy incumbent. Such quantities can never be in the optimum, so removing
+    // them is exact while collapsing the otherwise enormous fine-grained ranges
+    // (e.g. almonds' 0–560 g). Iterated to a fixpoint since each pass lowers the
+    // incumbent and tightens the next.
+    for (let pass = 0; pass < 3; pass++) {
+      const incumbent = this.greedySeed(candidates, config).score;
+      const reduced = this.reduceByCalorieFloor(candidates, config, incumbent);
+      const shrank = reduced.some((c, i) => c.quantities.length < candidates[i].quantities.length);
+      candidates = reduced;
+      if (!shrank) break;
     }
 
-    return bestQuantities;
+    const result = this.branchAndBound(candidates, config);
+
+    const quantities = new Map<Food, number>();
+    for (let i = 0; i < candidates.length; i++) {
+      quantities.set(candidates[i].food, candidates[i].quantities[result.indices[i]]);
+    }
+    return quantities;
   }
 
   /**
-   * Run simulated annealing and return the best quantities seen during the run.
+   * Expand each food's valid daily quantities into index-aligned macro
+   * contribution arrays so the search can accumulate totals with array reads
+   * instead of recomputing ratios.
    *
-   * Maintains a running MacroTotals that is updated incrementally (O(1) per
-   * move) rather than recomputed from scratch (O(numFoods) per move). A
-   * parallel index map eliminates O(n) indexOf lookups inside the hot loop.
-   *
-   * @param bounds - Valid daily quantity sets per food.
-   * @param config - Scoring configuration.
-   * @param categoryGroups - Foods grouped by category for exclusivity checks.
+   * @param bounds - Per-food valid daily quantity sets.
    */
-  private simulatedAnnealing(
-    bounds: FoodBounds[],
+  private buildCandidates(bounds: FoodBounds[]): Candidate[] {
+    return bounds.map(({ food, validDailyQuantities }) => {
+      const calPerUnit = food.serving.calories / food.serving.amount;
+      const protPerUnit = food.serving.protein / food.serving.amount;
+      const carbPerUnit = food.serving.carbs / food.serving.amount;
+      const fatPerUnit = food.serving.fat / food.serving.amount;
+      return {
+        food,
+        category: food.category,
+        quantities: validDailyQuantities,
+        calories: validDailyQuantities.map((q) => q * calPerUnit),
+        protein: validDailyQuantities.map((q) => q * protPerUnit),
+        carbs: validDailyQuantities.map((q) => q * carbPerUnit),
+        fat: validDailyQuantities.map((q) => q * fatPerUnit)
+      };
+    });
+  }
+
+  /**
+   * The largest calorie contribution a candidate can make (its max quantity),
+   * used to order foods for the search.
+   *
+   * @param candidate - Candidate to measure.
+   */
+  private maxCalories(candidate: Candidate): number {
+    return candidate.calories[candidate.calories.length - 1] ?? 0;
+  }
+
+  /**
+   * Exact domain reduction: drop any of a food's daily quantities that, even
+   * when every other food sits at its minimum, push calories far enough above
+   * target that the calorie penalty alone meets or exceeds `incumbent`. Such a
+   * quantity can never appear in a plan that beats the incumbent, so removing
+   * it preserves the optimum while shrinking the search. Because a food's
+   * calories rise monotonically with quantity, the first offending option caps
+   * the rest.
+   *
+   * @param candidates - Foods with their current valid quantities.
+   * @param config - Scoring configuration (targets).
+   * @param incumbent - A known achievable score (upper bound on the optimum).
+   */
+  private reduceByCalorieFloor(
+    candidates: Candidate[],
     config: ScoringConfig,
-    categoryGroups: Map<FoodCategory, Food[]>
-  ): Map<Food, number> {
-    const { currentIndices, currentQuantities } = this.randomInitialState(bounds, categoryGroups);
+    incumbent: number
+  ): Candidate[] {
+    const weights = macroScorer.weightsFor(config.phase);
+    const targetCal = config.targets.calories;
+    // Minimum total calories everyone contributes at once (every food at its
+    // smallest valid quantity).
+    const baseCalories = candidates.reduce((sum, c) => sum + c.calories[0], 0);
 
-    let currentTotals = macroScorer.computeTotals(currentQuantities);
-    let currentScore = macroScorer.score(currentTotals, config);
-    let bestScore = currentScore;
-    let bestQuantities = new Map(currentQuantities);
-
-    const movesPerTemp = bounds.length * 10;
-    let temperature = SA_T_INIT;
-
-    while (temperature > SA_T_FINAL) {
-      for (let i = 0; i < movesPerTemp; i++) {
-        const boundsEntry = bounds[Math.floor(Math.random() * bounds.length)];
-        const { food, validDailyQuantities } = boundsEntry;
-
-        const currentIdx = currentIndices.get(food) ?? 0;
-        const direction = Math.random() < 0.5 ? -1 : 1;
-        const neighborIdx = currentIdx + direction;
-        if (neighborIdx < 0 || neighborIdx >= validDailyQuantities.length) continue;
-
-        const oldQty = currentQuantities.get(food) ?? 0;
-        const newQty = validDailyQuantities[neighborIdx];
-
-        if (this.isExclusivityViolation(food, oldQty, newQty, currentQuantities, categoryGroups)) {
-          continue;
-        }
-
-        const ratioDelta = (newQty - oldQty) / food.serving.amount;
-        const newTotals: MacroTotals = {
-          calories: currentTotals.calories + ratioDelta * food.serving.calories,
-          protein: currentTotals.protein + ratioDelta * food.serving.protein,
-          carbs: currentTotals.carbs + ratioDelta * food.serving.carbs,
-          fat: currentTotals.fat + ratioDelta * food.serving.fat
-        };
-        const neighborScore = macroScorer.score(newTotals, config);
-
-        const delta = neighborScore - currentScore;
-        if (delta < 0 || Math.random() < Math.exp(-delta / temperature)) {
-          currentIndices.set(food, neighborIdx);
-          currentQuantities.set(food, newQty);
-          currentTotals = newTotals;
-          currentScore = neighborScore;
-          if (currentScore < bestScore) {
-            bestScore = currentScore;
-            bestQuantities = new Map(currentQuantities);
-          }
+    return candidates.map((c) => {
+      let keep = c.quantities.length;
+      for (let oi = 1; oi < c.quantities.length; oi++) {
+        const minTotalCal = baseCalories + (c.calories[oi] - c.calories[0]);
+        if (minTotalCal <= targetCal) continue;
+        const over = minTotalCal - targetCal;
+        if (weights.caloriesAbove * over * over > incumbent + 1e-9) {
+          keep = oi;
+          break;
         }
       }
-      temperature *= SA_COOLING;
-    }
-
-    return bestQuantities;
+      if (keep === c.quantities.length) return c;
+      return {
+        food: c.food,
+        category: c.category,
+        quantities: c.quantities.slice(0, keep),
+        calories: c.calories.slice(0, keep),
+        protein: c.protein.slice(0, keep),
+        carbs: c.carbs.slice(0, keep),
+        fat: c.fat.slice(0, keep)
+      };
+    });
   }
 
   /**
-   * Build a random starting state for one SA run. For each category, one
-   * member is chosen to be "active" (random quantity); the rest stay at 0
-   * so the exclusivity constraint holds from the very first move. Foods
-   * without a category get a random valid quantity directly.
+   * Depth-first branch-and-bound over the candidates. Maintains the running
+   * macro totals and prunes any subtree whose admissible lower bound cannot
+   * beat the incumbent. Category exclusivity is enforced by claiming a category
+   * when a food in it is given a non-zero quantity. Seeded with a greedy
+   * incumbent so pruning starts tight.
    *
-   * @param bounds - Valid daily quantity sets per food.
-   * @param categoryGroups - Foods grouped by category for exclusivity.
+   * @param candidates - Foods to assign, ordered most-impactful first.
+   * @param config - Scoring configuration (targets, floors, phase).
    */
-  private randomInitialState(
-    bounds: FoodBounds[],
-    categoryGroups: Map<FoodCategory, Food[]>
-  ): { currentIndices: Map<Food, number>; currentQuantities: Map<Food, number> } {
-    const activeInCategory = new Map<FoodCategory, Food>();
-    for (const [category, foods] of categoryGroups) {
-      activeInCategory.set(category, foods[Math.floor(Math.random() * foods.length)]);
-    }
+  private branchAndBound(
+    candidates: Candidate[],
+    config: ScoringConfig
+  ): { score: number; indices: number[] } {
+    const n = candidates.length;
+    const weights = macroScorer.weightsFor(config.phase);
+    const suffix = this.buildSuffixBounds(candidates);
 
-    const currentIndices = new Map<Food, number>();
-    const currentQuantities = new Map<Food, number>();
-    for (const { food, validDailyQuantities } of bounds) {
-      const canBeNonZero =
-        food.category === undefined || activeInCategory.get(food.category) === food;
-      const idx = canBeNonZero ? Math.floor(Math.random() * validDailyQuantities.length) : 0;
-      currentIndices.set(food, idx);
-      currentQuantities.set(food, validDailyQuantities[idx]);
-    }
+    const seed = this.greedySeed(candidates, config);
+    let bestScore = seed.score;
+    let bestIndices = seed.indices;
 
-    return { currentIndices, currentQuantities };
+    const currentIndices = new Array<number>(n).fill(0);
+    const claimedBy = new Map<FoodCategory, number>();
+
+    const recurse = (
+      depth: number,
+      cal: number,
+      protein: number,
+      carbs: number,
+      fat: number
+    ): void => {
+      const bound = this.lowerBound(suffix, depth, cal, protein, carbs, fat, config, weights);
+      // Can't strictly beat the incumbent below this node — abandon it.
+      if (bound >= bestScore - 1e-6) return;
+
+      if (depth === n) {
+        bestScore = bound; // at a leaf the bound equals the exact score
+        bestIndices = [...currentIndices];
+        return;
+      }
+
+      const candidate = candidates[depth];
+      const { category } = candidate;
+      const claimedElsewhere =
+        category !== undefined && claimedBy.has(category) && claimedBy.get(category) !== depth;
+
+      for (let oi = 0; oi < candidate.quantities.length; oi++) {
+        const nonZero = candidate.quantities[oi] > 0;
+        if (nonZero && claimedElsewhere) continue;
+
+        const claims = nonZero && category !== undefined && !claimedBy.has(category);
+        if (claims) claimedBy.set(category, depth);
+        currentIndices[depth] = oi;
+
+        recurse(
+          depth + 1,
+          cal + candidate.calories[oi],
+          protein + candidate.protein[oi],
+          carbs + candidate.carbs[oi],
+          fat + candidate.fat[oi]
+        );
+
+        if (claims) claimedBy.delete(category);
+      }
+      currentIndices[depth] = 0;
+    };
+
+    recurse(0, 0, 0, 0, 0);
+    return { score: bestScore, indices: bestIndices };
   }
 
   /**
-   * Polish a solution in place by applying the best single-food quantity
-   * change at each step until no improvement remains.
+   * Build, for each depth, the minimum and maximum macro contribution still
+   * available from candidates at that depth onward (ignoring category
+   * exclusivity, which only ever shrinks the reachable set — keeping the bound
+   * admissible). `min`/`max` have length `n + 1`; index `n` is all zeros.
    *
-   * @param quantities - Starting food-to-quantity map, modified in place.
-   * @param bounds - Valid quantity sets per food.
-   * @param config - Scoring configuration.
-   * @param categoryGroups - Foods grouped by category for exclusivity checks.
+   * @param candidates - Foods in search order.
    */
-  private hillClimb(
-    quantities: Map<Food, number>,
-    bounds: FoodBounds[],
+  private buildSuffixBounds(candidates: Candidate[]): {
+    min: MacroTotals[];
+    max: MacroTotals[];
+  } {
+    const n = candidates.length;
+    const min = new Array<MacroTotals>(n + 1);
+    const max = new Array<MacroTotals>(n + 1);
+    min[n] = { calories: 0, protein: 0, carbs: 0, fat: 0 };
+    max[n] = { calories: 0, protein: 0, carbs: 0, fat: 0 };
+
+    for (let i = n - 1; i >= 0; i--) {
+      const c = candidates[i];
+      const last = c.quantities.length - 1;
+      min[i] = {
+        calories: min[i + 1].calories + c.calories[0],
+        protein: min[i + 1].protein + c.protein[0],
+        carbs: min[i + 1].carbs + c.carbs[0],
+        fat: min[i + 1].fat + c.fat[0]
+      };
+      max[i] = {
+        calories: max[i + 1].calories + c.calories[last],
+        protein: max[i + 1].protein + c.protein[last],
+        carbs: max[i + 1].carbs + c.carbs[last],
+        fat: max[i + 1].fat + c.fat[last]
+      };
+    }
+    return { min, max };
+  }
+
+  /**
+   * Admissible lower bound on the best score reachable from a node: each macro
+   * penalty minimized independently over its reachable interval, plus the floor
+   * penalty evaluated at the most-favorable (maximum) reachable macro values. At
+   * a leaf (`depth === n`) the intervals collapse to points and this returns the
+   * exact score.
+   *
+   * @param suffix - Per-depth min/max remaining macro contributions.
+   * @param depth - Current search depth.
+   * @param cal - Accumulated calories from assigned foods.
+   * @param protein - Accumulated protein from assigned foods.
+   * @param carbs - Accumulated carbs from assigned foods.
+   * @param fat - Accumulated fat from assigned foods.
+   * @param config - Scoring configuration (targets, floors).
+   * @param weights - Per-macro penalty weights for the phase.
+   */
+  private lowerBound(
+    suffix: { min: MacroTotals[]; max: MacroTotals[] },
+    depth: number,
+    cal: number,
+    protein: number,
+    carbs: number,
+    fat: number,
     config: ScoringConfig,
-    categoryGroups: Map<FoodCategory, Food[]>
-  ): void {
+    weights: ScoringWeights
+  ): number {
+    const { targets, floors } = config;
+    const lo = suffix.min[depth];
+    const hi = suffix.max[depth];
+
+    const hiProt = protein + hi.protein;
+    const hiCarb = carbs + hi.carbs;
+    const hiFat = fat + hi.fat;
+
+    let bound =
+      termLowerBound(
+        cal + lo.calories,
+        cal + hi.calories,
+        targets.calories,
+        weights.caloriesBelow,
+        weights.caloriesAbove
+      ) +
+      termLowerBound(
+        protein + lo.protein,
+        hiProt,
+        targets.protein,
+        weights.proteinBelow,
+        weights.proteinAbove
+      ) +
+      termLowerBound(
+        carbs + lo.carbs,
+        hiCarb,
+        targets.carbs,
+        weights.carbsBelow,
+        weights.carbsAbove
+      ) +
+      termLowerBound(fat + lo.fat, hiFat, targets.fat, weights.fatBelow, weights.fatAbove);
+
+    const floorDeficit =
+      Math.max(0, floors.protein - hiProt) +
+      Math.max(0, floors.carbs - hiCarb) +
+      Math.max(0, floors.fat - hiFat);
+    bound += weights.belowFloor * floorDeficit * floorDeficit;
+
+    return bound;
+  }
+
+  /**
+   * Deterministic greedy incumbent: start every food at its smallest valid
+   * quantity, then repeatedly apply the single best ±1 step move until none
+   * improves. Gives branch-and-bound a starting bound without any randomness.
+   *
+   * @param candidates - Foods to assign.
+   * @param config - Scoring configuration.
+   */
+  private greedySeed(
+    candidates: Candidate[],
+    config: ScoringConfig
+  ): { score: number; indices: number[] } {
+    const indices = new Array<number>(candidates.length).fill(0);
+    let currentScore = macroScorer.score(this.totalsFrom(candidates, indices), config);
+
     let improved = true;
     while (improved) {
       improved = false;
-      const currentScore = macroScorer.score(macroScorer.computeTotals(quantities), config);
+      let bestDelta = 0;
+      let bestIndex = -1;
+      let bestOption = 0;
 
-      let bestImprovement = 0;
-      let bestFood: Food | null = null;
-      let bestQuantity = 0;
+      for (let i = 0; i < candidates.length; i++) {
+        const current = indices[i];
+        for (const step of [-1, 1]) {
+          const option = current + step;
+          if (option < 0 || option >= candidates[i].quantities.length) continue;
+          if (!this.exclusivityOk(candidates, indices, i, option)) continue;
 
-      for (const { food, validDailyQuantities } of bounds) {
-        const current = quantities.get(food) ?? 0;
-        const idx = validDailyQuantities.indexOf(current);
+          indices[i] = option;
+          const neighborScore = macroScorer.score(this.totalsFrom(candidates, indices), config);
+          indices[i] = current;
 
-        for (const delta of [-1, 1]) {
-          const neighborIdx = idx + delta;
-          if (neighborIdx < 0 || neighborIdx >= validDailyQuantities.length) continue;
-
-          const neighborQty = validDailyQuantities[neighborIdx];
-
-          if (this.isExclusivityViolation(food, current, neighborQty, quantities, categoryGroups)) {
-            continue;
-          }
-
-          quantities.set(food, neighborQty);
-          const neighborScore = macroScorer.score(macroScorer.computeTotals(quantities), config);
-          quantities.set(food, current);
-
-          const improvement = currentScore - neighborScore;
-          if (improvement > bestImprovement) {
-            bestImprovement = improvement;
-            bestFood = food;
-            bestQuantity = neighborQty;
+          const delta = currentScore - neighborScore;
+          if (delta > bestDelta) {
+            bestDelta = delta;
+            bestIndex = i;
+            bestOption = option;
           }
         }
       }
 
-      if (bestFood !== null) {
-        quantities.set(bestFood, bestQuantity);
+      if (bestIndex !== -1) {
+        indices[bestIndex] = bestOption;
+        currentScore -= bestDelta;
         improved = true;
       }
     }
+
+    return { score: currentScore, indices };
   }
 
   /**
-   * Group all foods that declare a category, keyed by that category.
-   * Used to enforce at-most-one-per-category during optimization.
+   * True when setting candidate `i` to `option` would not place a second
+   * non-zero food into an already-occupied category.
    *
-   * @param bounds - Bounds for all candidate foods.
+   * @param candidates - Foods being assigned.
+   * @param indices - Current chosen option index per candidate.
+   * @param i - Candidate being moved.
+   * @param option - Proposed option index for candidate `i`.
    */
-  private buildCategoryGroups(bounds: FoodBounds[]): Map<FoodCategory, Food[]> {
-    const groups = new Map<FoodCategory, Food[]>();
-    for (const { food } of bounds) {
-      if (food.category === undefined) continue;
-      const existing = groups.get(food.category) ?? [];
-      existing.push(food);
-      groups.set(food.category, existing);
-    }
-    return groups;
-  }
-
-  /**
-   * Return true when moving `food` from `oldQty` to `newQty` would place a
-   * second food from the same category into the non-zero pool. Only triggers
-   * when a food transitions from zero to non-zero (introducing it to the day).
-   *
-   * @param food - Food being considered.
-   * @param oldQty - Current daily quantity.
-   * @param newQty - Proposed daily quantity.
-   * @param quantities - Current quantities for all foods.
-   * @param categoryGroups - Foods grouped by category.
-   */
-  private isExclusivityViolation(
-    food: Food,
-    oldQty: number,
-    newQty: number,
-    quantities: Map<Food, number>,
-    categoryGroups: Map<FoodCategory, Food[]>
+  private exclusivityOk(
+    candidates: Candidate[],
+    indices: number[],
+    i: number,
+    option: number
   ): boolean {
-    if (oldQty !== 0 || newQty === 0 || food.category === undefined) return false;
-    const group = categoryGroups.get(food.category);
-    if (group === undefined) return false;
-    return group.some((f) => f !== food && (quantities.get(f) ?? 0) > 0);
+    const candidate = candidates[i];
+    if (candidate.category === undefined || candidate.quantities[option] === 0) return true;
+    for (let j = 0; j < candidates.length; j++) {
+      if (j === i) continue;
+      const other = candidates[j];
+      if (other.category === candidate.category && other.quantities[indices[j]] > 0) return false;
+    }
+    return true;
+  }
+
+  /**
+   * Sum the macro contributions selected by `indices` into a totals object.
+   *
+   * @param candidates - Foods being assigned.
+   * @param indices - Chosen option index per candidate.
+   */
+  private totalsFrom(candidates: Candidate[], indices: number[]): MacroTotals {
+    const totals: MacroTotals = { calories: 0, protein: 0, carbs: 0, fat: 0 };
+    for (let i = 0; i < candidates.length; i++) {
+      const oi = indices[i];
+      totals.calories += candidates[i].calories[oi];
+      totals.protein += candidates[i].protein[oi];
+      totals.carbs += candidates[i].carbs[oi];
+      totals.fat += candidates[i].fat[oi];
+    }
+    return totals;
   }
 }
 

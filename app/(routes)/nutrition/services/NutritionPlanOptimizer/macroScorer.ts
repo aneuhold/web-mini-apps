@@ -1,24 +1,6 @@
 import type { Food, MacroTotals } from '../../util/types';
 import { DietPhase } from '../../util/types';
-import type { ScoringConfig } from './optimizerTypes';
-
-type ScoringWeights = {
-  caloriesAbove: number;
-  caloriesBelow: number;
-  proteinAbove: number;
-  proteinBelow: number;
-  fatAbove: number;
-  fatBelow: number;
-  carbsAbove: number;
-  carbsBelow: number;
-  /**
-   * Applied (squared) to the summed below-floor deficit across macros whose
-   * hard floor sits below their target (so the floor needs its own threshold
-   * separate from `xBelow`). When target equals floor, the macro's `xBelow`
-   * already carries this weight directly and its `MacroFloors` entry is 0.
-   */
-  belowFloor: number;
-};
+import type { ScoringConfig, ScoringWeights } from './optimizerTypes';
 
 const PHASE_WEIGHTS: Record<DietPhase, ScoringWeights> = {
   [DietPhase.Maintenance]: {
@@ -101,6 +83,17 @@ class MacroScorer {
       carbWeight * carbDelta * carbDelta +
       w.belowFloor * floorDeficit * floorDeficit
     );
+  }
+
+  /**
+   * Return the per-macro scoring weights for a diet phase. Exposed so the
+   * branch-and-bound optimizer can compute admissible lower bounds with the
+   * exact same weights `score` applies, keeping the two in lockstep.
+   *
+   * @param phase - Diet phase whose weights to return.
+   */
+  weightsFor(phase: DietPhase): ScoringWeights {
+    return PHASE_WEIGHTS[phase];
   }
 
   /**
