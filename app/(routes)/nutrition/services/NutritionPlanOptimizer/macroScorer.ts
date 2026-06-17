@@ -86,17 +86,6 @@ class MacroScorer {
   }
 
   /**
-   * Return the per-macro scoring weights for a diet phase. Exposed so the
-   * branch-and-bound optimizer can compute admissible lower bounds with the
-   * exact same weights `score` applies, keeping the two in lockstep.
-   *
-   * @param phase - Diet phase whose weights to return.
-   */
-  weightsFor(phase: DietPhase): ScoringWeights {
-    return PHASE_WEIGHTS[phase];
-  }
-
-  /**
    * Accumulate the macro contribution of a food at a given daily quantity
    * into a running totals object.
    *

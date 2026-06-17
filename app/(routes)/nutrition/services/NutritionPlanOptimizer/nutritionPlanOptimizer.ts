@@ -13,9 +13,9 @@ import type { FoodBounds, OptimizationConfig, OptimizationResult } from './optim
  *   quantities for each candidate food given per-meal constraints and
  *   the number of meals in the plan.
  *
- * Phase 2 — `dailyQuantityOptimizer`: deterministic branch-and-bound that
- *   finds the globally optimal food quantities whose macros best match the
- *   plan's targets and the RP macro floors.
+ * Phase 2 — `dailyQuantityOptimizer`: deterministic multi-start descent that
+ *   finds the food quantities whose macros best match the plan's targets and
+ *   the RP macro floors.
  *
  * Phase 3 — `mealAllocator`: distribute daily totals across meal slots,
  *   spreading protein evenly and clustering carbs around the pre-workout
