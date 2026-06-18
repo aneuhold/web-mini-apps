@@ -112,6 +112,10 @@ export default function NutritionPage() {
         View Stats →
       </NextLink>
 
+      <a href="/index-files/nutrition-optimizer-explainer.html" data-explainer-button>
+        How the Optimizer Works →
+      </a>
+
       <Footer />
     </article>
   );
