@@ -50,6 +50,8 @@ export const riceCakeWhiteCheddar: Food = {
   id: 'riceCakeWhiteCheddar',
   name: 'Rice cake (white cheddar)',
   serving: { amount: 1, unitLabel: 'rice cake', calories: 45, protein: 1, carbs: 9, fat: 0.5 },
+  // Currently out
+  maxServingAmountPerPlan: 0,
   allowedStepServingAmountPerMeal: 1
 };
 
@@ -80,6 +82,7 @@ export const clifBuildersMiniChocMint: Food = {
   name: 'Clif Builders Mini Choc Mint',
   serving: { amount: 1, unitLabel: 'bar', calories: 140, protein: 10, carbs: 15, fat: 4.5 },
   category: FoodCategory.ProteinBar,
+  maxServingAmountPerPlan: 3,
   allowedStepServingAmountPerMeal: 1
 };
 
