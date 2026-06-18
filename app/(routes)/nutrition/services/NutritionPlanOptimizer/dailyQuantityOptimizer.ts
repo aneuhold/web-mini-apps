@@ -270,19 +270,23 @@ class DailyQuantityOptimizer {
    * source *and* drop a carb filler in the same move, which only a two-group
    * move can express. Returns whether any pair moved.
    *
+   * When a pair has too many combinations to scan fully, `pairChoiceSubsets`
+   * narrows it (see there) rather than skipping it, so every pair still gets a
+   * joint move.
+   *
    * @param w - The local-search workspace (mutated in place).
    */
   private improveEachGroupPair(w: Workspace): boolean {
     let improved = false;
     for (let a = 0; a < w.groups.length; a++) {
       for (let b = a + 1; b < w.groups.length; b++) {
-        if (w.choices[a].length * w.choices[b].length > MAX_PAIR_CHOICES) continue;
+        const [choicesA, choicesB] = this.pairChoiceSubsets(w, a, b);
         const without = this.totalsExcluding(w, [a, b]);
         let bestScore = macroScorer.score(w.totals, w.config);
         let bestA: GroupChoice | null = null;
         let bestB: GroupChoice | null = null;
-        for (const choiceA of w.choices[a]) {
-          for (const choiceB of w.choices[b]) {
+        for (const choiceA of choicesA) {
+          for (const choiceB of choicesB) {
             const score = this.scoreAfter(without, [choiceA, choiceB], w.config);
             if (score < bestScore - IMPROVEMENT_EPS) {
               bestScore = score;
@@ -298,6 +302,72 @@ class DailyQuantityOptimizer {
       }
     }
     return improved;
+  }
+
+  /**
+   * The two choice lists a paired move should scan for groups `a` and `b`,
+   * trimmed so their product stays within `MAX_PAIR_CHOICES`.
+   *
+   * If the full product already fits, both lists are returned whole. Otherwise
+   * the smaller group is kept whole and the larger one is *windowed* to a band
+   * of choices around its current setting (via `windowAroundCurrent`) — never
+   * dropped. Windowing rather than skipping means even a pair of two
+   * large-range foods still gets a joint move: a local one each sweep, while
+   * the single-food pass handles the big global jumps. The window always
+   * contains each group's current choice, so "leave this group as-is" stays on
+   * the table and a pair move can never raise the score.
+   *
+   * @param w - The local-search workspace.
+   * @param a - First group index.
+   * @param b - Second group index.
+   */
+  private pairChoiceSubsets(w: Workspace, a: number, b: number): [GroupChoice[], GroupChoice[]] {
+    const choicesA = w.choices[a];
+    const choicesB = w.choices[b];
+    if (choicesA.length * choicesB.length <= MAX_PAIR_CHOICES) return [choicesA, choicesB];
+
+    // Keep the smaller list whole; give the larger as wide a window as the
+    // budget allows against the smaller's full length.
+    if (choicesA.length <= choicesB.length) {
+      const room = Math.max(1, Math.floor(MAX_PAIR_CHOICES / choicesA.length));
+      return [choicesA, this.windowAroundCurrent(w, b, room)];
+    }
+    const room = Math.max(1, Math.floor(MAX_PAIR_CHOICES / choicesB.length));
+    return [this.windowAroundCurrent(w, a, room), choicesB];
+  }
+
+  /**
+   * Up to `size` of group `g`'s choices, taken as a contiguous band centered on
+   * the group's current choice (so adjacent choices are nearby quantities of
+   * the same food). Returns the whole list when it already fits.
+   *
+   * @param w - The local-search workspace.
+   * @param g - Group index.
+   * @param size - Maximum number of choices to return.
+   */
+  private windowAroundCurrent(w: Workspace, g: number, size: number): GroupChoice[] {
+    const choices = w.choices[g];
+    if (choices.length <= size) return choices;
+    const center = this.currentChoiceIndex(w, g);
+    let start = center - Math.floor(size / 2);
+    start = Math.max(0, Math.min(start, choices.length - size));
+    return choices.slice(start, start + size);
+  }
+
+  /**
+   * Position in `choices[g]` of the choice that matches the plan's current
+   * setting for that group (the one whose every `[food, quantity]` assignment
+   * holds in `indices`). Used to center a window on where the group is now.
+   *
+   * @param w - The local-search workspace.
+   * @param g - Group index.
+   */
+  private currentChoiceIndex(w: Workspace, g: number): number {
+    const choices = w.choices[g];
+    for (let j = 0; j < choices.length; j++) {
+      if (choices[j].assign.every(([food, quantity]) => w.indices[food] === quantity)) return j;
+    }
+    return 0;
   }
 
   // --- Starting point: a "good guess" from the relaxed problem ---------------
