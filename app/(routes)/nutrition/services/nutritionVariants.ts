@@ -26,6 +26,14 @@ const KEY_SEPARATOR = ':';
 const PART_SEPARATOR = ',';
 const ASSIGN_SEPARATOR = '=';
 
+/**
+ * `sessionStorage` namespace for memoized optimizer output. Each entry is
+ * keyed by the variant key plus the template's `lastUpdatedAt`, so bumping a
+ * template's timestamp (as the coaching workflow does after any template
+ * edit) invalidates that template's cached variants automatically.
+ */
+const OPTIMIZED_PLAN_STORAGE_PREFIX = 'v1-nutrition:optimized-plan:';
+
 type Toggle = { kind: 'optional'; foodId: string } | { kind: 'category'; category: FoodCategory };
 
 /**
@@ -182,7 +190,9 @@ class NutritionVariants {
    * run the optimizer over it inline, returning the optimized `NutritionPlan`.
    * The optimizer's `-optimized` / `(Optimized)` suffixes are stripped so the
    * plan keeps the template's `id` and `title`; `lastUpdatedAt` flows through
-   * from the template unchanged.
+   * from the template unchanged. Results are memoized in `sessionStorage` per
+   * variant key, so revisiting a swap combination returns instantly; the
+   * optimizer only runs on a cache miss.
    *
    * @param phase
    * @param dayType
@@ -190,6 +200,11 @@ class NutritionVariants {
    */
   getOptimizedPlan(phase: DietPhase, dayType: DayType, swapState: SwapState): NutritionPlan {
     const basePlan = this.buildPlanFromTemplate(phase, dayType, swapState);
+    const storageKey = `${OPTIMIZED_PLAN_STORAGE_PREFIX}${basePlan.id}@${basePlan.lastUpdatedAt}`;
+
+    const cached = this.readCachedPlan(storageKey);
+    if (cached !== undefined) return cached;
+
     const excluded = new Set(basePlan.excludedFoods ?? []);
     const availableFoods = allFoods.filter((food) => !excluded.has(food));
     const preWorkoutIndex = basePlan.meals.findIndex((meal) => meal.name === MealName.PreWorkout);
@@ -201,7 +216,46 @@ class NutritionVariants {
       preWorkoutMealIndex
     });
 
-    return { ...optimizedPlan, id: basePlan.id, title: basePlan.title };
+    const plan: NutritionPlan = { ...optimizedPlan, id: basePlan.id, title: basePlan.title };
+    this.writeCachedPlan(storageKey, plan);
+    return plan;
+  }
+
+  /**
+   * Read a memoized plan out of `sessionStorage`. Returns `undefined` outside
+   * the browser (e.g. the print script), on a cache miss, or when the stored
+   * blob fails to parse.
+   *
+   * @param storageKey
+   */
+  private readCachedPlan(storageKey: string): NutritionPlan | undefined {
+    if (typeof window === 'undefined') return undefined;
+    const raw = window.sessionStorage.getItem(storageKey);
+    if (raw === null) return undefined;
+    try {
+      // Our own serialized output, so a structural cast is safe here — the same
+      // JSON↔enum boundary the optimizer round-trips through elsewhere.
+      const parsed: unknown = JSON.parse(raw);
+      return parsed as NutritionPlan;
+    } catch {
+      return undefined;
+    }
+  }
+
+  /**
+   * Best-effort write of a memoized plan to `sessionStorage`. No-ops outside
+   * the browser and swallows quota / private-mode write failures.
+   *
+   * @param storageKey
+   * @param plan
+   */
+  private writeCachedPlan(storageKey: string, plan: NutritionPlan): void {
+    if (typeof window === 'undefined') return;
+    try {
+      window.sessionStorage.setItem(storageKey, JSON.stringify(plan));
+    } catch {
+      // Caching is best-effort; a failed write just means a recompute next time.
+    }
   }
 }
 
