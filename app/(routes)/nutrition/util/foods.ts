@@ -71,7 +71,6 @@ export const kindThinsPBDarkChocolate: Food = {
   id: 'kindThinsPBDarkChocolate',
   name: 'Kind Thins PB Dark Chocolate',
   serving: { amount: 2, unitLabel: 'bar', calories: 200, protein: 6, carbs: 20, fat: 14 },
-  category: FoodCategory.ProteinBar,
   allowedStepServingAmountPerMeal: 1
 };
 
