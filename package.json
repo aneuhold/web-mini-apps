@@ -11,6 +11,7 @@
     "start": "pnpm run build && serve out",
     "check": "tsc --noEmit",
     "lint": "eslint .",
+    "test": "vitest run",
     "nutrition:meals": "tsx 'app/(routes)/nutrition/scripts/printMealPlans.ts'",
     "nutrition:optimize": "tsx 'app/(routes)/nutrition/scripts/optimizeMealPlan.ts'",
     "nutrition:targets": "tsx 'app/(routes)/nutrition/scripts/analyzeCalorieTargets.ts'"
@@ -37,6 +38,7 @@
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.9"
   }
 }
