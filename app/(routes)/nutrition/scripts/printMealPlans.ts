@@ -1,6 +1,6 @@
-import optimizedVariants from '../plans/optimizedVariants';
 import nutritionPlanPrinter from '../services/nutritionPlanPrinter';
-import { DAY_TYPE_CLI_FLAG, parseCliArgs, resolveScope } from './variantScope';
+import nutritionVariants from '../services/nutritionVariants';
+import { parseCliArgs, resolveScope } from './variantScope';
 
 const main = async (): Promise<void> => {
   const args = parseCliArgs();
@@ -10,15 +10,9 @@ const main = async (): Promise<void> => {
     return;
   }
 
-  for (const { phase, dayType, key } of scope) {
-    if (!Object.hasOwn(optimizedVariants, key)) {
-      const dayFlag = DAY_TYPE_CLI_FLAG[dayType];
-      console.log(
-        `\n=== ${key} ===\n(no optimized output yet — run \`pnpm nutrition:optimize --phase ${phase.toLowerCase()} --day ${dayFlag} --variant-id ${key}\`)`
-      );
-      continue;
-    }
-    nutritionPlanPrinter.printPlan(optimizedVariants[key]);
+  for (const { phase, dayType, swapState } of scope) {
+    const plan = nutritionVariants.getOptimizedPlan(phase, dayType, swapState);
+    nutritionPlanPrinter.printPlan(plan);
   }
   console.log('');
 };

@@ -18,8 +18,7 @@ export type PlanTemplate = {
   /**
    * Anchors the meal layout (times, names, count), calorie target, bodyweight,
    * activity level, and phase. The meal `items` lists are a baseline food set
-   * the optimizer reshapes — the rendered plan reads optimized meals out of
-   * `optimized-variants.json` instead.
+   * the optimizer reshapes into the rendered plan at runtime.
    */
   template: NutritionPlan;
   optionalFoods: OptionalFood[];

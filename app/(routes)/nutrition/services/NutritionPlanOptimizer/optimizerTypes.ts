@@ -19,6 +19,31 @@ export type ScoringConfig = {
   phase: DietPhase;
 };
 
+/**
+ * Per-macro penalty weights for one diet phase. Each macro has independent
+ * above/below weights so a phase can express asymmetric goals (e.g. cutting
+ * penalizes protein deficits but not surpluses). Consumed by `macroScorer`
+ * to score a plan and by `dailyQuantityOptimizer` to compute branch-and-bound
+ * lower bounds.
+ */
+export type ScoringWeights = {
+  caloriesAbove: number;
+  caloriesBelow: number;
+  proteinAbove: number;
+  proteinBelow: number;
+  fatAbove: number;
+  fatBelow: number;
+  carbsAbove: number;
+  carbsBelow: number;
+  /**
+   * Applied (squared) to the summed below-floor deficit across macros whose
+   * hard floor sits below their target (so the floor needs its own threshold
+   * separate from `xBelow`). When target equals floor, the macro's `xBelow`
+   * already carries this weight directly and its `MacroFloors` entry is 0.
+   */
+  belowFloor: number;
+};
+
 export type OptimizationConfig = {
   /** Template plan: targets and meal slots (time/name/count) drive the optimization. */
   targetPlan: NutritionPlan;

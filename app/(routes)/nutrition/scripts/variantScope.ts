@@ -1,5 +1,6 @@
 import { checkbox, select } from '@inquirer/prompts';
 import { parseArgs } from 'util';
+import type { SwapState } from '../services/nutritionVariants';
 import nutritionVariants from '../services/nutritionVariants';
 import { DayType, DietPhase } from '../util/types';
 
@@ -7,35 +8,32 @@ const PHASE_VALUES: DietPhase[] = Object.values(DietPhase);
 const DAY_VALUES: DayType[] = Object.values(DayType);
 
 /**
- * CLI-friendly spelling of each `DayType` for the `--day` flag and the
- * regen hints surfaced by scripts when a variant is missing.
+ * CLI-friendly spelling of each `DayType` for the `--day` flag.
  */
-export const DAY_TYPE_CLI_FLAG: Record<DayType, string> = {
+const DAY_TYPE_CLI_FLAG: Record<DayType, string> = {
   [DayType.Training]: 'training',
   [DayType.NonTraining]: 'non-training'
 };
 
 /**
- * Parsed `--phase` / `--day` / `--variant-id` flags. Both `nutrition:meals`
- * and `nutrition:optimize` accept the same flag set. `reconcile` is honored
- * only by `nutrition:optimize` (it re-keys/prunes cached variants without
- * re-running the optimizer); `nutrition:meals` ignores it.
+ * Parsed `--phase` / `--day` / `--variant-id` flags used by `nutrition:meals`
+ * to narrow which variants it optimizes and prints.
  */
 export type CliArgs = {
   phase?: DietPhase;
   day?: DayType;
   variantId?: string;
-  reconcile: boolean;
 };
 
 /**
  * One concrete variant the active script will operate on: the phase + day
- * type pair and its key into `optimized-variants.json`.
+ * type pair, its variant key, and the swap state that produced it.
  */
 export type VariantScope = {
   phase: DietPhase;
   dayType: DayType;
   key: string;
+  swapState: SwapState;
 };
 
 /**
@@ -48,12 +46,11 @@ export const parseCliArgs = (): CliArgs => {
     options: {
       phase: { type: 'string' },
       day: { type: 'string' },
-      'variant-id': { type: 'string' },
-      reconcile: { type: 'boolean' }
+      'variant-id': { type: 'string' }
     },
     strict: true
   });
-  const { phase: phaseInput, day: dayInput, 'variant-id': variantId, reconcile } = values;
+  const { phase: phaseInput, day: dayInput, 'variant-id': variantId } = values;
 
   let phase: DietPhase | undefined;
   if (phaseInput !== undefined) {
@@ -79,7 +76,7 @@ export const parseCliArgs = (): CliArgs => {
   if (variantId && (!phase || !day)) {
     throw new Error('--variant-id requires both --phase and --day');
   }
-  return { phase, day, variantId, reconcile: reconcile === true };
+  return { phase, day, variantId };
 };
 
 /**
@@ -89,7 +86,9 @@ export const parseCliArgs = (): CliArgs => {
  * @param dayType
  */
 const expand = (phase: DietPhase, dayType: DayType): VariantScope[] =>
-  nutritionVariants.enumerateAll(phase, dayType).map(({ key }) => ({ phase, dayType, key }));
+  nutritionVariants
+    .enumerateAll(phase, dayType)
+    .map(({ key, swapState }) => ({ phase, dayType, key, swapState }));
 
 /**
  * Prompt for a phase. `undefined` means "All".

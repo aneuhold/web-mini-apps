@@ -1,24 +1,6 @@
 import type { Food, MacroTotals } from '../../util/types';
 import { DietPhase } from '../../util/types';
-import type { ScoringConfig } from './optimizerTypes';
-
-type ScoringWeights = {
-  caloriesAbove: number;
-  caloriesBelow: number;
-  proteinAbove: number;
-  proteinBelow: number;
-  fatAbove: number;
-  fatBelow: number;
-  carbsAbove: number;
-  carbsBelow: number;
-  /**
-   * Applied (squared) to the summed below-floor deficit across macros whose
-   * hard floor sits below their target (so the floor needs its own threshold
-   * separate from `xBelow`). When target equals floor, the macro's `xBelow`
-   * already carries this weight directly and its `MacroFloors` entry is 0.
-   */
-  belowFloor: number;
-};
+import type { ScoringConfig, ScoringWeights } from './optimizerTypes';
 
 const PHASE_WEIGHTS: Record<DietPhase, ScoringWeights> = {
   [DietPhase.Maintenance]: {

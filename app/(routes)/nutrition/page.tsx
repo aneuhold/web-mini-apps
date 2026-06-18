@@ -14,8 +14,8 @@ const DAY_ORDER: DayType[] = [DayType.Training, DayType.NonTraining];
 
 /**
  * Nutrition plans page. Two stacked tab strips choose the (phase × day-type)
- * and the checkbox swap list below them drives variant lookup into the
- * prebuilt `optimized-variants.json`. All persistence flows through
+ * and the checkbox swap list below them drives the active variant, which is
+ * optimized at render time from its template. All persistence flows through
  * `nutritionLocalData` — this component holds no `localStorage` calls of
  * its own. Render is gated on `mounted` so the static-export HTML and the
  * client's first paint agree, sidestepping the hydration-mismatch warning.
