@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How the Nutrition Plan Optimizer Works — Visual Explainer</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --panel: #171d26;
+    --panel-2: #1f2733;
+    --ink: #e6edf3;
+    --muted: #9aa7b4;
+    --line: #2b3543;
+    --accent: #5ad1a0;   /* protein-ish green */
+    --cal: #ffb454;      /* calories  */
+    --prot: #5ad1a0;     /* protein   */
+    --carb: #6ab7ff;     /* carbs     */
+    --fat: #ff7a85;      /* fat       */
+    --floor: #c792ea;    /* floor     */
+    --warn: #ffd479;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: radial-gradient(1200px 600px at 70% -10%, #1b2735, var(--bg));
+    color: var(--ink);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 22px 120px; }
+  header.hero {
+    padding: 64px 0 36px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 40px;
+  }
+  .kicker {
+    text-transform: uppercase; letter-spacing: .18em; font-size: 12px;
+    color: var(--accent); font-weight: 700; margin: 0 0 14px;
+  }
+  h1 { font-size: 40px; line-height: 1.12; margin: 0 0 16px; letter-spacing: -.02em; }
+  h2 {
+    font-size: 27px; margin: 64px 0 6px; letter-spacing: -.01em;
+    scroll-margin-top: 20px;
+  }
+  h2 .num {
+    display: inline-block; width: 38px; height: 38px; line-height: 38px; text-align: center;
+    border-radius: 10px; background: var(--panel-2); color: var(--accent);
+    font: 700 18px/38px var(--mono); margin-right: 12px; border: 1px solid var(--line);
+  }
+  h3 { font-size: 19px; margin: 30px 0 6px; }
+  p { color: var(--ink); }
+  .lead { font-size: 19px; color: var(--muted); max-width: 70ch; }
+  .muted { color: var(--muted); }
+  a { color: var(--carb); }
+  code, .mono { font-family: var(--mono); font-size: .92em; }
+  code { background: var(--panel-2); padding: 1px 6px; border-radius: 5px; border: 1px solid var(--line); }
+  .panel {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 22px 24px; margin: 22px 0;
+  }
+  .panel.tight { padding: 16px 18px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 760px){ .grid2, .grid3 { grid-template-columns: 1fr; } }
+  .pill {
+    display: inline-block; font: 600 12px/1 var(--mono); padding: 5px 9px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--muted);
+  }
+  .tag-cal{color:var(--cal)} .tag-prot{color:var(--prot)} .tag-carb{color:var(--carb)} .tag-fat{color:var(--fat)} .tag-floor{color:var(--floor)}
+  .eq {
+    background: #0c1117; border: 1px solid var(--line); border-radius: 10px;
+    padding: 16px 18px; font-family: var(--mono); font-size: 14.5px; overflow-x: auto;
+    color: #d7e2ee;
+  }
+  .eq .c{color:var(--cal)} .eq .p{color:var(--prot)} .eq .k{color:var(--carb)} .eq .f{color:var(--fat)} .eq .fl{color:var(--floor)} .eq .dim{color:var(--muted)}
+  canvas { display:block; max-width: 100%; }
+  label.ctl { display:flex; align-items:center; gap:10px; font-size:14px; margin:8px 0; }
+  label.ctl .name { width: 92px; color: var(--muted); }
+  label.ctl .val { width: 78px; text-align:right; font-family:var(--mono); }
+  input[type=range]{ flex:1; accent-color: var(--accent); }
+  select, button {
+    font: inherit; background: var(--panel-2); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 8px; padding: 7px 12px; cursor: pointer;
+  }
+  button:hover, select:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); color: #06231a; font-weight: 700; border-color: transparent; }
+  .bar-row { display:flex; align-items:center; gap:10px; margin:6px 0; font-size:13px; }
+  .bar-row .lbl { width: 70px; color: var(--muted); }
+  .bar-track { flex:1; height:16px; background:var(--panel-2); border-radius:6px; overflow:hidden; border:1px solid var(--line); }
+  .bar-fill { height:100%; border-radius:6px 0 0 6px; transition: width .12s ease; }
+  .bar-row .amt { width: 96px; text-align:right; font-family:var(--mono); }
+  .legend { display:flex; flex-wrap:wrap; gap:14px; font-size:13px; color:var(--muted); margin-top:10px; }
+  .legend span::before { content:""; display:inline-block; width:11px; height:11px; border-radius:3px; margin-right:6px; vertical-align:-1px; }
+  .pipeline { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:14px; margin-top:8px; }
+  @media (max-width:760px){ .pipeline{grid-template-columns:1fr} }
+  .phase-card { background:var(--panel-2); border:1px solid var(--line); border-radius:12px; padding:16px; position:relative; }
+  .phase-card .ph { font:700 12px var(--mono); color:var(--accent); letter-spacing:.1em; }
+  .phase-card h4 { margin:6px 0 8px; font-size:16px; }
+  .phase-card p { font-size:13.5px; color:var(--muted); margin:0; }
+  .file { font-family:var(--mono); font-size:12px; color:var(--carb); }
+  ul.clean { padding-left: 20px; }
+  ul.clean li { margin: 6px 0; }
+  .callout { border-left: 3px solid var(--accent); background: var(--panel-2); border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 18px 0; }
+  .callout.warn { border-left-color: var(--warn); }
+  table.w { width:100%; border-collapse:collapse; font-size:13.5px; }
+  table.w th, table.w td { border:1px solid var(--line); padding:7px 10px; text-align:center; }
+  table.w th { background:var(--panel-2); color:var(--muted); font-weight:600; }
+  table.w td.macro { text-align:left; color:var(--muted); }
+  .toc { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+  .toc a { text-decoration:none; }
+  .num-line { position:relative; height:74px; margin:12px 0 4px; }
+  .footnote { font-size:13px; color:var(--muted); }
+  .swatch { font-family:var(--mono); }
+  .big-num { font:700 30px var(--mono); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <p class="kicker">Nutrition Plan Optimizer · Visual Explainer</p>
+  <h1>Picking how much of each food to eat,<br>as a math problem</h1>
+  <p class="lead">
+    The optimizer answers one question: <em>given a pantry of candidate foods and a set of macro
+    targets, how many grams of each food should the day contain so the totals land as close to the
+    targets as possible?</em> Underneath, that's a <strong>constrained discrete optimization</strong>
+    problem. This page builds up the math piece by piece, with widgets you can poke at.
+  </p>
+  <div class="toc">
+    <a class="pill" href="#bigpicture">① The problem</a>
+    <a class="pill" href="#objective">② The score (objective)</a>
+    <a class="pill" href="#asym">③ Asymmetry &amp; floors</a>
+    <a class="pill" href="#grid">④ Feasible quantities</a>
+    <a class="pill" href="#landscape">⑤ The landscape</a>
+    <a class="pill" href="#relaxed">⑥ The relaxed guess</a>
+    <a class="pill" href="#moves">⑦ Hill-climbing moves</a>
+    <a class="pill" href="#allocate">⑧ Meal allocation</a>
+    <a class="pill" href="#history">⑨ Why this algorithm</a>
+  </div>
+</header>
+
+<!-- ===================================================================== -->
+<h2 id="bigpicture"><span class="num">1</span>The problem, stated as math</h2>
+<p>
+  Strip away the food labels and you have a textbook optimization problem with three ingredients:
+</p>
+
+<div class="grid3">
+  <div class="panel tight">
+    <p class="pill">Decision variables</p>
+    <p style="margin:.5em 0 0">For each food <code>i</code>, choose a daily quantity
+    <span class="mono">q<sub>i</sub></span> (in grams / servings).
+    These are the knobs the optimizer turns.</p>
+  </div>
+  <div class="panel tight">
+    <p class="pill">Objective</p>
+    <p style="margin:.5em 0 0">Minimize a <strong>penalty score</strong> measuring how far the day's
+    macro totals sit from the targets. Lower = better. Defined in
+    <span class="file">macroScorer.ts</span>.</p>
+  </div>
+  <div class="panel tight">
+    <p class="pill">Constraints</p>
+    <p style="margin:.5em 0 0">Each <span class="mono">q<sub>i</sub></span> must come from a
+    discrete set of <em>valid</em> quantities, and at most one food per category may be used.
+    From <span class="file">foodBoundsCalculator.ts</span>.</p>
+  </div>
+</div>
+
+<p>
+  Every food contributes macros in proportion to how much you eat. If a food's reference serving is
+  <span class="mono">amount</span> grams with <span class="mono">cal/protein/carbs/fat</span> macros,
+  then <span class="mono">q</span> grams contributes <span class="mono">(q / amount)</span> of each.
+  The day's totals are just the sum across all foods:
+</p>
+
+<div class="eq">
+totals.<span class="c">calories</span> = Σ<sub>i</sub> (q<sub>i</sub> / amount<sub>i</sub>) · <span class="c">cal<sub>i</sub></span>    <span class="dim">// same for protein, carbs, fat</span>
+</div>
+
+<p>
+  That linear relationship is the entire bridge between "grams of food" and "grams of macros." The
+  hard part isn't computing totals — it's <em>searching</em> the astronomically large space of
+  quantity combinations for the one that scores best. Everything below is about how the score is
+  shaped and how the search is run.
+</p>
+
+<div class="callout">
+  <strong>The pipeline at a glance.</strong> The optimizer runs in three phases, orchestrated by
+  <span class="file">nutritionPlanOptimizer.ts</span>:
+  <div class="pipeline" style="margin-top:14px">
+    <div class="phase-card">
+      <div class="ph">PHASE 1</div>
+      <h4>What's allowed?</h4>
+      <p>Enumerate each food's valid daily quantities given per-meal limits and the number of meals.
+      <span class="file">foodBoundsCalculator</span></p>
+    </div>
+    <div class="phase-card">
+      <div class="ph">PHASE 2</div>
+      <h4>How much of each?</h4>
+      <p>Search for the quantities whose macro totals score best.
+      <span class="file">dailyQuantityOptimizer</span></p>
+    </div>
+    <div class="phase-card">
+      <div class="ph">PHASE 3</div>
+      <h4>Which meal?</h4>
+      <p>Spread the daily totals across meal slots (balance calories, carbs pre-workout).
+      <span class="file">mealAllocator</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<h2 id="objective"><span class="num">2</span>The score: a weighted, squared penalty</h2>
+<p>
+  The objective is a <strong>weighted sum of squared errors</strong> — the same idea as least-squares
+  regression. For each macro, take how far the actual total is from the target
+  (<span class="mono">Δ = actual − target</span>), square it (so being off in either direction hurts,
+  and being <em>way</em> off hurts disproportionately), and multiply by a weight. Add a special
+  penalty for dipping below a hard floor. Sum it all up:
+</p>
+
+<div class="eq">
+score =
+  w<span class="c">.cal</span>  · Δ<span class="c">cal</span>²
++ w<span class="p">.prot</span> · Δ<span class="p">prot</span>²
++ w<span class="f">.fat</span>  · Δ<span class="f">fat</span>²
++ w<span class="k">.carb</span> · Δ<span class="k">carb</span>²
++ w<span class="fl">.floor</span> · (<span class="fl">floorDeficit</span>)²
+</div>
+
+<p>
+  Two things make this more than plain least-squares, and they're what let one formula express
+  "cutting" vs "bulking" vs "maintenance":
+</p>
+<ul class="clean">
+  <li><strong>The weights are per-macro and asymmetric.</strong> Each macro has a separate weight for
+  being <em>over</em> target vs <em>under</em> target. The code picks
+  <code>calDelta &lt; 0 ? caloriesBelow : caloriesAbove</code> for each macro.</li>
+  <li><strong>Squaring</strong> means the penalty curve is a parabola: tiny misses barely register,
+  large misses dominate. The optimizer naturally fixes the biggest problem first.</li>
+</ul>
+
+<div class="panel">
+  <h3 style="margin-top:0">Playground: feel the score</h3>
+  <p class="muted" style="margin-top:0">Pick a phase, then drag the actual totals away from the dotted
+  targets. Watch which macros the penalty cares about — and how being off by a lot costs far more than
+  being off by a little.</p>
+
+  <div class="grid2">
+    <div>
+      <label class="ctl"><span class="name">Phase</span>
+        <select id="pgPhase">
+          <option value="Cutting">Cutting</option>
+          <option value="Bulking">Bulking</option>
+          <option value="Maintenance">Maintenance</option>
+        </select>
+      </label>
+      <label class="ctl"><span class="name tag-cal">Calories</span><input type="range" id="pgCal" min="1000" max="3200" step="10"><span class="val" id="pgCalV"></span></label>
+      <label class="ctl"><span class="name tag-prot">Protein</span><input type="range" id="pgProt" min="0" max="320" step="1"><span class="val" id="pgProtV"></span></label>
+      <label class="ctl"><span class="name tag-carb">Carbs</span><input type="range" id="pgCarb" min="0" max="400" step="1"><span class="val" id="pgCarbV"></span></label>
+      <label class="ctl"><span class="name tag-fat">Fat</span><input type="range" id="pgFat" min="0" max="160" step="1"><span class="val" id="pgFatV"></span></label>
+      <p class="footnote" id="pgTargets" style="margin-top:14px"></p>
+    </div>
+    <div>
+      <p style="margin:.2em 0 .6em; font-size:14px" class="muted">Penalty contributed by each term:</p>
+      <div class="bar-row"><span class="lbl tag-cal">cal</span><div class="bar-track"><div class="bar-fill" id="pgBarCal" style="background:var(--cal)"></div></div><span class="amt" id="pgAmtCal"></span></div>
+      <div class="bar-row"><span class="lbl tag-prot">protein</span><div class="bar-track"><div class="bar-fill" id="pgBarProt" style="background:var(--prot)"></div></div><span class="amt" id="pgAmtProt"></span></div>
+      <div class="bar-row"><span class="lbl tag-carb">carbs</span><div class="bar-track"><div class="bar-fill" id="pgBarCarb" style="background:var(--carb)"></div></div><span class="amt" id="pgAmtCarb"></span></div>
+      <div class="bar-row"><span class="lbl tag-fat">fat</span><div class="bar-track"><div class="bar-fill" id="pgBarFat" style="background:var(--fat)"></div></div><span class="amt" id="pgAmtFat"></span></div>
+      <div class="bar-row"><span class="lbl tag-floor">floor</span><div class="bar-track"><div class="bar-fill" id="pgBarFloor" style="background:var(--floor)"></div></div><span class="amt" id="pgAmtFloor"></span></div>
+      <hr style="border:none;border-top:1px solid var(--line);margin:14px 0">
+      <div style="display:flex;align-items:baseline;justify-content:space-between">
+        <span class="muted">total score</span>
+        <span class="big-num" id="pgTotal">0</span>
+      </div>
+      <p class="footnote" id="pgNote" style="margin-top:10px"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<h2 id="asym"><span class="num">3</span>Asymmetry &amp; floors: how a phase gets its personality</h2>
+<p>
+  The whole reason for separate above/below weights is that nutrition goals are <em>directional</em>.
+  When cutting, overshooting protein is fine but undershooting is bad; overshooting carbs is bad but
+  hitting the calorie ceiling matters most. The penalty curve becomes a <strong>lopsided
+  parabola</strong> — gentle on the "good" side, steep on the "bad" side. Here are the actual weights
+  from <span class="file">macroScorer.ts</span>:
+</p>
+
+<table class="w">
+  <thead><tr><th>macro</th><th>Cutting (below / above)</th><th>Bulking (below / above)</th><th>Maintenance (below / above)</th></tr></thead>
+  <tbody>
+    <tr><td class="macro">calories</td><td>10 / 10</td><td>10 / 10</td><td>10 / 10</td></tr>
+    <tr><td class="macro">protein</td><td>5 / 2</td><td>15 / 3</td><td>4 / 4</td></tr>
+    <tr><td class="macro">fat</td><td>15 / 3</td><td>15 / 3</td><td>0 / 0</td></tr>
+    <tr><td class="macro">carbs</td><td>0 / 0</td><td>0 / 0</td><td>3 / 3</td></tr>
+    <tr><td class="macro">below-floor</td><td colspan="3" style="text-align:center">15 (squared, applied to summed deficit beneath any hard floor)</td></tr>
+  </tbody>
+</table>
+
+<div class="panel">
+  <h3 style="margin-top:0">The penalty curve for one macro</h3>
+  <p class="muted" style="margin-top:0">Each side of the dip can have a different steepness. A weight
+  of <code>0</code> makes that whole side <em>flat</em> — the optimizer stops caring about that
+  direction entirely (that's why cutting can pour spare calories into carbs for free).</p>
+  <div class="grid2">
+    <div>
+      <label class="ctl"><span class="name">Phase</span>
+        <select id="curvePhase">
+          <option value="Cutting">Cutting</option>
+          <option value="Bulking">Bulking</option>
+          <option value="Maintenance">Maintenance</option>
+        </select>
+      </label>
+      <label class="ctl"><span class="name">Macro</span>
+        <select id="curveMacro">
+          <option value="protein">protein</option>
+          <option value="carbs">carbs</option>
+          <option value="fat">fat</option>
+          <option value="calories">calories</option>
+        </select>
+      </label>
+      <p class="footnote" id="curveNote"></p>
+      <div class="legend">
+        <span style="--c:var(--accent)"><i></i>penalty</span>
+        <span style="color:var(--muted)">dashed line = target · purple = hard floor</span>
+      </div>
+    </div>
+    <div><canvas id="curveCanvas" width="440" height="260"></canvas></div>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>Floors are a separate hinge.</strong> A floor only bites when you're <em>below</em> it, so
+  its penalty is <code>max(0, floor − actual)²</code> — flat above the floor, a steep wall below.
+  This lets a macro have a hard minimum without dragging the target around. The floors come from RP
+  rules in <span class="file">nutritionPlanCalculator.ts</span> (e.g. cutting keeps protein ≥ 1.0
+  g/lb even though the <em>target</em> is 1.2).
+</div>
+
+<!-- ===================================================================== -->
+<h2 id="grid"><span class="num">4</span>Phase 1: which daily quantities are even allowed?</h2>
+<p>
+  Before searching, the optimizer figures out the <strong>discrete set of valid daily quantities</strong>
+  for each food. You can't eat a continuous river of peanut butter — portions come in steps, each meal
+  has a min and max serving, and there are only so many meals. So a daily quantity
+  <span class="mono">q</span> is valid only if it can be split into <em>at most</em>
+  <span class="mono">numMeals</span> portions, each a whole number of steps within
+  <span class="mono">[perMealMin, perMealMax]</span>.
+</p>
+
+<div class="eq">
+q = n · step is valid  ⇔  ∃ k ∈ [1, numMeals]  such that  k·minUnits ≤ n ≤ k·maxUnits
+<span class="dim">// k = how many meals the food appears in; from foodBoundsCalculator.isFeasible</span>
+</div>
+
+<div class="panel">
+  <h3 style="margin-top:0">Build the valid set</h3>
+  <p class="muted" style="margin-top:0">Adjust a food's constraints and see exactly which daily
+  totals survive. Gaps appear when a quantity can't be evenly split across the available meals.</p>
+  <div class="grid2">
+    <div>
+      <label class="ctl"><span class="name">step</span><input type="range" id="gStep" min="10" max="100" step="5"><span class="val" id="gStepV"></span></label>
+      <label class="ctl"><span class="name">per-meal min</span><input type="range" id="gMin" min="0" max="200" step="10"><span class="val" id="gMinV"></span></label>
+      <label class="ctl"><span class="name">per-meal max</span><input type="range" id="gMax" min="50" max="400" step="10"><span class="val" id="gMaxV"></span></label>
+      <label class="ctl"><span class="name"># meals</span><input type="range" id="gMeals" min="1" max="6" step="1"><span class="val" id="gMealsV"></span></label>
+      <p class="footnote" id="gSummary"></p>
+    </div>
+    <div>
+      <canvas id="gridCanvas" width="440" height="150"></canvas>
+      <p class="footnote">Each <span style="color:var(--accent)">●</span> is a valid daily total. The
+      first valid amount is always reachable in one meal; higher amounts need more meals to hold them.</p>
+    </div>
+  </div>
+</div>
+
+<p class="muted">
+  Phase 1 also bakes in two more rules: <strong>required foods</strong> drop the <code>0</code> option
+  (so they can't be excluded), and a <strong>category</strong> of mutually-exclusive foods is handled
+  later as a group where at most one member is "on." These valid sets become the only positions the
+  Phase-2 search is ever allowed to stand on.
+</p>
+
+<!-- ===================================================================== -->
+<h2 id="landscape"><span class="num">5</span>Phase 2: the search landscape</h2>
+<p>
+  Now the real work. Each food sits on its own grid of valid quantities; a "plan" is one choice per
+  food. The score turns that grid of combinations into a <strong>landscape</strong> — a surface where
+  height is the penalty and we're hunting for the lowest valley. With many foods this surface lives in
+  too many dimensions to picture, so here it is for just <strong>two foods</strong> (a protein source
+  and a carb source) on top of a fixed backdrop of other foods.
+</p>
+
+<div class="panel">
+  <h3 style="margin-top:0">Two-food landscape</h3>
+  <p class="muted" style="margin-top:0">Darker = higher penalty (worse). Brighter = closer to the
+  target. The <span style="color:#fff">✦</span> marks the true best combination on the grid. Switch
+  phases and watch the terrain reshape — note how, when a macro's weight is <code>0</code>, the
+  surface flattens into a <strong>plateau</strong> along that food's direction.</p>
+  <div class="grid2">
+    <div>
+      <label class="ctl"><span class="name">Phase</span>
+        <select id="lsPhase">
+          <option value="Cutting">Cutting</option>
+          <option value="Bulking">Bulking</option>
+          <option value="Maintenance">Maintenance</option>
+        </select>
+      </label>
+      <div style="margin:10px 0 4px">
+        <button id="lsClimb" class="primary">▶ Run hill-climb from all-min</button>
+        <button id="lsReset">reset</button>
+      </div>
+      <p class="footnote" id="lsInfo"></p>
+      <div class="legend">
+        <span style="color:#9fe7c7">✦ grid optimum</span>
+        <span style="color:var(--warn)">● starting plans</span>
+        <span style="color:#fff">— climb path</span>
+      </div>
+    </div>
+    <div>
+      <canvas id="lsCanvas" width="380" height="380"></canvas>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted)">
+        <span>← whey (protein) →</span><span style="writing-mode:vertical-lr">rice (carbs) ↑</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p>
+  Why is this hard enough to need a clever search? Three reasons, all visible above:
+</p>
+<ul class="clean">
+  <li><strong>It's discrete.</strong> You can only stand on grid points. The continuous best might sit
+  between two servings, and snapping to the nearest one can overshoot.</li>
+  <li><strong>It's combinatorial.</strong> Two foods make a readable picture; a real plan has a dozen
+  foods, each with many quantities — billions of combinations. Brute force is hopeless.</li>
+  <li><strong>It has plateaus.</strong> When a phase zero-weights a macro, huge regions score
+  <em>identically</em>. An exact solver has to rule them out one by one (slow); a naïve climber wanders
+  them aimlessly.</li>
+</ul>
+
+<p>
+  The solution in <span class="file">dailyQuantityOptimizer.ts</span> is a <strong>deterministic
+  multi-start local search</strong> (hill-climbing). The idea: drop several climbers at carefully
+  chosen starting points, let each walk downhill to the bottom of its valley, and keep the best
+  result. Hill-climbing only finds the lowest point <em>near</em> where it starts, so the variety of
+  starts is what reaches the global best.
+</p>
+
+<div class="grid2">
+  <div class="panel tight">
+    <p class="pill">The starting plans <span class="file">· startingPlanBuilder.ts</span></p>
+    <ul class="clean" style="font-size:14.5px">
+      <li><strong>all-min</strong> — every food at its smallest amount (a calorie-light corner).</li>
+      <li><strong>all-max</strong> — every food maxed (a calorie-heavy corner).</li>
+      <li><strong>relaxed guess</strong> — a smart seed with the protein/carb balance about right
+      (next section).</li>
+      <li><strong>per-food emphasis</strong> — the guess with one food cranked to max, one such start
+      per food, to surface structurally different plans.</li>
+    </ul>
+  </div>
+  <div class="panel tight">
+    <p class="pill">Why multi-start never hurts</p>
+    <p style="font-size:14.5px">Refinement can only <em>lower</em> a start's score. So every extra
+    start is a free extra lottery ticket: it either finds a better valley or it doesn't, but it can't
+    make the answer worse. The cost is just more climbs — and each climb is milliseconds. That's the
+    whole bargain that makes this fast <em>and</em> reliable.</p>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<h2 id="relaxed"><span class="num">6</span>The relaxed guess: cheat the discreteness, then snap back</h2>
+<p>
+  The all-min and all-max corners are easy to generate but they're terrible starting points for
+  getting macro <em>ratios</em> right. So <span class="file">relaxedGuess.ts</span> builds a smarter
+  seed by solving an <strong>easier version of the problem</strong>: pretend any fractional quantity is
+  allowed (drop the discrete grid) and ignore the category rules. This "relaxation" removes the
+  discreteness trap entirely.
+</p>
+
+<p>
+  It solves the relaxed problem with <strong>coordinate descent</strong>: hold every food fixed but
+  one, find that one food's best amount, move on, and repeat sweeping over all foods until nothing
+  changes. The key fact that makes this clean: with all other foods fixed, the penalty is
+  <strong>convex</strong> (single-dipped) in one food's amount — so its minimum can be found by
+  <strong>ternary search</strong>, repeatedly shrinking the bracket toward the dip.
+</p>
+
+<div class="panel">
+  <h3 style="margin-top:0">Ternary search on a convex slice</h3>
+  <p class="muted" style="margin-top:0">This is the penalty as a function of <em>one</em> food's
+  amount, everything else fixed — a convex bowl. Ternary search probes two interior points, throws
+  away the third that can't contain the minimum, and repeats. Step through it:</p>
+  <div class="grid2">
+    <div>
+      <div style="margin:8px 0">
+        <button id="tStep" class="primary">▶ one ternary step</button>
+        <button id="tReset">reset</button>
+      </div>
+      <p class="footnote" id="tInfo"></p>
+      <p class="footnote">After ~40 steps the bracket is microscopic; the midpoint is the food's
+      optimal amount. Then <span class="file">nearestQuantityIndex</span> snaps it back to the closest
+      real serving on the grid.</p>
+    </div>
+    <div><canvas id="ternCanvas" width="440" height="260"></canvas></div>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>Why relax at all?</strong> At the calorie target, the calorie penalty's slope is zero, so in
+  the continuous world nudging in a little more protein is a pure win. But a whole discrete serving
+  would overshoot calories and get rejected. The relaxed solver finds that sweet protein/carb balance
+  the discrete corners can't reach; rounding it to the grid lands the multi-start search right next to
+  the answer, and the refinement that follows cleans up any rounding or category conflict.
+</div>
+
+<!-- ===================================================================== -->
+<h2 id="moves"><span class="num">7</span>The two hill-climbing moves</h2>
+<p>
+  Each climber refines its plan with two kinds of moves, sweeping until a full pass changes nothing
+  (<span class="file">localSearch.ts</span>). Plain ±1-step hill-climbing would stall constantly; these
+  two move types are designed to not stall.
+</p>
+
+<div class="grid2">
+  <div class="panel">
+    <p class="pill">Move #1 — whole-range single move</p>
+    <h3 style="margin:.4em 0">Re-pick one food across its <em>entire</em> range</h3>
+    <p class="muted">For each food (or category group), try <em>every</em> valid amount with the rest
+    of the plan fixed, and jump straight to the best one. Because it considers the food's whole range
+    at once — not just one step up or down — it never stalls a step short of a better amount.</p>
+    <div class="eq" style="font-size:12.5px">for each group g:
+  freeze everyone else → backdrop
+  pick the amount of g
+  that minimizes score(backdrop + g)</div>
+  </div>
+  <div class="panel">
+    <p class="pill">Move #2 — paired two-food move</p>
+    <h3 style="margin:.4em 0">Adjust <em>two</em> foods together</h3>
+    <p class="muted">For every pair of groups, find the best joint setting of both at once. This makes
+    trades a single move can't: when you're short on protein but already at the calorie ceiling,
+    <em>adding whey alone</em> overshoots calories. The fix is "add the protein source <strong>and</strong>
+    drop a carb filler" in one move — only a two-food move can express it.</p>
+    <div class="eq" style="font-size:12.5px">for each pair (a, b):
+  freeze everyone else → backdrop
+  pick amounts of a AND b
+  that jointly minimize score</div>
+  </div>
+</div>
+
+<p class="muted">
+  Both moves are made cheap by <strong>running-totals bookkeeping</strong>
+  (<span class="file">macroMath.ts</span>): instead of re-summing the whole plan, the search subtracts
+  the moving group's contribution to get a fixed "backdrop," then scores each candidate by adding back
+  just four numbers (cal/protein/carbs/fat). Pair moves are capped so a giant two-food product can't
+  blow up the scan — when a pair is too big, the larger food is <em>windowed</em> around its current
+  amount rather than skipped, so every pair still gets a joint move.
+</p>
+
+<!-- ===================================================================== -->
+<h2 id="allocate"><span class="num">8</span>Phase 3: spreading the day across meals</h2>
+<p>
+  Phase 2 outputs <em>daily</em> quantities. <span class="file">mealAllocator.ts</span> decides which
+  meal each portion lands in. This is a smaller balancing problem, not a re-optimization of macros:
+</p>
+<ul class="clean">
+  <li><strong>Calorie balancing</strong> — each food's portions go to whichever meals are currently
+  <em>lowest</em> in calories (weighted by each meal's optional share weight), so load spreads evenly
+  across the day instead of front-loading meal 1.</li>
+  <li><strong>Carbs near the workout</strong> — a food whose carbs supply &gt; 40% of its calories is
+  "carb-heavy" and claims the pre-workout slot first, then balances the rest.</li>
+  <li><strong>Respect the splits</strong> — the daily total is divided into <code>k</code> portions
+  where <code>k</code> is chosen so each portion fits within the per-meal min/max/step, and foods can
+  be barred from certain named meals (<span class="mono">excludedMealNames</span>).</li>
+  <li><strong>Tightest first</strong> — foods with the narrowest min-to-max range are placed first to
+  reduce conflicts.</li>
+</ul>
+
+<!-- ===================================================================== -->
+<h2 id="history"><span class="num">9</span>Why <em>this</em> algorithm?</h2>
+<p>
+  The current deterministic multi-start local search replaced two earlier approaches. The comparison
+  is the best summary of the design constraints:
+</p>
+<div class="grid3">
+  <div class="phase-card">
+    <div class="ph" style="color:var(--fat)">REJECTED</div>
+    <h4>Simulated annealing</h4>
+    <p>Worked, but <em>stochastic</em> — regenerating the same plan produced different output, so the
+    committed files churned on every run. Non-determinism is a dealbreaker for checked-in plans.</p>
+  </div>
+  <div class="phase-card">
+    <div class="ph" style="color:var(--fat)">REJECTED</div>
+    <h4>Exact branch-and-bound</h4>
+    <p>Provably optimal, but seconds-to-minutes per plan. Cutting and bulking zero-weight a macro,
+    creating a vast <strong>plateau</strong> of equally-good fine-step combinations it had to rule out
+    one at a time.</p>
+  </div>
+  <div class="phase-card">
+    <div class="ph" style="color:var(--accent)">CHOSEN</div>
+    <h4>Multi-start local search</h4>
+    <p><strong>Deterministic</strong> (same input → same output), runs in tens of milliseconds, and
+    hits the exact optimum for most plans — within ~a gram of macros on the rest. A strong heuristic,
+    not a proof, but the right trade.</p>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:30px">
+  <strong>The one-sentence version.</strong> Express "how well does this day match its targets?" as a
+  weighted squared-error score with asymmetric, phase-dependent weights and hard floors
+  <span class="muted">(§2–3)</span>; enumerate the discrete amounts each food can take
+  <span class="muted">(§4)</span>; then find the lowest-scoring combination by dropping several smart
+  climbers onto that landscape and letting each walk downhill with whole-range and paired moves
+  <span class="muted">(§5–7)</span> — finally, sprinkle the winning daily totals across the day's meals
+  <span class="muted">(§8)</span>.
+</div>
+
+<p class="footnote" style="margin-top:50px">
+  Generated from the source in
+  <span class="file">app/(routes)/nutrition/services/NutritionPlanOptimizer/</span>. All numbers and
+  weights in the widgets mirror the real code; the two-food landscape uses an illustrative pantry so
+  the math is visible in 2D. Open this file directly in a browser — it has no dependencies.
+</p>
+
+</div>
+
+<script>
+"use strict";
+
+/* ============================ shared model ============================ *
+ * Mirrors macroScorer.ts (PHASE_WEIGHTS + score) exactly.               */
+const PHASE_WEIGHTS = {
+  Maintenance: { caloriesAbove:10, caloriesBelow:10, proteinAbove:4, proteinBelow:4, fatAbove:0,  fatBelow:0,  carbsAbove:3, carbsBelow:3, belowFloor:15 },
+  Cutting:     { caloriesAbove:10, caloriesBelow:10, proteinAbove:2, proteinBelow:5, fatAbove:3,  fatBelow:15, carbsAbove:0, carbsBelow:0, belowFloor:15 },
+  Bulking:     { caloriesAbove:10, caloriesBelow:10, proteinAbove:3, proteinBelow:15, fatAbove:3, fatBelow:15, carbsAbove:0, carbsBelow:0, belowFloor:15 },
+};
+
+/* Illustrative targets + floors per phase (real shape, simple round numbers). */
+const PHASE_SETUP = {
+  Cutting:     { targets:{calories:1200, protein:150, carbs:120, fat:38}, floors:{protein:125, carbs:0, fat:0} },
+  Bulking:     { targets:{calories:1500, protein:140, carbs:170, fat:42}, floors:{protein:0, carbs:130, fat:0} },
+  Maintenance: { targets:{calories:1400, protein:150, carbs:140, fat:46}, floors:{protein:0, carbs:0, fat:42} },
+};
+
+/** Weighted squared-error score with asymmetric weights + floor hinge. */
+function score(actual, cfg) {
+  const w = PHASE_WEIGHTS[cfg.phase], t = cfg.targets, fl = cfg.floors;
+  const dCal = actual.calories - t.calories;
+  const dProt = actual.protein - t.protein;
+  const dFat = actual.fat - t.fat;
+  const dCarb = actual.carbs - t.carbs;
+  const cw = dCal  < 0 ? w.caloriesBelow : w.caloriesAbove;
+  const pw = dProt < 0 ? w.proteinBelow  : w.proteinAbove;
+  const fw = dFat  < 0 ? w.fatBelow      : w.fatAbove;
+  const kw = dCarb < 0 ? w.carbsBelow    : w.carbsAbove;
+  const floorDef = Math.max(0, fl.protein - actual.protein)
+                 + Math.max(0, fl.carbs   - actual.carbs)
+                 + Math.max(0, fl.fat     - actual.fat);
+  const parts = {
+    calories: cw*dCal*dCal, protein: pw*dProt*dProt,
+    fat: fw*dFat*dFat, carbs: kw*dCarb*dCarb, floor: w.belowFloor*floorDef*floorDef
+  };
+  parts.total = parts.calories + parts.protein + parts.fat + parts.carbs + parts.floor;
+  return parts;
+}
+const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+/* ===================== §2 score playground ===================== */
+(function(){
+  const ids = ['Cal','Prot','Carb','Fat'];
+  const el = (s)=>document.getElementById(s);
+  const phaseSel = el('pgPhase');
+  function setup(){
+    const s = PHASE_SETUP[phaseSel.value].targets;
+    el('pgCal').value = Math.round(s.calories);
+    el('pgProt').value = Math.round(s.protein);
+    el('pgCarb').value = Math.round(s.carbs);
+    el('pgFat').value = Math.round(s.fat);
+    render();
+  }
+  function render(){
+    const phase = phaseSel.value;
+    const cfg = { phase, targets: PHASE_SETUP[phase].targets, floors: PHASE_SETUP[phase].floors };
+    const actual = {
+      calories:+el('pgCal').value, protein:+el('pgProt').value,
+      carbs:+el('pgCarb').value, fat:+el('pgFat').value
+    };
+    el('pgCalV').textContent = actual.calories + ' kcal';
+    el('pgProtV').textContent = actual.protein + ' g';
+    el('pgCarbV').textContent = actual.carbs + ' g';
+    el('pgFatV').textContent = actual.fat + ' g';
+    const t = cfg.targets, fl = cfg.floors;
+    el('pgTargets').innerHTML =
+      `<strong>targets</strong> — cal ${Math.round(t.calories)}, protein ${Math.round(t.protein)}g, `+
+      `carbs ${Math.round(t.carbs)}g, fat ${Math.round(t.fat)}g · `+
+      `<strong>floors</strong> — `+
+      [fl.protein&&`protein ≥ ${Math.round(fl.protein)}g`, fl.carbs&&`carbs ≥ ${Math.round(fl.carbs)}g`, fl.fat&&`fat ≥ ${Math.round(fl.fat)}g`].filter(Boolean).join(', ') || 'none';
+
+    const p = score(actual, cfg);
+    const max = Math.max(p.calories, p.protein, p.carbs, p.fat, p.floor, 1);
+    const set=(bar,amt,val)=>{ el(bar).style.width=(100*val/max)+'%'; el(amt).textContent=Math.round(val).toLocaleString(); };
+    set('pgBarCal','pgAmtCal',p.calories);
+    set('pgBarProt','pgAmtProt',p.protein);
+    set('pgBarCarb','pgAmtCarb',p.carbs);
+    set('pgBarFat','pgAmtFat',p.fat);
+    set('pgBarFloor','pgAmtFloor',p.floor);
+    el('pgTotal').textContent = Math.round(p.total).toLocaleString();
+
+    const w = PHASE_WEIGHTS[phase];
+    const zero = [];
+    if(w.carbsAbove===0 && w.carbsBelow===0) zero.push('carbs');
+    if(w.fatAbove===0 && w.fatBelow===0) zero.push('fat');
+    el('pgNote').innerHTML = zero.length
+      ? `In <strong>${phase}</strong>, <strong>${zero.join(' & ')}</strong> carry weight 0 — slide them and the score won't move (except via calories).`
+      : `In <strong>${phase}</strong>, every macro is weighted.`;
+  }
+  phaseSel.addEventListener('change', setup);
+  ['pgCal','pgProt','pgCarb','pgFat'].forEach(id=>el(id).addEventListener('input', render));
+  setup();
+})();
+
+/* ===================== §3 penalty curve ===================== */
+(function(){
+  const cv = document.getElementById('curveCanvas'), ctx = cv.getContext('2d');
+  const phaseSel = document.getElementById('curvePhase'), macroSel = document.getElementById('curveMacro');
+  const note = document.getElementById('curveNote');
+  const W=cv.width, H=cv.height, padL=44, padB=30, padT=14, padR=14;
+
+  function draw(){
+    const phase = phaseSel.value, macro = macroSel.value;
+    const setup = PHASE_SETUP[phase];
+    const target = setup.targets[macro];
+    const floor = setup.floors[macro] || 0;
+    const w = PHASE_WEIGHTS[phase];
+    const below = w[macro+'Below'], above = w[macro+'Above'];
+    // domain: 0 .. 2*target-ish
+    const xMax = Math.max(target*2, target+60, floor*1.4 || 0);
+    const fl = setup.floors;
+    // penalty at a given actual value of THIS macro (others at target so they contribute 0)
+    function pen(x){
+      const actual = { ...setup.targets };
+      actual[macro] = x;
+      return score(actual, {phase, targets:setup.targets, floors:fl}).total;
+    }
+    let yMax = 0;
+    const pts = [];
+    for(let i=0;i<=240;i++){ const x=xMax*i/240; const y=pen(x); pts.push([x,y]); if(y>yMax)yMax=y; }
+    yMax = yMax || 1;
+    const X = x=> padL + (W-padL-padR)*(x/xMax);
+    const Y = y=> H-padB - (H-padB-padT)*(y/yMax);
+
+    ctx.clearRect(0,0,W,H);
+    // axes
+    ctx.strokeStyle=css('--line'); ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(padL,padT); ctx.lineTo(padL,H-padB); ctx.lineTo(W-padR,H-padB); ctx.stroke();
+    // floor wall
+    if(floor>0){
+      ctx.strokeStyle=css('--floor'); ctx.setLineDash([4,4]);
+      ctx.beginPath(); ctx.moveTo(X(floor),padT); ctx.lineTo(X(floor),H-padB); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle=css('--floor'); ctx.font='11px '+css('--mono');
+      ctx.fillText('floor', X(floor)+4, padT+12);
+    }
+    // target line
+    ctx.strokeStyle=css('--muted'); ctx.setLineDash([5,5]);
+    ctx.beginPath(); ctx.moveTo(X(target),padT); ctx.lineTo(X(target),H-padB); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=css('--muted'); ctx.font='11px '+css('--mono');
+    ctx.fillText('target', X(target)+4, H-padB-6);
+    // curve
+    ctx.strokeStyle=css('--accent'); ctx.lineWidth=2.5;
+    ctx.beginPath();
+    pts.forEach(([x,y],i)=>{ const px=X(x),py=Y(y); i?ctx.lineTo(px,py):ctx.moveTo(px,py); });
+    ctx.stroke();
+    // labels
+    ctx.fillStyle=css('--muted'); ctx.font='11px sans-serif';
+    ctx.fillText('penalty', 6, padT+10);
+    ctx.fillText(macro+' (g)', W-78, H-8);
+
+    const shape = (below===0&&above===0) ? 'flat — this macro is ignored entirely'
+      : below>above ? 'steeper on the left: undershooting is punished harder'
+      : above>below ? 'steeper on the right: overshooting is punished harder'
+      : 'symmetric: over and under cost the same';
+    note.innerHTML = `below-weight = <strong>${below}</strong>, above-weight = <strong>${above}</strong> → ${shape}.`
+      + (floor>0 ? ` A hard floor adds a steep wall below ${Math.round(floor)}g.` : '');
+  }
+  phaseSel.addEventListener('change',draw);
+  macroSel.addEventListener('change',draw);
+  draw();
+})();
+
+/* ===================== §4 feasible quantity grid ===================== */
+(function(){
+  const cv=document.getElementById('gridCanvas'), ctx=cv.getContext('2d');
+  const el=(s)=>document.getElementById(s);
+  function isFeasible(n,minUnits,maxUnits,meals){
+    const kMin=Math.ceil(n/maxUnits);
+    const kMax=minUnits===0?meals:Math.min(meals,Math.floor(n/minUnits));
+    return kMin<=kMax;
+  }
+  function draw(){
+    const step=+el('gStep').value, pmin=+el('gMin').value, pmax=+el('gMax').value, meals=+el('gMeals').value;
+    el('gStepV').textContent=step+' g'; el('gMinV').textContent=pmin+' g';
+    el('gMaxV').textContent=pmax+' g'; el('gMealsV').textContent=meals;
+    const minUnits = pmin>0?Math.ceil(pmin/step):0;
+    const maxUnits = Math.floor(pmax/step);
+    const dailyMax = pmax*meals;
+    const maxN = Math.floor(dailyMax/step);
+    const valid=[]; const all=[];
+    for(let n=0;n<=maxN;n++){
+      const q=n*step;
+      const ok = (n===0) ? true : (maxUnits>=1 && isFeasible(n,minUnits,maxUnits,meals));
+      all.push({q,ok}); if(ok) valid.push(q);
+    }
+    const W=cv.width,H=cv.height,padL=20,padR=20,y=70;
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle=css('--line'); ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(W-padR,y); ctx.stroke();
+    const xScale = x => padL + (W-padL-padR)*(x/Math.max(dailyMax,1));
+    all.forEach(({q,ok})=>{
+      const px=xScale(q);
+      ctx.beginPath();
+      if(ok){ ctx.fillStyle=css('--accent'); ctx.arc(px,y,5,0,7); ctx.fill(); }
+      else { ctx.strokeStyle='#445'; ctx.arc(px,y,3,0,7); ctx.stroke(); }
+    });
+    ctx.fillStyle=css('--muted'); ctx.font='11px '+css('--mono');
+    ctx.fillText('0', padL-3, y+22);
+    ctx.fillText(dailyMax+'g/day', W-padR-54, y+22);
+    ctx.fillText('valid daily totals →', padL, y-44);
+    el('gSummary').innerHTML = maxUnits<1
+      ? `<span style="color:var(--warn)">per-meal max (${pmax}g) is below one step (${step}g) — nothing fits.</span>`
+      : `<strong>${valid.length}</strong> valid daily totals. Smallest non-zero: <strong>${valid.find(v=>v>0)??'—'}g</strong>, largest: <strong>${valid[valid.length-1]}g</strong>. Each meal holds ${minUnits||1}–${maxUnits} step(s).`;
+  }
+  ['gStep','gMin','gMax','gMeals'].forEach(id=>el(id).addEventListener('input',draw));
+  // sane defaults
+  el('gStep').value=25; el('gMin').value=50; el('gMax').value=200; el('gMeals').value=4;
+  draw();
+})();
+
+/* ===================== §5 two-food landscape ===================== */
+const LS = (function(){
+  const cv=document.getElementById('lsCanvas'), ctx=cv.getContext('2d');
+  const phaseSel=document.getElementById('lsPhase'), info=document.getElementById('lsInfo');
+  // fixed backdrop (the "rest of the plan"): chicken 250g + olive oil 14g
+  const backdrop = { calories:536, protein:78, carbs:0, fat:23 };
+  // whey: 30g serving 120/24/3/1.5  → grid 0..300 step 30
+  // rice: 100g serving 130/2.7/28/0.3 → grid 0..400 step 50
+  const whey = { perG:{calories:4, protein:0.8, carbs:0.1, fat:0.05}, grid:[] };
+  for(let q=0;q<=300;q+=30) whey.grid.push(q);
+  const rice = { perG:{calories:1.30, protein:0.027, carbs:0.28, fat:0.003}, grid:[] };
+  for(let q=0;q<=400;q+=50) rice.grid.push(q);
+
+  const N=cv.width;
+  let climbPath=null, climbScore=null;
+
+  function totalsFor(qw,qr){
+    return {
+      calories: backdrop.calories + qw*whey.perG.calories + qr*rice.perG.calories,
+      protein:  backdrop.protein  + qw*whey.perG.protein  + qr*rice.perG.protein,
+      carbs:    backdrop.carbs    + qw*whey.perG.carbs    + qr*rice.perG.carbs,
+      fat:      backdrop.fat      + qw*whey.perG.fat      + qr*rice.perG.fat,
+    };
+  }
+  function cfg(){ const p=phaseSel.value; return {phase:p, targets:PHASE_SETUP[p].targets, floors:PHASE_SETUP[p].floors}; }
+  function scoreAt(iw,ir){ return score(totalsFor(whey.grid[iw], rice.grid[ir]), cfg()).total; }
+
+  function gridMin(){
+    let best={s:Infinity,iw:0,ir:0};
+    for(let iw=0;iw<whey.grid.length;iw++)for(let ir=0;ir<rice.grid.length;ir++){
+      const s=scoreAt(iw,ir); if(s<best.s) best={s,iw,ir};
+    }
+    return best;
+  }
+  // whole-range single-coordinate hill climb (mirrors localSearch move #1 over 2 foods)
+  function climbFrom(iw,ir){
+    const path=[[iw,ir]];
+    let improved=true, guard=0;
+    while(improved && guard++<50){
+      improved=false;
+      // best whey given rice
+      let bw=iw, bs=scoreAt(iw,ir);
+      for(let k=0;k<whey.grid.length;k++){ const s=scoreAt(k,ir); if(s<bs-1e-9){bs=s;bw=k;} }
+      if(bw!==iw){ iw=bw; path.push([iw,ir]); improved=true; }
+      // best rice given whey
+      let br=ir, bs2=scoreAt(iw,ir);
+      for(let k=0;k<rice.grid.length;k++){ const s=scoreAt(iw,k); if(s<bs2-1e-9){bs2=s;br=k;} }
+      if(br!==ir){ ir=br; path.push([iw,ir]); improved=true; }
+    }
+    return path;
+  }
+
+  function gx(iw){ return N*(iw+0.5)/whey.grid.length; }
+  function gy(ir){ return N - N*(ir+0.5)/rice.grid.length; } // rice up
+
+  function draw(){
+    const c=cfg();
+    // score field for color scaling
+    let lo=Infinity, hi=-Infinity; const field=[];
+    for(let iw=0;iw<whey.grid.length;iw++){ field[iw]=[]; for(let ir=0;ir<rice.grid.length;ir++){ const s=scoreAt(iw,ir); field[iw][ir]=s; if(s<lo)lo=s; if(s>hi)hi=s; } }
+    const cw=N/whey.grid.length, ch=N/rice.grid.length;
+    ctx.clearRect(0,0,N,N);
+    for(let iw=0;iw<whey.grid.length;iw++)for(let ir=0;ir<rice.grid.length;ir++){
+      // normalize via sqrt for contrast; bright=low score
+      let t=(field[iw][ir]-lo)/(hi-lo||1);
+      t=Math.sqrt(t);
+      const r=Math.round(20+ t*20), g=Math.round(210 - t*180), b=Math.round(160 - t*120);
+      ctx.fillStyle=`rgb(${r},${g},${b})`;
+      const x=N*iw/whey.grid.length, y=N-N*(ir+1)/rice.grid.length;
+      ctx.fillRect(x,y,cw+0.5,ch+0.5);
+    }
+    // grid optimum
+    const gm=gridMin();
+    ctx.fillStyle='#ffffff'; ctx.font='20px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('✦', gx(gm.iw), gy(gm.ir));
+    // starts
+    const starts=[[0,0],[whey.grid.length-1,rice.grid.length-1]];
+    ctx.fillStyle=css('--warn');
+    starts.forEach(([iw,ir])=>{ ctx.beginPath(); ctx.arc(gx(iw),gy(ir),5,0,7); ctx.fill(); });
+    // climb path
+    if(climbPath){
+      ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.beginPath();
+      climbPath.forEach(([iw,ir],i)=>{ const x=gx(iw),y=gy(ir); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+      ctx.stroke();
+      climbPath.forEach(([iw,ir])=>{ ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(gx(iw),gy(ir),3,0,7); ctx.fill(); });
+    }
+    const t=c.targets;
+    let msg=`Optimum on grid: <strong>${whey.grid[gm.iw]}g whey</strong> + <strong>${rice.grid[gm.ir]}g rice</strong> (score ${Math.round(gm.s)}). `+
+      `Targets: ${Math.round(t.calories)} kcal / ${Math.round(t.protein)}p / ${Math.round(t.carbs)}c / ${Math.round(t.fat)}f.`;
+    if(climbPath){
+      const stuck = climbScore > gm.s + 1;
+      msg += stuck
+        ? ` <span style="color:var(--warn)">The single-food climb stalled at score ${Math.round(climbScore)} — short of the ✦.</span> No one-food move helps: it would need to <em>drop whey and add rice together</em> (a pair move, §7) to keep calories flat while cutting the protein overshoot. This is exactly why one climb isn't enough.`
+        : ` The climb reached the optimum here — but on a different start or phase it can stall, which is why several starts are run.`;
+    }
+    info.innerHTML=msg;
+  }
+  document.getElementById('lsClimb').addEventListener('click',()=>{ climbPath=climbFrom(0,0); const e=climbPath[climbPath.length-1]; climbScore=scoreAt(e[0],e[1]); draw(); });
+  document.getElementById('lsReset').addEventListener('click',()=>{ climbPath=null; climbScore=null; draw(); });
+  phaseSel.addEventListener('change',()=>{ climbPath=null; climbScore=null; draw(); });
+  draw();
+  return {draw};
+})();
+
+/* ===================== §6 ternary search ===================== */
+(function(){
+  const cv=document.getElementById('ternCanvas'), ctx=cv.getContext('2d');
+  const info=document.getElementById('tInfo');
+  const W=cv.width,H=cv.height,padL=40,padR=16,padT=14,padB=28;
+  // a convex penalty slice: one food's amount x in [0, xMax]; everything else fixed.
+  // use cutting protein-ish bowl: penalty = belowW*(t-x)^2 if x<t else aboveW*(x-t)^2  + small
+  const xMax=300, target=170, belowW=5, aboveW=2;
+  function pen(x){ const d=x-target; return (d<0?belowW:aboveW)*d*d; }
+  let lo=0, hi=xMax, steps=0;
+  let yMax=Math.max(pen(0),pen(xMax));
+  const X=x=>padL+(W-padL-padR)*(x/xMax);
+  const Y=y=>H-padB-(H-padB-padT)*(y/yMax);
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle=css('--line'); ctx.beginPath(); ctx.moveTo(padL,padT); ctx.lineTo(padL,H-padB); ctx.lineTo(W-padR,H-padB); ctx.stroke();
+    // bracket shading
+    ctx.fillStyle='rgba(90,209,160,0.10)';
+    ctx.fillRect(X(lo),padT,X(hi)-X(lo),H-padB-padT);
+    // curve
+    ctx.strokeStyle=css('--accent'); ctx.lineWidth=2.5; ctx.beginPath();
+    for(let i=0;i<=200;i++){ const x=xMax*i/200; const px=X(x),py=Y(pen(x)); i?ctx.lineTo(px,py):ctx.moveTo(px,py); }
+    ctx.stroke();
+    // probes
+    const m1=lo+(hi-lo)/3, m2=hi-(hi-lo)/3;
+    [[m1,'#6ab7ff'],[m2,'#ff7a85']].forEach(([x,col])=>{
+      ctx.strokeStyle=col; ctx.setLineDash([3,3]); ctx.beginPath(); ctx.moveTo(X(x),padT); ctx.lineTo(X(x),H-padB); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle=col; ctx.beginPath(); ctx.arc(X(x),Y(pen(x)),4,0,7); ctx.fill();
+    });
+    // bracket edges
+    ctx.fillStyle=css('--muted'); ctx.font='11px '+css('--mono');
+    ctx.fillText('lo',X(lo)-4,H-padB+14); ctx.fillText('hi',X(hi)-4,H-padB+14);
+    ctx.fillText('penalty',6,padT+8); ctx.fillText("one food's amount →",W-150,H-8);
+    info.innerHTML=`step <strong>${steps}</strong> · bracket width <strong>${Math.round(hi-lo)}g</strong> · midpoint ≈ <strong>${Math.round((lo+hi)/2)}g</strong> (true min ${target}g). `+
+      `Blue &amp; red are the two probes; the third of the interval that can't hold the minimum is discarded.`;
+  }
+  function step(){
+    const m1=lo+(hi-lo)/3, m2=hi-(hi-lo)/3;
+    if(pen(m1)<pen(m2)) hi=m2; else lo=m1;
+    steps++; draw();
+  }
+  document.getElementById('tStep').addEventListener('click',step);
+  document.getElementById('tReset').addEventListener('click',()=>{ lo=0;hi=xMax;steps=0;draw(); });
+  draw();
+})();
+</script>
+</body>
+</html>
