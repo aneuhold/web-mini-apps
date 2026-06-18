@@ -1,18 +1,13 @@
+import { useMemo } from 'react';
 import { planTemplates } from '../plans/planTemplates';
 import type { SwapState } from '../services/nutritionVariants';
 import nutritionVariants from '../services/nutritionVariants';
 import { DAY_TYPE_LABEL, DayType, DietPhase } from '../util/types';
 import VariantTable from './VariantTable';
 
-const DAY_TYPE_CLI_FLAG: Record<DayType, string> = {
-  [DayType.Training]: 'training',
-  [DayType.NonTraining]: 'non-training'
-};
-
 /**
- * One (phase × day-type) panel: heading, checkbox swap list, and either the
- * optimized variant table for the active swap state or a notice pointing at
- * the regen command.
+ * One (phase × day-type) panel: heading, checkbox swap list, and the variant
+ * table optimized at render time for the active swap state.
  *
  * @param props
  */
@@ -28,7 +23,10 @@ const VariantSection = ({
   onSwapStateChange: (next: SwapState) => void;
 }) => {
   const template = planTemplates[phase][dayType];
-  const plan = nutritionVariants.getOptimizedPlan(phase, dayType, swapState);
+  const plan = useMemo(
+    () => nutritionVariants.getOptimizedPlan(phase, dayType, swapState),
+    [phase, dayType, swapState]
+  );
 
   return (
     <div data-day-section>
@@ -84,17 +82,7 @@ const VariantSection = ({
         </div>
       )}
 
-      {plan ? (
-        <VariantTable plan={plan} />
-      ) : (
-        <p data-missing-variant>
-          No optimized plan for this checkbox combination yet. Run{' '}
-          <code>
-            pnpm nutrition:optimize --phase {phase.toLowerCase()} --day {DAY_TYPE_CLI_FLAG[dayType]}
-          </code>{' '}
-          to generate it.
-        </p>
-      )}
+      <VariantTable plan={plan} />
     </div>
   );
 };

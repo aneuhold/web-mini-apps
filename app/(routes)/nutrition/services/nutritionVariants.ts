@@ -1,31 +1,8 @@
-import optimizedVariants from '../plans/optimizedVariants';
 import { planTemplates } from '../plans/planTemplates';
 import { allFoods } from '../util/foods';
 import type { Food, FoodTotal, NutritionPlan } from '../util/types';
-import { DayType, DietPhase, FoodCategory } from '../util/types';
-
-/**
- * Outcome of `reconcileVariants`: the rewritten variant record plus a
- * breakdown of what happened to every in-scope cached entry so callers can
- * surface a human-readable report.
- */
-export type ReconcileResult = {
-  /** Full variant record after reconciliation (out-of-scope keys untouched). */
-  variants: Record<string, NutritionPlan>;
-  /** Entries whose key changed to match the current key format. */
-  remapped: { from: string; to: string }[];
-  /** Entries already stored under the key their swap state produces. */
-  unchanged: string[];
-  /** Entries dropped because their meals reference a removed/unavailable food. */
-  prunedStale: { key: string; reason: string }[];
-  /**
-   * Entries dropped because another entry already claimed the key they
-   * resolve to (the first one encountered wins).
-   */
-  prunedCollision: { key: string; target: string }[];
-  /** Template keys with no surviving entry. These still need `nutrition:optimize`. */
-  missing: string[];
-};
+import { DayType, DietPhase, FoodCategory, MealName } from '../util/types';
+import nutritionPlanOptimizer from './NutritionPlanOptimizer/nutritionPlanOptimizer';
 
 /**
  * Per-(phase × day-type) swap state. `optionalFoods` is keyed by `food.id`
@@ -51,14 +28,10 @@ const ASSIGN_SEPARATOR = '=';
 
 type Toggle = { kind: 'optional'; foodId: string } | { kind: 'category'; category: FoodCategory };
 
-/** A (phase × day-type) pair, used to scope a reconcile pass. */
-export type VariantPair = { phase: DietPhase; dayType: DayType };
-
 /**
  * Single entry point for everything variant-shaped: key building,
  * default swap states, enumeration across a (phase × day-type), and plan
- * resolution against both the hand-authored templates and the optimizer's
- * cached output.
+ * resolution that optimizes the hand-authored template at runtime.
  */
 class NutritionVariants {
   /**
@@ -205,161 +178,30 @@ class NutritionVariants {
   }
 
   /**
-   * Look up the optimized variant for a (phase × day-type × swapState) and
-   * hydrate it through the template so non-meal fields (title, calorieTarget,
-   * etc.) always reflect the current template — only `meals` and
-   * `lastUpdatedAt` come from the cached JSON. Returns `undefined` when no
-   * optimized entry exists yet for the active variant key.
+   * Build the (phase × day-type × swapState) base plan from the template and
+   * run the optimizer over it inline, returning the optimized `NutritionPlan`.
+   * The optimizer's `-optimized` / `(Optimized)` suffixes are stripped so the
+   * plan keeps the template's `id` and `title`; `lastUpdatedAt` flows through
+   * from the template unchanged.
    *
    * @param phase
    * @param dayType
    * @param swapState
    */
-  getOptimizedPlan(
-    phase: DietPhase,
-    dayType: DayType,
-    swapState: SwapState
-  ): NutritionPlan | undefined {
-    const variantKey = this.buildKey(phase, dayType, swapState);
-    if (!Object.hasOwn(optimizedVariants, variantKey)) return undefined;
-    const cached = optimizedVariants[variantKey];
+  getOptimizedPlan(phase: DietPhase, dayType: DayType, swapState: SwapState): NutritionPlan {
     const basePlan = this.buildPlanFromTemplate(phase, dayType, swapState);
-    return {
-      ...basePlan,
-      meals: cached.meals,
-      lastUpdatedAt: cached.lastUpdatedAt
-    };
-  }
+    const excluded = new Set(basePlan.excludedFoods ?? []);
+    const availableFoods = allFoods.filter((food) => !excluded.has(food));
+    const preWorkoutIndex = basePlan.meals.findIndex((meal) => meal.name === MealName.PreWorkout);
+    const preWorkoutMealIndex = preWorkoutIndex === -1 ? undefined : preWorkoutIndex;
 
-  /**
-   * Re-key the cached variants for the given (phase × day-type) pairs against
-   * the current templates *without* re-optimizing. Each in-scope entry's swap
-   * state is inferred from the foods actually present in its meals — the same
-   * ground truth `getOptimizedPlan` reads — and the entry is rewritten under
-   * the key that state produces. Entries whose meals reference a
-   * food that no longer exists or is no longer allocatable (e.g.
-   * `maxServingAmountPerPlan: 0`) are dropped, as are entries that collide on
-   * a key already claimed. Keys outside the scoped pairs are
-   * preserved verbatim. Use after a template edit that changes the swap-toggle
-   * shape (adding/removing a toggle, retiring a food) but leaves the meals
-   * themselves valid.
-   *
-   * @param variants - The full variant record to reconcile.
-   * @param pairs - The (phase × day-type) pairs whose entries to reconcile.
-   */
-  reconcileVariants(
-    variants: Record<string, NutritionPlan>,
-    pairs: VariantPair[]
-  ): ReconcileResult {
-    const foodsById = new Map(allFoods.map((food) => [food.id, food]));
-    const prefixes = pairs.map((pair) => ({
-      ...pair,
-      prefix: [pair.phase, pair.dayType, ''].join(KEY_SEPARATOR)
-    }));
+    const { optimizedPlan } = nutritionPlanOptimizer.optimize({
+      targetPlan: basePlan,
+      availableFoods,
+      preWorkoutMealIndex
+    });
 
-    const result: Record<string, NutritionPlan> = {};
-    for (const [key, plan] of Object.entries(variants)) {
-      if (!prefixes.some(({ prefix }) => key.startsWith(prefix))) result[key] = plan;
-    }
-
-    const report: ReconcileResult = {
-      variants: result,
-      remapped: [],
-      unchanged: [],
-      prunedStale: [],
-      prunedCollision: [],
-      missing: []
-    };
-
-    for (const { phase, dayType, prefix } of prefixes) {
-      const validKeys = new Set(this.enumerateAll(phase, dayType).map((entry) => entry.key));
-      const claimedBy = new Map<string, string>();
-
-      for (const [oldKey, plan] of Object.entries(variants)) {
-        if (!oldKey.startsWith(prefix)) continue;
-
-        const staleReason = this.findUnusableFood(plan, foodsById);
-        if (staleReason !== undefined) {
-          report.prunedStale.push({ key: oldKey, reason: staleReason });
-          continue;
-        }
-
-        const swapState = this.inferSwapState(phase, dayType, plan);
-        const newKey = this.buildKey(phase, dayType, swapState);
-        if (!validKeys.has(newKey)) {
-          report.prunedStale.push({
-            key: oldKey,
-            reason: `resolves to non-template key ${newKey}`
-          });
-          continue;
-        }
-        if (claimedBy.has(newKey)) {
-          report.prunedCollision.push({ key: oldKey, target: newKey });
-          continue;
-        }
-
-        claimedBy.set(newKey, oldKey);
-        result[newKey] = newKey === oldKey ? plan : { ...plan, id: newKey };
-        if (newKey === oldKey) report.unchanged.push(oldKey);
-        else report.remapped.push({ from: oldKey, to: newKey });
-      }
-
-      for (const validKey of validKeys) {
-        if (!claimedBy.has(validKey)) report.missing.push(validKey);
-      }
-    }
-
-    return report;
-  }
-
-  /**
-   * Infer the swap state of a cached plan from the foods present in its meals.
-   * An optional food is ON when it appears; a category food is ON when its
-   * alternate appears, OFF when its default appears (or when neither does, so
-   * the meals — which are identical either way — land under a deterministic
-   * key).
-   *
-   * @param phase
-   * @param dayType
-   * @param plan
-   */
-  private inferSwapState(phase: DietPhase, dayType: DayType, plan: NutritionPlan): SwapState {
-    const { optionalFoods, categoryFoods } = planTemplates[phase][dayType];
-    const usedIds = new Set<string>();
-    for (const meal of plan.meals) {
-      for (const item of meal.items) usedIds.add(item.food.id);
-    }
-
-    const optionalState: Record<string, boolean> = {};
-    for (const { food } of optionalFoods) {
-      optionalState[food.id] = usedIds.has(food.id);
-    }
-
-    const categoryState: Partial<Record<FoodCategory, boolean>> = {};
-    for (const { category, alternateFood } of categoryFoods) {
-      categoryState[category] = usedIds.has(alternateFood.id);
-    }
-
-    return { optionalFoods: optionalState, categoryFoods: categoryState };
-  }
-
-  /**
-   * Return a human-readable reason if the plan's meals reference a food that
-   * is no longer usable — either deleted from the food module or capped to
-   * zero servings per plan — otherwise `undefined`.
-   *
-   * @param plan
-   * @param foodsById - Current food definitions keyed by id.
-   */
-  private findUnusableFood(plan: NutritionPlan, foodsById: Map<string, Food>): string | undefined {
-    for (const meal of plan.meals) {
-      for (const { food } of meal.items) {
-        const current = foodsById.get(food.id);
-        if (current === undefined) return `${food.id} (no longer defined)`;
-        if (current.maxServingAmountPerPlan === 0) return `${food.id} (maxServingAmountPerPlan 0)`;
-      }
-    }
-    return undefined;
+    return { ...optimizedPlan, id: basePlan.id, title: basePlan.title };
   }
 }
 

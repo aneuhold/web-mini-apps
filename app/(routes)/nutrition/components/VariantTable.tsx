@@ -6,7 +6,7 @@ import MacroCells from './MacroCells';
 
 /**
  * Render the targets summary, per-food totals, and meal table for a
- * concrete `NutritionPlan` — typically the cached optimized output for the
+ * concrete `NutritionPlan` — typically the runtime-optimized output for the
  * active swap state.
  *
  * @param props
@@ -23,7 +23,7 @@ const VariantTable = ({ plan }: { plan: NutritionPlan }) => {
       <section aria-label={`${plan.title} targets`}>
         <h2>
           Daily Targets
-          {lastUpdated && <small> · Last optimized: {lastUpdated}</small>}
+          {lastUpdated && <small> · Template last updated: {lastUpdated}</small>}
         </h2>
         <dl>
           <dt>Calories</dt>

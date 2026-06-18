@@ -284,10 +284,9 @@ export interface NutritionPlan {
   meals: Meal[];
   notes?: string;
   /**
-   * ISO timestamp stamped by `nutrition:optimize` when this variant was last
-   * regenerated. Hand-authored templates in `planTemplates.ts` initialize
-   * it (e.g. to the date the template was authored); the optimizer
-   * overwrites it on each regeneration.
+   * ISO timestamp set on the hand-authored template in `planTemplates.ts`
+   * (e.g. the date the template was last edited). It flows through the
+   * runtime optimizer unchanged onto the rendered variant.
    */
   lastUpdatedAt: string;
 }

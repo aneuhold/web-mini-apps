@@ -13,7 +13,6 @@
     "lint": "eslint .",
     "test": "vitest run",
     "nutrition:meals": "tsx 'app/(routes)/nutrition/scripts/printMealPlans.ts'",
-    "nutrition:optimize": "tsx 'app/(routes)/nutrition/scripts/optimizeMealPlan.ts'",
     "nutrition:targets": "tsx 'app/(routes)/nutrition/scripts/analyzeCalorieTargets.ts'"
   },
   "dependencies": {
