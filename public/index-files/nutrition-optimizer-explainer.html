@@ -112,12 +112,22 @@
   .toc a { text-decoration:none; }
   .num-line { position:relative; height:74px; margin:12px 0 4px; }
   .footnote { font-size:13px; color:var(--muted); }
+  a.back {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:8px 14px; border:1px solid var(--line); border-radius:9px;
+    background:var(--panel-2); color:var(--ink); text-decoration:none;
+    font-size:14px; font-weight:600; transition:border-color .15s ease, transform .15s ease;
+  }
+  a.back:hover { border-color:var(--accent); transform:translateX(-2px); }
+  a.back .arrow { color:var(--accent); font-size:18px; line-height:1; }
   .swatch { font-family:var(--mono); }
   .big-num { font:700 30px var(--mono); }
 </style>
 </head>
 <body>
 <div class="wrap">
+
+<a class="back" href="/nutrition/" style="margin-top:26px"><span class="arrow">←</span> Back to Nutrition Plans</a>
 
 <header class="hero">
   <p class="kicker">Nutrition Plan Optimizer · Visual Explainer</p>
@@ -624,6 +634,8 @@ q = n · step is valid  ⇔  ∃ k ∈ [1, numMeals]  such that  k·minUnits ≤
   weights in the widgets mirror the real code; the two-food landscape uses an illustrative pantry so
   the math is visible in 2D. Open this file directly in a browser — it has no dependencies.
 </p>
+
+<a class="back" href="/nutrition/" style="margin-top:24px"><span class="arrow">←</span> Back to Nutrition Plans</a>
 
 </div>
 
