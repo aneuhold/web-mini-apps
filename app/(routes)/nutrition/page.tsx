@@ -7,10 +7,10 @@ import VariantSection from './components/VariantSection';
 import type { NutritionViewState } from './services/nutritionLocalData';
 import nutritionLocalData from './services/nutritionLocalData';
 import type { SwapState } from './services/nutritionVariants';
-import { DAY_TYPE_LABEL, DayType, DietPhase } from './util/types';
+import nutritionVariants from './services/nutritionVariants';
+import { DAY_TYPE_LABEL, DietPhase } from './util/types';
 
 const PHASE_ORDER: DietPhase[] = [DietPhase.Cutting, DietPhase.Bulking, DietPhase.Maintenance];
-const DAY_ORDER: DayType[] = [DayType.Training, DayType.NonTraining];
 
 /**
  * Nutrition plans page. Two stacked tab strips choose the (phase × day-type)
@@ -40,6 +40,15 @@ export default function NutritionPage() {
 
   const { swapStates, activePhase, activeDayType } = viewState;
 
+  // Day types vary by phase (only Maintenance offers the camping day), so the
+  // active day type may not exist under the active phase after a phase switch —
+  // fall back to the phase's first available day type for rendering.
+  const dayTypes = nutritionVariants.availableDayTypes(activePhase);
+  const effectiveDayType = dayTypes.includes(activeDayType) ? activeDayType : dayTypes[0];
+  const swapState =
+    swapStates[activePhase][effectiveDayType] ??
+    nutritionVariants.defaultSwapState(activePhase, effectiveDayType);
+
   const updateSwapState = (next: SwapState): void => {
     setViewState((prev) => ({
       ...prev,
@@ -47,7 +56,7 @@ export default function NutritionPage() {
         ...prev.swapStates,
         [prev.activePhase]: {
           ...prev.swapStates[prev.activePhase],
-          [prev.activeDayType]: next
+          [effectiveDayType]: next
         }
       }
     }));
@@ -80,8 +89,8 @@ export default function NutritionPage() {
       </nav>
 
       <nav aria-label="Day type" data-day-tabs role="tablist">
-        {DAY_ORDER.map((dayType) => {
-          const isActive = dayType === activeDayType;
+        {dayTypes.map((dayType) => {
+          const isActive = dayType === effectiveDayType;
           return (
             <button
               key={dayType}
@@ -100,10 +109,10 @@ export default function NutritionPage() {
 
       <div data-phase-group>
         <VariantSection
-          key={`${activePhase}-${activeDayType}`}
+          key={`${activePhase}-${effectiveDayType}`}
           phase={activePhase}
-          dayType={activeDayType}
-          swapState={swapStates[activePhase][activeDayType]}
+          dayType={effectiveDayType}
+          swapState={swapState}
           onSwapStateChange={updateSwapState}
         />
       </div>

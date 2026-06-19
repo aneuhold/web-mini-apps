@@ -14,6 +14,21 @@ export const chickenBreast: Food = {
   excludedMealNames: [MealName.PreWorkout, MealName.Break]
 };
 
+/**
+ * Same chicken breast as `chickenBreast`, but barred from every feeding past
+ * lunch. Used only by the maintenance "training + active camping" template,
+ * where chicken must be eaten earlier in the day; the post-lunch meals
+ * (pre-workout, dinner, the 9pm evening snack) are added to the standard
+ * break/pre-workout exclusions. Kept out of `allFoods` so it never competes
+ * with the standard chicken in other plans — it enters the optimizer only via
+ * that template's `requiredFoods`.
+ */
+export const campingChickenBreast: Food = {
+  ...chickenBreast,
+  id: 'campingChickenBreast',
+  excludedMealNames: [MealName.Break, MealName.PreWorkout, MealName.Dinner, MealName.EveningSnack]
+};
+
 export const bodyStrongWheyChocolate: Food = {
   id: 'bodyStrongWheyChocolate',
   name: 'BodyStrong Whey, Chocolate',

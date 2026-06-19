@@ -1,3 +1,4 @@
+import type { PlanTemplate } from '../plans/planTemplates';
 import { planTemplates } from '../plans/planTemplates';
 import { allFoods } from '../util/foods';
 import type { Food, FoodTotal, NutritionPlan } from '../util/types';
@@ -20,7 +21,7 @@ export type SwapState = {
  * state means editing one combination's toggles never disturbs another's
  * cached variants.
  */
-export type AllSwapStates = Record<DietPhase, Record<DayType, SwapState>>;
+export type AllSwapStates = Record<DietPhase, Partial<Record<DayType, SwapState>>>;
 
 const KEY_SEPARATOR = ':';
 const PART_SEPARATOR = ',';
@@ -43,6 +44,32 @@ type Toggle = { kind: 'optional'; foodId: string } | { kind: 'category'; categor
  */
 class NutritionVariants {
   /**
+   * Return the plan template for a (phase × day-type), throwing when the
+   * combination has no template defined. Not every phase defines every day
+   * type (the day-type map is `Partial`), so this guards the lookups below.
+   *
+   * @param phase
+   * @param dayType
+   */
+  getTemplate(phase: DietPhase, dayType: DayType): PlanTemplate {
+    const template = planTemplates[phase][dayType];
+    if (template === undefined) {
+      throw new Error(`No plan template for ${phase} · ${dayType}`);
+    }
+    return template;
+  }
+
+  /**
+   * List the day types that have a template defined for a phase, in
+   * `DayType` enum declaration order.
+   *
+   * @param phase
+   */
+  availableDayTypes(phase: DietPhase): DayType[] {
+    return Object.values(DayType).filter((dayType) => planTemplates[phase][dayType] !== undefined);
+  }
+
+  /**
    * Build the variant key from a (phase, dayType, swapState)
    * triple. Parts are sorted alphabetically so the same logical state
    * always produces the same key.
@@ -52,7 +79,7 @@ class NutritionVariants {
    * @param swapState
    */
   buildKey(phase: DietPhase, dayType: DayType, swapState: SwapState): string {
-    const template = planTemplates[phase][dayType];
+    const template = this.getTemplate(phase, dayType);
     const parts: string[] = [];
 
     for (const { food } of template.optionalFoods) {
@@ -77,7 +104,7 @@ class NutritionVariants {
    * @param dayType
    */
   defaultSwapState(phase: DietPhase, dayType: DayType): SwapState {
-    const template = planTemplates[phase][dayType];
+    const template = this.getTemplate(phase, dayType);
     const optionalFoods: Record<string, boolean> = {};
     for (const { food } of template.optionalFoods) {
       optionalFoods[food.id] = false;
@@ -94,20 +121,15 @@ class NutritionVariants {
    * via `defaultSwapState`.
    */
   defaultAllSwapStates(): AllSwapStates {
-    return {
-      [DietPhase.Cutting]: {
-        [DayType.Training]: this.defaultSwapState(DietPhase.Cutting, DayType.Training),
-        [DayType.NonTraining]: this.defaultSwapState(DietPhase.Cutting, DayType.NonTraining)
-      },
-      [DietPhase.Bulking]: {
-        [DayType.Training]: this.defaultSwapState(DietPhase.Bulking, DayType.Training),
-        [DayType.NonTraining]: this.defaultSwapState(DietPhase.Bulking, DayType.NonTraining)
-      },
-      [DietPhase.Maintenance]: {
-        [DayType.Training]: this.defaultSwapState(DietPhase.Maintenance, DayType.Training),
-        [DayType.NonTraining]: this.defaultSwapState(DietPhase.Maintenance, DayType.NonTraining)
+    const states = {} as AllSwapStates;
+    for (const phase of Object.values(DietPhase)) {
+      const dayStates: Partial<Record<DayType, SwapState>> = {};
+      for (const dayType of this.availableDayTypes(phase)) {
+        dayStates[dayType] = this.defaultSwapState(phase, dayType);
       }
-    };
+      states[phase] = dayStates;
+    }
+    return states;
   }
 
   /**
@@ -120,7 +142,7 @@ class NutritionVariants {
    * @param dayType
    */
   enumerateAll(phase: DietPhase, dayType: DayType): { key: string; swapState: SwapState }[] {
-    const template = planTemplates[phase][dayType];
+    const template = this.getTemplate(phase, dayType);
     const toggles: Toggle[] = [
       ...template.optionalFoods.map(({ food }): Toggle => ({ kind: 'optional', foodId: food.id })),
       ...template.categoryFoods.map(({ category }): Toggle => ({ kind: 'category', category }))
@@ -156,8 +178,10 @@ class NutritionVariants {
    * @param swapState
    */
   buildPlanFromTemplate(phase: DietPhase, dayType: DayType, swapState: SwapState): NutritionPlan {
-    const { template, optionalFoods, categoryFoods } = planTemplates[phase][dayType];
-    const excludedFoods: Food[] = [];
+    const { template, optionalFoods, categoryFoods } = this.getTemplate(phase, dayType);
+    // Seed with the template's own always-excluded foods (e.g. the standard
+    // chicken on the camping day, where only the camping chicken is allowed).
+    const excludedFoods: Food[] = [...(template.excludedFoods ?? [])];
     const requiredFoods: FoodTotal[] = [];
 
     for (const { food, requiredDailyQuantity } of optionalFoods) {

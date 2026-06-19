@@ -289,7 +289,9 @@ class NutritionStatsCalculator {
     const surplus = this.dailyDelta(bodyweightLb, bulkRatePercent);
     for (const phase of Object.values(DietPhase)) {
       for (const dayType of Object.values(DayType)) {
-        const { template } = planTemplates[phase][dayType];
+        const entry = planTemplates[phase][dayType];
+        if (entry === undefined) continue;
+        const { template } = entry;
         const maintenance = this.lookupMaintenance(bodyweightLb, template.activityLevel);
         let recommended = maintenance;
         if (phase === DietPhase.Cutting) recommended = Math.round(maintenance - deficit);

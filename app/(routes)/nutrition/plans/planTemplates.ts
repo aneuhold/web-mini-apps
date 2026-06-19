@@ -1,5 +1,6 @@
 import {
   almonds,
+  campingChickenBreast,
   chickenBreast,
   dannonLightFitGreekBlueberry,
   jifChunkyPB,
@@ -63,9 +64,11 @@ export type CategoryFood = {
 /**
  * Per-(phase × day-type) plan templates plus their swap lists. Each (phase ×
  * day-type) keeps its own independent swap lists so editing one combination
- * never invalidates another combination's cached variants.
+ * never invalidates another combination's cached variants. The day-type map is
+ * `Partial` because not every phase defines every day type — e.g. only
+ * Maintenance offers the "training + active camping" day.
  */
-export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
+export const planTemplates: Record<DietPhase, Partial<Record<DayType, PlanTemplate>>> = {
   [DietPhase.Cutting]: {
     [DayType.Training]: {
       template: {
@@ -218,6 +221,47 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       },
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
+        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
+        { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
+        { food: almonds, label: 'Almonds' },
+        { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
+        { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
+        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' }
+      ],
+      categoryFoods: [
+        {
+          category: FoodCategory.PeanutButter,
+          defaultFood: krogerChunkyPB,
+          alternateFood: jifChunkyPB,
+          label: 'JIF PB (instead of Kroger)'
+        }
+      ]
+    },
+    [DayType.TrainingCamping]: {
+      template: {
+        id: 'maintenance-training-camping-template',
+        title: 'Maintenance · Training + Active Camping Day',
+        phase: DietPhase.Maintenance,
+        bodyweightLb: 183,
+        // One activity level above the standard maintenance training day
+        // (Light → Moderate): RP Table 10.1 maintenance at 183 lb / Moderate.
+        calorieTarget: 2500,
+        activityLevel: ActivityLevel.Moderate,
+        lastUpdatedAt: '2026-06-19T00:00:00.000Z',
+        // The standard chicken is always off the table here so only the
+        // camping chicken (barred from post-lunch meals) can be selected.
+        excludedFoods: [chickenBreast],
+        meals: [
+          { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
+          { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
+          { time: '11:00 AM', name: MealName.Lunch, items: [], calorieShareWeight: 1.15 },
+          { time: '2:40 PM', name: MealName.PreWorkout, items: [] },
+          { time: '4:50 PM', name: MealName.Dinner, items: [] },
+          { time: '9:00 PM', name: MealName.EveningSnack, items: [] }
+        ]
+      },
+      optionalFoods: [
+        { food: campingChickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
         { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
         { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
         { food: almonds, label: 'Almonds' },

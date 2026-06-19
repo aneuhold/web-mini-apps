@@ -86,6 +86,10 @@ class NutritionLocalData {
       if (!isPlainObject(storedPhase)) continue;
 
       for (const dayType of Object.values(DayType)) {
+        // The phase may not define this day type — leave nothing to merge onto.
+        const freshDay = fresh[phase][dayType];
+        if (freshDay === undefined) continue;
+
         const storedDay = storedPhase[dayType];
         if (!isPlainObject(storedDay)) continue;
 
@@ -94,7 +98,7 @@ class NutritionLocalData {
         if (isPlainObject(optionalFoods)) {
           for (const [foodId, on] of Object.entries(optionalFoods)) {
             if (typeof on === 'boolean') {
-              fresh[phase][dayType].optionalFoods[foodId] = on;
+              freshDay.optionalFoods[foodId] = on;
             }
           }
         }
@@ -104,7 +108,7 @@ class NutritionLocalData {
         if (isPlainObject(categoryFoods)) {
           for (const [category, on] of Object.entries(categoryFoods)) {
             if (typeof on === 'boolean' && isFoodCategory(category)) {
-              fresh[phase][dayType].categoryFoods[category] = on;
+              freshDay.categoryFoods[category] = on;
             }
           }
         }

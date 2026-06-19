@@ -158,11 +158,10 @@ const printAnalysis = (rows: AnalysisRow[], latestAvgLb: number): void => {
 
   const drifts = Object.values(DietPhase)
     .flatMap((phase) =>
-      Object.values(DayType).map((dayType) => ({
-        phase,
-        dayType,
-        template: planTemplates[phase][dayType].template
-      }))
+      Object.values(DayType).flatMap((dayType) => {
+        const entry = planTemplates[phase][dayType];
+        return entry === undefined ? [] : [{ phase, dayType, template: entry.template }];
+      })
     )
     .map((t) => ({ ...t, drift: Math.abs(t.template.bodyweightLb - latestAvgLb) }))
     .filter((t) => t.drift >= 3);

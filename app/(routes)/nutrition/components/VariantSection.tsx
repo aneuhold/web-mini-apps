@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { planTemplates } from '../plans/planTemplates';
 import type { SwapState } from '../services/nutritionVariants';
 import nutritionVariants from '../services/nutritionVariants';
 import { DAY_TYPE_LABEL, DayType, DietPhase } from '../util/types';
@@ -22,7 +21,7 @@ const VariantSection = ({
   swapState: SwapState;
   onSwapStateChange: (next: SwapState) => void;
 }) => {
-  const template = planTemplates[phase][dayType];
+  const template = nutritionVariants.getTemplate(phase, dayType);
   const plan = useMemo(
     () => nutritionVariants.getOptimizedPlan(phase, dayType, swapState),
     [phase, dayType, swapState]

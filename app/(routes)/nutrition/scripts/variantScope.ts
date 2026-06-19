@@ -1,5 +1,6 @@
 import { checkbox, select } from '@inquirer/prompts';
 import { parseArgs } from 'util';
+import { planTemplates } from '../plans/planTemplates';
 import type { SwapState } from '../services/nutritionVariants';
 import nutritionVariants from '../services/nutritionVariants';
 import { DayType, DietPhase } from '../util/types';
@@ -12,6 +13,7 @@ const DAY_VALUES: DayType[] = Object.values(DayType);
  */
 const DAY_TYPE_CLI_FLAG: Record<DayType, string> = {
   [DayType.Training]: 'training',
+  [DayType.TrainingCamping]: 'training-camping',
   [DayType.NonTraining]: 'non-training'
 };
 
@@ -85,10 +87,13 @@ export const parseCliArgs = (): CliArgs => {
  * @param phase
  * @param dayType
  */
-const expand = (phase: DietPhase, dayType: DayType): VariantScope[] =>
-  nutritionVariants
+const expand = (phase: DietPhase, dayType: DayType): VariantScope[] => {
+  // Not every phase defines every day type — skip combinations with no template.
+  if (planTemplates[phase][dayType] === undefined) return [];
+  return nutritionVariants
     .enumerateAll(phase, dayType)
     .map(({ key, swapState }) => ({ phase, dayType, key, swapState }));
+};
 
 /**
  * Prompt for a phase. `undefined` means "All".
