@@ -10,8 +10,16 @@ export const chickenBreast: Food = {
   maxServingAmountPerPlan: 400,
   allowedStepServingAmountPerMeal: 25,
   // 200g chunks belong in the substantial meals, not the quick break snack
-  // or the carb-focused pre-workout feeding.
-  excludedMealNames: [MealName.PreWorkout, MealName.Break]
+  // or the carb-focused pre-workout feeding. CampDinner / CampLateSnack are the
+  // camping template's evening slots — keeping chicken out of them enforces the
+  // "no chicken past lunch" rule for that template without touching the regular
+  // Dinner slot other templates use.
+  excludedMealNames: [
+    MealName.PreWorkout,
+    MealName.Break,
+    MealName.CampDinner,
+    MealName.CampLateSnack
+  ]
 };
 
 export const bodyStrongWheyChocolate: Food = {

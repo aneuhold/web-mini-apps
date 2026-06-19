@@ -97,14 +97,26 @@ class NutritionVariants {
     return {
       [DietPhase.Cutting]: {
         [DayType.Training]: this.defaultSwapState(DietPhase.Cutting, DayType.Training),
+        [DayType.TrainingCamping]: this.defaultSwapState(
+          DietPhase.Cutting,
+          DayType.TrainingCamping
+        ),
         [DayType.NonTraining]: this.defaultSwapState(DietPhase.Cutting, DayType.NonTraining)
       },
       [DietPhase.Bulking]: {
         [DayType.Training]: this.defaultSwapState(DietPhase.Bulking, DayType.Training),
+        [DayType.TrainingCamping]: this.defaultSwapState(
+          DietPhase.Bulking,
+          DayType.TrainingCamping
+        ),
         [DayType.NonTraining]: this.defaultSwapState(DietPhase.Bulking, DayType.NonTraining)
       },
       [DietPhase.Maintenance]: {
         [DayType.Training]: this.defaultSwapState(DietPhase.Maintenance, DayType.Training),
+        [DayType.TrainingCamping]: this.defaultSwapState(
+          DietPhase.Maintenance,
+          DayType.TrainingCamping
+        ),
         [DayType.NonTraining]: this.defaultSwapState(DietPhase.Maintenance, DayType.NonTraining)
       }
     };

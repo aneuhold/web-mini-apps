@@ -12,6 +12,7 @@ const DAY_VALUES: DayType[] = Object.values(DayType);
  */
 const DAY_TYPE_CLI_FLAG: Record<DayType, string> = {
   [DayType.Training]: 'training',
+  [DayType.TrainingCamping]: 'training-camping',
   [DayType.NonTraining]: 'non-training'
 };
 

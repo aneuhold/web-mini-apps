@@ -1,5 +1,6 @@
 import {
   almonds,
+  banana,
   chickenBreast,
   dannonLightFitGreekBlueberry,
   jifChunkyPB,
@@ -100,6 +101,40 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         }
       ]
     },
+    [DayType.TrainingCamping]: {
+      template: {
+        id: 'cutting-training-camping-template',
+        title: 'Cutting · Training + Active Camping',
+        phase: DietPhase.Cutting,
+        bodyweightLb: 183,
+        calorieTarget: 2000,
+        activityLevel: ActivityLevel.Moderate,
+        lastUpdatedAt: '2026-06-19T00:00:00.000Z',
+        meals: [
+          { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
+          { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
+          { time: '11:00 AM', name: MealName.Lunch, items: [], calorieShareWeight: 1.15 },
+          { time: '2:40 PM', name: MealName.PreWorkout, items: [] },
+          { time: '4:50 PM', name: MealName.CampDinner, items: [] },
+          { time: '9:00 PM', name: MealName.CampLateSnack, items: [] }
+        ]
+      },
+      optionalFoods: [
+        { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
+        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
+        { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
+        { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
+        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' }
+      ],
+      categoryFoods: [
+        {
+          category: FoodCategory.PeanutButter,
+          defaultFood: krogerChunkyPB,
+          alternateFood: jifChunkyPB,
+          label: 'JIF PB (instead of Kroger)'
+        }
+      ]
+    },
     [DayType.NonTraining]: {
       template: {
         id: 'cutting-non-training-template',
@@ -166,6 +201,40 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         }
       ]
     },
+    [DayType.TrainingCamping]: {
+      template: {
+        id: 'bulking-training-camping-template',
+        title: 'Bulking · Training + Active Camping',
+        phase: DietPhase.Bulking,
+        bodyweightLb: 183,
+        calorieTarget: 2850,
+        activityLevel: ActivityLevel.Moderate,
+        lastUpdatedAt: '2026-06-19T00:00:00.000Z',
+        meals: [
+          { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
+          { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
+          { time: '11:00 AM', name: MealName.Lunch, items: [], calorieShareWeight: 1.15 },
+          { time: '2:40 PM', name: MealName.PreWorkout, items: [] },
+          { time: '4:50 PM', name: MealName.CampDinner, items: [] },
+          { time: '9:00 PM', name: MealName.CampLateSnack, items: [] }
+        ]
+      },
+      optionalFoods: [
+        { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
+        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
+        { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
+        { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
+        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' }
+      ],
+      categoryFoods: [
+        {
+          category: FoodCategory.PeanutButter,
+          defaultFood: krogerChunkyPB,
+          alternateFood: jifChunkyPB,
+          label: 'JIF PB (instead of Kroger)'
+        }
+      ]
+    },
     [DayType.NonTraining]: {
       template: {
         id: 'bulking-non-training-template',
@@ -207,7 +276,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         bodyweightLb: 183,
         calorieTarget: 2200,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-06-18T00:00:00.000Z',
+        lastUpdatedAt: '2026-06-19T00:00:00.000Z',
         meals: [
           { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
           { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
@@ -223,7 +292,45 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: almonds, label: 'Almonds' },
         { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
         { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
-        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' }
+        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
+        { food: banana, label: 'Bananas' }
+      ],
+      categoryFoods: [
+        {
+          category: FoodCategory.PeanutButter,
+          defaultFood: krogerChunkyPB,
+          alternateFood: jifChunkyPB,
+          label: 'JIF PB (instead of Kroger)'
+        }
+      ]
+    },
+    [DayType.TrainingCamping]: {
+      template: {
+        id: 'maintenance-training-camping-template',
+        title: 'Maintenance · Training + Active Camping',
+        phase: DietPhase.Maintenance,
+        bodyweightLb: 183,
+        calorieTarget: 2500,
+        activityLevel: ActivityLevel.Moderate,
+        lastUpdatedAt: '2026-06-19T00:00:00.000Z',
+        meals: [
+          { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
+          { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
+          { time: '11:00 AM', name: MealName.Lunch, items: [], calorieShareWeight: 1.15 },
+          { time: '2:40 PM', name: MealName.PreWorkout, items: [] },
+          { time: '4:50 PM', name: MealName.CampDinner, items: [] },
+          { time: '9:00 PM', name: MealName.CampLateSnack, items: [] }
+        ]
+      },
+      optionalFoods: [
+        { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
+        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
+        { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
+        { food: almonds, label: 'Almonds' },
+        { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
+        { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
+        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
+        { food: banana, label: 'Bananas' }
       ],
       categoryFoods: [
         {
@@ -242,7 +349,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         bodyweightLb: 183,
         calorieTarget: 1950,
         activityLevel: ActivityLevel.NonTraining,
-        lastUpdatedAt: '2026-06-18T00:00:00.000Z',
+        lastUpdatedAt: '2026-06-19T00:00:00.000Z',
         meals: [
           { time: 'Meal 1', name: MealName.Meal1, items: [] },
           { time: 'Meal 2', name: MealName.Meal2, items: [] },
@@ -256,7 +363,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: almonds, label: 'Almonds' },
         { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
         { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
-        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' }
+        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
+        { food: banana, label: 'Bananas' }
       ],
       categoryFoods: [
         {
