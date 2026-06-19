@@ -10,7 +10,7 @@ import type { SwapState } from './services/nutritionVariants';
 import { DAY_TYPE_LABEL, DayType, DietPhase } from './util/types';
 
 const PHASE_ORDER: DietPhase[] = [DietPhase.Cutting, DietPhase.Bulking, DietPhase.Maintenance];
-const DAY_ORDER: DayType[] = [DayType.Training, DayType.NonTraining];
+const DAY_ORDER: DayType[] = [DayType.Training, DayType.TrainingCamping, DayType.NonTraining];
 
 /**
  * Nutrition plans page. Two stacked tab strips choose the (phase × day-type)
