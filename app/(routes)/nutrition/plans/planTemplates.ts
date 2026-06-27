@@ -177,9 +177,9 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         title: 'Bulking · Training Day',
         phase: DietPhase.Bulking,
         bodyweightLb: 183,
-        calorieTarget: 2550,
+        calorieTarget: 2540,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-06-27T00:00:00.000Z',
+        lastUpdatedAt: '2026-06-27T01:00:00.000Z',
         // Green beans, peas, and corn are kept out of every bulking variant: on a
         // surplus the rest of the food already fills me up, and these canned
         // veggies are filling enough that adding them would make the meals take
@@ -218,9 +218,9 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         title: 'Bulking · Training + Active Camping',
         phase: DietPhase.Bulking,
         bodyweightLb: 183,
-        calorieTarget: 2850,
+        calorieTarget: 2840,
         activityLevel: ActivityLevel.Moderate,
-        lastUpdatedAt: '2026-06-27T00:00:00.000Z',
+        lastUpdatedAt: '2026-06-27T01:00:00.000Z',
         // Green beans, peas, and corn are kept out of every bulking variant: on a
         // surplus the rest of the food already fills me up, and these canned
         // veggies are filling enough that adding them would make the meals take
@@ -260,9 +260,9 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         title: 'Bulking · Non-Training Day',
         phase: DietPhase.Bulking,
         bodyweightLb: 183,
-        calorieTarget: 2300,
+        calorieTarget: 2290,
         activityLevel: ActivityLevel.NonTraining,
-        lastUpdatedAt: '2026-06-27T00:00:00.000Z',
+        lastUpdatedAt: '2026-06-27T01:00:00.000Z',
         // Green beans, peas, and corn are kept out of every bulking variant: on a
         // surplus the rest of the food already fills me up, and these canned
         // veggies are filling enough that adding them would make the meals take
