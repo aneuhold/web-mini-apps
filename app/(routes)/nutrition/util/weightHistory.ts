@@ -15,6 +15,15 @@ export interface WeightEntry {
  * enough (daily or near-daily) to compute a moving average.
  */
 export const weightHistory: WeightEntry[] = [
+  { date: '2026-06-27', weightLb: 181.8 },
+  { date: '2026-06-26', weightLb: 181.6 },
+  { date: '2026-06-25', weightLb: 180.9 },
+  { date: '2026-06-24', weightLb: 181.2 },
+  { date: '2026-06-23', weightLb: 181.6 },
+  { date: '2026-06-22', weightLb: 179.8 },
+  { date: '2026-06-19', weightLb: 180.1 },
+  { date: '2026-06-18', weightLb: 180.9 },
+  { date: '2026-06-17', weightLb: 181.2 },
   { date: '2026-06-16', weightLb: 182.9 },
   { date: '2026-06-15', weightLb: 181.2 },
   { date: '2026-06-14', weightLb: 180.9 },

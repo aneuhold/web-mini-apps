@@ -169,7 +169,8 @@ class NutritionVariants {
    */
   buildPlanFromTemplate(phase: DietPhase, dayType: DayType, swapState: SwapState): NutritionPlan {
     const { template, optionalFoods, categoryFoods } = planTemplates[phase][dayType];
-    const excludedFoods: Food[] = [];
+    // Create a copy of the excluded foods so it doesn't modify the original.
+    const excludedFoods: Food[] = [...(template.excludedFoods ?? [])];
     const requiredFoods: FoodTotal[] = [];
 
     for (const { food, requiredDailyQuantity } of optionalFoods) {
