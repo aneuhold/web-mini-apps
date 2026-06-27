@@ -2,10 +2,13 @@ import {
   almonds,
   banana,
   chickenBreast,
+  cornCanned,
   dannonLightFitGreekBlueberry,
+  greenBeansCanned,
   jifChunkyPB,
   kindThinsPBDarkChocolate,
   krogerChunkyPB,
+  peasCanned,
   riceCakeAppleCinnamon,
   riceCakeWhiteCheddar,
   stringCheese
@@ -176,7 +179,12 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         bodyweightLb: 183,
         calorieTarget: 2550,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-06-18T00:00:00.000Z',
+        lastUpdatedAt: '2026-06-27T00:00:00.000Z',
+        // Green beans, peas, and corn are kept out of every bulking variant: on a
+        // surplus the rest of the food already fills me up, and these canned
+        // veggies are filling enough that adding them would make the meals take
+        // too long to eat.
+        excludedFoods: [greenBeansCanned, peasCanned, cornCanned],
         meals: [
           { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
           { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
@@ -188,9 +196,12 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
         { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
+        { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
+        { food: almonds, label: 'Almonds' },
         { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
         { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
-        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' }
+        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
+        { food: banana, label: 'Bananas' }
       ],
       categoryFoods: [
         {
@@ -209,7 +220,12 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         bodyweightLb: 183,
         calorieTarget: 2850,
         activityLevel: ActivityLevel.Moderate,
-        lastUpdatedAt: '2026-06-19T00:00:00.000Z',
+        lastUpdatedAt: '2026-06-27T00:00:00.000Z',
+        // Green beans, peas, and corn are kept out of every bulking variant: on a
+        // surplus the rest of the food already fills me up, and these canned
+        // veggies are filling enough that adding them would make the meals take
+        // too long to eat.
+        excludedFoods: [greenBeansCanned, peasCanned, cornCanned],
         meals: [
           { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
           { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
@@ -222,9 +238,12 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
         { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
+        { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
+        { food: almonds, label: 'Almonds' },
         { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
         { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
-        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' }
+        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
+        { food: banana, label: 'Bananas' }
       ],
       categoryFoods: [
         {
@@ -243,7 +262,12 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         bodyweightLb: 183,
         calorieTarget: 2300,
         activityLevel: ActivityLevel.NonTraining,
-        lastUpdatedAt: '2026-06-18T00:00:00.000Z',
+        lastUpdatedAt: '2026-06-27T00:00:00.000Z',
+        // Green beans, peas, and corn are kept out of every bulking variant: on a
+        // surplus the rest of the food already fills me up, and these canned
+        // veggies are filling enough that adding them would make the meals take
+        // too long to eat.
+        excludedFoods: [greenBeansCanned, peasCanned, cornCanned],
         meals: [
           { time: 'Meal 1', name: MealName.Meal1, items: [] },
           { time: 'Meal 2', name: MealName.Meal2, items: [] },
@@ -253,9 +277,12 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
         { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
+        { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
+        { food: almonds, label: 'Almonds' },
         { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
         { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
-        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' }
+        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
+        { food: banana, label: 'Bananas' }
       ],
       categoryFoods: [
         {
