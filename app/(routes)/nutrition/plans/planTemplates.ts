@@ -95,7 +95,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
         {
           food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Rice Cakes'
+          label: 'Signature Select Cheddar Rice Cakes'
         },
         { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' }
@@ -133,7 +133,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
         {
           food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Rice Cakes'
+          label: 'Signature Select Cheddar Rice Cakes'
         },
         { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' }
@@ -168,7 +168,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
         {
           food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Rice Cakes'
+          label: 'Signature Select Cheddar Rice Cakes'
         },
         { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' }
@@ -214,7 +214,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
         {
           food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Rice Cakes'
+          label: 'Signature Select Cheddar Rice Cakes'
         },
         { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
@@ -260,7 +260,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
         {
           food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Rice Cakes'
+          label: 'Signature Select Cheddar Rice Cakes'
         },
         { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
@@ -303,7 +303,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
         {
           food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Rice Cakes'
+          label: 'Signature Select Cheddar Rice Cakes'
         },
         { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
@@ -345,7 +345,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
         {
           food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Rice Cakes'
+          label: 'Signature Select Cheddar Rice Cakes'
         },
         { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
@@ -386,7 +386,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
         {
           food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Rice Cakes'
+          label: 'Signature Select Cheddar Rice Cakes'
         },
         { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
@@ -424,7 +424,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
         {
           food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Rice Cakes'
+          label: 'Signature Select Cheddar Rice Cakes'
         },
         { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
