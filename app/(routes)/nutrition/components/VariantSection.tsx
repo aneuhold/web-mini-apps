@@ -211,7 +211,7 @@ const VariantSection = ({
                       removeOverride(foodId);
                     }}
                   >
-                    X
+                    x
                   </button>
                 </span>
               );

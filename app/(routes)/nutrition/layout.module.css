@@ -275,16 +275,26 @@
   }
 
   [data-swap-controls] [data-override] button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* A comfortable square tap target; negative margins let it reach the pill's
+       padded edges without making the row taller. */
+    min-width: 2rem;
+    min-height: 2rem;
+    margin: -0.3rem -0.4rem -0.3rem 0;
     padding: 0;
     border: none;
+    border-radius: 6px;
     background: none;
     color: var(--text-muted);
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     line-height: 1;
     cursor: pointer;
   }
 
   [data-swap-controls] [data-override] button:hover {
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
     color: var(--accent);
   }
 
