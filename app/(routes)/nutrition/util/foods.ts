@@ -61,6 +61,13 @@ export const riceCakeWhiteCheddar: Food = {
   allowedStepServingAmountPerMeal: 1
 };
 
+export const riceCakeWhiteCheddarSignatureSelect: Food = {
+  id: 'riceCakeWhiteCheddarSignatureSelect',
+  name: 'Rice cake (Signature Select white cheddar)',
+  serving: { amount: 1, unitLabel: 'rice cake', calories: 45, protein: 1, carbs: 9, fat: 0.5 },
+  allowedStepServingAmountPerMeal: 1
+};
+
 export const riceCakeAppleCinnamon: Food = {
   id: 'riceCakeAppleCinnamon',
   name: 'Rice cake (apple cinnamon)',
@@ -209,6 +216,7 @@ export const allFoods: Food[] = [
   optimumNutritionGoldStandardWhey,
   caseinProteinShakeVanilla,
   riceCakeWhiteCheddar,
+  riceCakeWhiteCheddarSignatureSelect,
   riceCakeAppleCinnamon,
   banana,
   kindThinsPBDarkChocolate,
