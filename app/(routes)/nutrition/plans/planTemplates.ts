@@ -50,18 +50,16 @@ export type OptionalFood = {
 };
 
 /**
- * A toggle that swaps one food for another inside a `FoodCategory`. When the
- * toggle is OFF the `defaultFood` is allowed and the `alternateFood` is
- * excluded; when ON those roles flip. The category guarantees the optimizer
- * never picks both.
+ * A single-choice selection within a `FoodCategory`. The plan keeps exactly
+ * one of `foods` (the selected one is allowed, the rest excluded), so the
+ * optimizer never picks more than one. The category guarantees that mutual
+ * exclusion.
  */
 export type CategoryFood = {
   category: FoodCategory;
-  /** Used when the toggle is OFF. */
-  defaultFood: Food;
-  /** Used when the toggle is ON. */
-  alternateFood: Food;
-  /** Checkbox label, e.g. "ON Whey (instead of BodyStrong)". */
+  /** Selectable foods in this category; the first entry is the default. */
+  foods: Food[];
+  /** Dropdown label, e.g. "Peanut Butter". */
   label: string;
 };
 
@@ -103,9 +101,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       categoryFoods: [
         {
           category: FoodCategory.PeanutButter,
-          defaultFood: krogerChunkyPB,
-          alternateFood: jifChunkyPB,
-          label: 'JIF PB (instead of Kroger)'
+          foods: [krogerChunkyPB, jifChunkyPB],
+          label: 'Peanut Butter'
         }
       ]
     },
@@ -141,9 +138,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       categoryFoods: [
         {
           category: FoodCategory.PeanutButter,
-          defaultFood: krogerChunkyPB,
-          alternateFood: jifChunkyPB,
-          label: 'JIF PB (instead of Kroger)'
+          foods: [krogerChunkyPB, jifChunkyPB],
+          label: 'Peanut Butter'
         }
       ]
     },
@@ -176,9 +172,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       categoryFoods: [
         {
           category: FoodCategory.PeanutButter,
-          defaultFood: krogerChunkyPB,
-          alternateFood: jifChunkyPB,
-          label: 'JIF PB (instead of Kroger)'
+          foods: [krogerChunkyPB, jifChunkyPB],
+          label: 'Peanut Butter'
         }
       ]
     }
@@ -223,9 +218,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       categoryFoods: [
         {
           category: FoodCategory.PeanutButter,
-          defaultFood: krogerChunkyPB,
-          alternateFood: jifChunkyPB,
-          label: 'JIF PB (instead of Kroger)'
+          foods: [krogerChunkyPB, jifChunkyPB],
+          label: 'Peanut Butter'
         }
       ]
     },
@@ -269,9 +263,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       categoryFoods: [
         {
           category: FoodCategory.PeanutButter,
-          defaultFood: krogerChunkyPB,
-          alternateFood: jifChunkyPB,
-          label: 'JIF PB (instead of Kroger)'
+          foods: [krogerChunkyPB, jifChunkyPB],
+          label: 'Peanut Butter'
         }
       ]
     },
@@ -312,9 +305,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       categoryFoods: [
         {
           category: FoodCategory.PeanutButter,
-          defaultFood: krogerChunkyPB,
-          alternateFood: jifChunkyPB,
-          label: 'JIF PB (instead of Kroger)'
+          foods: [krogerChunkyPB, jifChunkyPB],
+          label: 'Peanut Butter'
         }
       ]
     }
@@ -354,9 +346,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       categoryFoods: [
         {
           category: FoodCategory.PeanutButter,
-          defaultFood: krogerChunkyPB,
-          alternateFood: jifChunkyPB,
-          label: 'JIF PB (instead of Kroger)'
+          foods: [krogerChunkyPB, jifChunkyPB],
+          label: 'Peanut Butter'
         }
       ]
     },
@@ -395,9 +386,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       categoryFoods: [
         {
           category: FoodCategory.PeanutButter,
-          defaultFood: krogerChunkyPB,
-          alternateFood: jifChunkyPB,
-          label: 'JIF PB (instead of Kroger)'
+          foods: [krogerChunkyPB, jifChunkyPB],
+          label: 'Peanut Butter'
         }
       ]
     },
@@ -433,9 +423,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       categoryFoods: [
         {
           category: FoodCategory.PeanutButter,
-          defaultFood: krogerChunkyPB,
-          alternateFood: jifChunkyPB,
-          label: 'JIF PB (instead of Kroger)'
+          foods: [krogerChunkyPB, jifChunkyPB],
+          label: 'Peanut Butter'
         }
       ]
     }

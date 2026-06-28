@@ -161,13 +161,28 @@
     font-weight: 500;
   }
 
-  [data-swap-list] {
+  [data-swap-group] {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  [data-swap-group] h4 {
+    margin: 0;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  [data-swap-controls] {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem 1rem;
   }
 
-  [data-swap-list] label {
+  [data-swap-controls] label {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
@@ -179,13 +194,49 @@
     cursor: pointer;
   }
 
-  [data-swap-list] label:hover {
+  [data-swap-controls] label:hover {
     border-color: var(--accent);
   }
 
-  [data-swap-list] input[type='checkbox'] {
+  [data-swap-controls] input[type='checkbox'] {
     accent-color: var(--accent);
     margin: 0;
+  }
+
+  /* Fixed-amount badge on a required add-on, e.g. "400 g". */
+  [data-swap-controls] [data-amount] {
+    padding: 0.05rem 0.4rem;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Category selection: a labelled dropdown rather than a checkbox. */
+  [data-swap-controls] label[data-select] > span {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  [data-swap-controls] select {
+    cursor: pointer;
+    padding: 0.2rem 0.5rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  [data-swap-controls] select:hover {
+    border-color: var(--accent);
   }
 
   [data-missing-variant] {

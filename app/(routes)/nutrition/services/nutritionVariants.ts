@@ -1,3 +1,4 @@
+import type { CategoryFood } from '../plans/planTemplates';
 import { planTemplates } from '../plans/planTemplates';
 import { allFoods } from '../util/foods';
 import type { Food, FoodTotal, NutritionPlan } from '../util/types';
@@ -7,12 +8,11 @@ import nutritionPlanOptimizer from './NutritionPlanOptimizer/nutritionPlanOptimi
 /**
  * Per-(phase × day-type) swap state. `optionalFoods` is keyed by `food.id`
  * with `true` meaning the food is included; `categoryFoods` is keyed by the
- * `FoodCategory` enum value with `true` meaning the alternate food is
- * selected (and `false` keeping the default food).
+ * `FoodCategory` enum value with the value being the selected food's `id`.
  */
 export type SwapState = {
   optionalFoods: Record<string, boolean>;
-  categoryFoods: Partial<Record<FoodCategory, boolean>>;
+  categoryFoods: Partial<Record<FoodCategory, string>>;
 };
 
 /**
@@ -33,8 +33,6 @@ const ASSIGN_SEPARATOR = '=';
  * edit) invalidates that template's cached variants automatically.
  */
 const OPTIMIZED_PLAN_STORAGE_PREFIX = 'v1-nutrition:optimized-plan:';
-
-type Toggle = { kind: 'optional'; foodId: string } | { kind: 'category'; category: FoodCategory };
 
 /**
  * Single entry point for everything variant-shaped: key building,
@@ -60,10 +58,9 @@ class NutritionVariants {
       parts.push(`${food.id}${ASSIGN_SEPARATOR}${on ? 'on' : 'off'}`);
     }
 
-    for (const { category, defaultFood, alternateFood } of template.categoryFoods) {
-      const useAlternate = swapState.categoryFoods[category];
-      const selected = useAlternate ? alternateFood : defaultFood;
-      parts.push(`${category}${ASSIGN_SEPARATOR}${selected.id}`);
+    for (const categoryFood of template.categoryFoods) {
+      const selected = this.selectedFood(categoryFood, swapState);
+      parts.push(`${categoryFood.category}${ASSIGN_SEPARATOR}${selected.id}`);
     }
 
     parts.sort();
@@ -82,9 +79,9 @@ class NutritionVariants {
     for (const { food } of template.optionalFoods) {
       optionalFoods[food.id] = false;
     }
-    const categoryFoods: Partial<Record<FoodCategory, boolean>> = {};
-    for (const { category } of template.categoryFoods) {
-      categoryFoods[category] = false;
+    const categoryFoods: Partial<Record<FoodCategory, string>> = {};
+    for (const { category, foods } of template.categoryFoods) {
+      categoryFoods[category] = foods[0].id;
     }
     return { optionalFoods, categoryFoods };
   }
@@ -133,26 +130,42 @@ class NutritionVariants {
    */
   enumerateAll(phase: DietPhase, dayType: DayType): { key: string; swapState: SwapState }[] {
     const template = planTemplates[phase][dayType];
-    const toggles: Toggle[] = [
-      ...template.optionalFoods.map(({ food }): Toggle => ({ kind: 'optional', foodId: food.id })),
-      ...template.categoryFoods.map(({ category }): Toggle => ({ kind: 'category', category }))
+
+    // Each axis is the list of mutations that set one toggle to one of its
+    // possible values: optional foods have two (off / on), category foods
+    // have one per selectable food. The variants are the cross product.
+    const axes: ((swapState: SwapState) => void)[][] = [
+      ...template.optionalFoods.map(({ food }) => [
+        (swapState: SwapState): void => {
+          swapState.optionalFoods[food.id] = false;
+        },
+        (swapState: SwapState): void => {
+          swapState.optionalFoods[food.id] = true;
+        }
+      ]),
+      ...template.categoryFoods.map(({ category, foods }) =>
+        foods.map((food) => (swapState: SwapState): void => {
+          swapState.categoryFoods[category] = food.id;
+        })
+      )
     ];
 
     const results: { key: string; swapState: SwapState }[] = [];
-    const total = 1 << toggles.length;
-    for (let mask = 0; mask < total; mask++) {
-      const swapState: SwapState = { optionalFoods: {}, categoryFoods: {} };
-      for (let bit = 0; bit < toggles.length; bit++) {
-        const on = (mask & (1 << bit)) !== 0;
-        const toggle = toggles[bit];
-        if (toggle.kind === 'optional') {
-          swapState.optionalFoods[toggle.foodId] = on;
-        } else {
-          swapState.categoryFoods[toggle.category] = on;
-        }
+    const walk = (axisIndex: number, current: SwapState): void => {
+      if (axisIndex === axes.length) {
+        results.push({ key: this.buildKey(phase, dayType, current), swapState: current });
+        return;
       }
-      results.push({ key: this.buildKey(phase, dayType, swapState), swapState });
-    }
+      for (const apply of axes[axisIndex]) {
+        const next: SwapState = {
+          optionalFoods: { ...current.optionalFoods },
+          categoryFoods: { ...current.categoryFoods }
+        };
+        apply(next);
+        walk(axisIndex + 1, next);
+      }
+    };
+    walk(0, { optionalFoods: {}, categoryFoods: {} });
     return results;
   }
 
@@ -184,9 +197,11 @@ class NutritionVariants {
       }
     }
 
-    for (const { category, defaultFood, alternateFood } of categoryFoods) {
-      const useAlternate = swapState.categoryFoods[category];
-      excludedFoods.push(useAlternate ? defaultFood : alternateFood);
+    for (const categoryFood of categoryFoods) {
+      const selected = this.selectedFood(categoryFood, swapState);
+      for (const food of categoryFood.foods) {
+        if (food.id !== selected.id) excludedFoods.push(food);
+      }
     }
 
     return {
@@ -232,6 +247,18 @@ class NutritionVariants {
     const plan: NutritionPlan = { ...optimizedPlan, id: basePlan.id, title: basePlan.title };
     this.writeCachedPlan(storageKey, plan);
     return plan;
+  }
+
+  /**
+   * Resolve the selected food for a category selection, falling back to the
+   * first (default) food when the stored id is missing or no longer valid.
+   *
+   * @param categoryFood
+   * @param swapState
+   */
+  private selectedFood(categoryFood: CategoryFood, swapState: SwapState): Food {
+    const selectedId = swapState.categoryFoods[categoryFood.category];
+    return categoryFood.foods.find((food) => food.id === selectedId) ?? categoryFood.foods[0];
   }
 
   /**
