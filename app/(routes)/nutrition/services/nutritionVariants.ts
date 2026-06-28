@@ -1,19 +1,9 @@
 import type { CategoryFood } from '../plans/planTemplates';
 import { planTemplates } from '../plans/planTemplates';
 import { allFoods } from '../util/foods';
-import type { Food, FoodTotal, NutritionPlan } from '../util/types';
-import { DayType, DietPhase, FoodCategory, MealName } from '../util/types';
+import type { Food, NutritionPlan } from '../util/types';
+import { DayType, DietPhase, FoodCategory, FoodOverrideMode, MealName } from '../util/types';
 import nutritionPlanOptimizer from './NutritionPlanOptimizer/nutritionPlanOptimizer';
-
-/**
- * Per-(phase × day-type) swap state. `optionalFoods` is keyed by `food.id`
- * with `true` meaning the food is included; `categoryFoods` is keyed by the
- * `FoodCategory` enum value with the value being the selected food's `id`.
- */
-export type SwapState = {
-  optionalFoods: Record<string, boolean>;
-  categoryFoods: Partial<Record<FoodCategory, string>>;
-};
 
 /**
  * Full swap-state tree across every (phase × day-type). Keeping per-pair
@@ -21,6 +11,30 @@ export type SwapState = {
  * cached variants.
  */
 export type AllSwapStates = Record<DietPhase, Record<DayType, SwapState>>;
+
+/**
+ * Per-(phase × day-type) swap state. `optionalFoods` is keyed by `food.id`
+ * with `true` meaning the food is included; `categoryFoods` is keyed by the
+ * `FoodCategory` enum value with the value being the selected food's `id`;
+ * `overrides` is keyed by `food.id` with a custom daily-amount pin that takes
+ * precedence over the other two.
+ */
+export type SwapState = {
+  optionalFoods: Record<string, boolean>;
+  categoryFoods: Partial<Record<FoodCategory, string>>;
+  overrides: Record<string, FoodOverride>;
+};
+
+/**
+ * A user-authored pin on one food's daily total, layered on top of the
+ * template toggles. `Minimum` requires at least `amount`; `Exact` pins the
+ * daily total to exactly `amount`. An override always wins over the
+ * optional-food and category selections for the same food.
+ */
+export type FoodOverride = {
+  mode: FoodOverrideMode;
+  amount: number;
+};
 
 const KEY_SEPARATOR = ':';
 const PART_SEPARATOR = ',';
@@ -63,6 +77,13 @@ class NutritionVariants {
       parts.push(`${categoryFood.category}${ASSIGN_SEPARATOR}${selected.id}`);
     }
 
+    // Custom overrides aren't bound to the template's swap lists, so they key
+    // off `food.id` directly. With no overrides set this adds nothing, leaving
+    // existing variant keys (and their caches) unchanged.
+    for (const [foodId, { mode, amount }] of Object.entries(swapState.overrides)) {
+      parts.push(`${foodId}${ASSIGN_SEPARATOR}${mode}@${amount}`);
+    }
+
     parts.sort();
     return [phase, dayType, parts.join(PART_SEPARATOR)].join(KEY_SEPARATOR);
   }
@@ -83,7 +104,7 @@ class NutritionVariants {
     for (const { category, foods } of template.categoryFoods) {
       categoryFoods[category] = foods[0].id;
     }
-    return { optionalFoods, categoryFoods };
+    return { optionalFoods, categoryFoods, overrides: {} };
   }
 
   /**
@@ -159,92 +180,121 @@ class NutritionVariants {
       for (const apply of axes[axisIndex]) {
         const next: SwapState = {
           optionalFoods: { ...current.optionalFoods },
-          categoryFoods: { ...current.categoryFoods }
+          categoryFoods: { ...current.categoryFoods },
+          overrides: { ...current.overrides }
         };
         apply(next);
         walk(axisIndex + 1, next);
       }
     };
-    walk(0, { optionalFoods: {}, categoryFoods: {} });
+    // Overrides are open-ended (any food, any amount), so they aren't an
+    // enumeration axis; enumerated variants always carry the empty default.
+    walk(0, { optionalFoods: {}, categoryFoods: {}, overrides: {} });
     return results;
   }
 
   /**
-   * Build a complete `NutritionPlan` from the (phase × day-type) template
-   * plus swap-state deltas applied to `requiredFoods` / `excludedFoods`.
-   * The plan inherits everything else (title, calorieTarget, bodyweight,
-   * activity, meal layout) from the template. The optimizer feeds this
-   * plan in as its target.
+   * Resolve the candidate food pool for a variant. Clones every food, then
+   * layers the template exclusions, optional toggles, category selection, and
+   * custom overrides — in that precedence order — onto each clone's daily
+   * interval (`min/maxServingAmountPerPlan`). Foods left capped at zero are
+   * dropped from the returned pool.
    *
    * @param phase
    * @param dayType
    * @param swapState
    */
-  buildPlanFromTemplate(phase: DietPhase, dayType: DayType, swapState: SwapState): NutritionPlan {
+  resolveFoods(phase: DietPhase, dayType: DayType, swapState: SwapState): Food[] {
     const { template, optionalFoods, categoryFoods } = planTemplates[phase][dayType];
-    // Create a copy of the excluded foods so it doesn't modify the original.
-    const excludedFoods: Food[] = [...(template.excludedFoods ?? [])];
-    const requiredFoods: FoodTotal[] = [];
+    const { overrides } = swapState;
+
+    // Work on per-resolve clones so the shared `allFoods` definitions are never
+    // mutated; each clone's own `min/maxServingAmountPerPlan` holds its effective
+    // daily interval, and `maxServingAmountPerPlan === 0` marks it excluded.
+    const pool = new Map<string, Food>(allFoods.map((food) => [food.id, { ...food }]));
+
+    for (const food of template.excludedFoods ?? []) {
+      const candidate = pool.get(food.id);
+      if (candidate !== undefined) candidate.maxServingAmountPerPlan = 0;
+    }
 
     for (const { food, requiredDailyQuantity } of optionalFoods) {
-      const on = swapState.optionalFoods[food.id];
-      if (on) {
+      // A custom override fully governs this food's interval below.
+      if (food.id in overrides) continue;
+      const candidate = pool.get(food.id);
+      if (candidate === undefined) continue;
+      if (swapState.optionalFoods[food.id]) {
         if (requiredDailyQuantity !== undefined) {
-          requiredFoods.push({ food, quantity: requiredDailyQuantity });
+          candidate.minServingAmountPerPlan = requiredDailyQuantity;
         }
       } else {
-        excludedFoods.push(food);
+        candidate.maxServingAmountPerPlan = 0;
       }
     }
 
     for (const categoryFood of categoryFoods) {
       const selected = this.selectedFood(categoryFood, swapState);
       for (const food of categoryFood.foods) {
-        if (food.id !== selected.id) excludedFoods.push(food);
+        if (food.id === selected.id || food.id in overrides) continue;
+        const candidate = pool.get(food.id);
+        if (candidate !== undefined) candidate.maxServingAmountPerPlan = 0;
       }
     }
 
-    return {
-      ...template,
-      id: this.buildKey(phase, dayType, swapState),
-      meals: template.meals.map((meal) => ({ ...meal, items: [...meal.items] })),
-      excludedFoods: excludedFoods.length > 0 ? excludedFoods : undefined,
-      requiredFoods: requiredFoods.length > 0 ? requiredFoods : undefined
-    };
+    // Overrides win over every selection above. `Minimum` sets a floor (lifting
+    // the base ceiling only when the floor would exceed it); `Exact` pins both
+    // ends. Per-meal caps and step sizes can still keep the optimizer from
+    // landing exactly, which is the intended "unless something else restricts
+    // it" behavior.
+    for (const [foodId, { mode, amount }] of Object.entries(overrides)) {
+      if (amount <= 0) continue;
+      const candidate = pool.get(foodId);
+      if (candidate === undefined) continue;
+      candidate.minServingAmountPerPlan = amount;
+      if (mode === FoodOverrideMode.Exact) {
+        candidate.maxServingAmountPerPlan = amount;
+      } else if (
+        candidate.maxServingAmountPerPlan !== undefined &&
+        candidate.maxServingAmountPerPlan < amount
+      ) {
+        candidate.maxServingAmountPerPlan = undefined;
+      }
+    }
+
+    return [...pool.values()].filter((food) => food.maxServingAmountPerPlan !== 0);
   }
 
   /**
-   * Build the (phase × day-type × swapState) base plan from the template and
-   * run the optimizer over it inline, returning the optimized `NutritionPlan`.
-   * The optimizer's `-optimized` / `(Optimized)` suffixes are stripped so the
-   * plan keeps the template's `id` and `title`; `lastUpdatedAt` flows through
-   * from the template unchanged. Results are memoized in `sessionStorage` per
-   * variant key, so revisiting a swap combination returns instantly; the
-   * optimizer only runs on a cache miss.
+   * Optimize a variant at runtime.
    *
    * @param phase
    * @param dayType
    * @param swapState
    */
   getOptimizedPlan(phase: DietPhase, dayType: DayType, swapState: SwapState): NutritionPlan {
-    const basePlan = this.buildPlanFromTemplate(phase, dayType, swapState);
-    const storageKey = `${OPTIMIZED_PLAN_STORAGE_PREFIX}${basePlan.id}@${basePlan.lastUpdatedAt}`;
+    const { template } = planTemplates[phase][dayType];
+    const id = this.buildKey(phase, dayType, swapState);
+    const storageKey = `${OPTIMIZED_PLAN_STORAGE_PREFIX}${id}@${template.lastUpdatedAt}`;
 
     const cached = this.readCachedPlan(storageKey);
     if (cached !== undefined) return cached;
 
-    const excluded = new Set(basePlan.excludedFoods ?? []);
-    const availableFoods = allFoods.filter((food) => !excluded.has(food));
-    const preWorkoutIndex = basePlan.meals.findIndex((meal) => meal.name === MealName.PreWorkout);
+    const targetPlan: NutritionPlan = {
+      ...template,
+      id,
+      meals: template.meals.map((meal) => ({ ...meal, items: [...meal.items] }))
+    };
+    const availableFoods = this.resolveFoods(phase, dayType, swapState);
+    const preWorkoutIndex = targetPlan.meals.findIndex((meal) => meal.name === MealName.PreWorkout);
     const preWorkoutMealIndex = preWorkoutIndex === -1 ? undefined : preWorkoutIndex;
 
     const { optimizedPlan } = nutritionPlanOptimizer.optimize({
-      targetPlan: basePlan,
+      targetPlan,
       availableFoods,
       preWorkoutMealIndex
     });
 
-    const plan: NutritionPlan = { ...optimizedPlan, id: basePlan.id, title: basePlan.title };
+    const plan: NutritionPlan = { ...optimizedPlan, id, title: template.title };
     this.writeCachedPlan(storageKey, plan);
     return plan;
   }

@@ -1,4 +1,4 @@
-import type { Food, FoodTotal } from '../../util/types';
+import type { Food } from '../../util/types';
 import type { FoodBounds } from './optimizerTypes';
 
 /**
@@ -17,46 +17,34 @@ const PRACTICAL_MAX_SERVINGS_PER_MEAL = 4;
  */
 class FoodBoundsCalculator {
   /**
-   * Compute bounds for every food in the candidate pool. Any food listed in
-   * `requiredFoods` but missing from `foods` is added to the pool so its
-   * daily minimum is still honored.
+   * Compute bounds for every food in the candidate pool. Each food's daily
+   * floor and ceiling come from its own `minServingAmountPerPlan` /
+   * `maxServingAmountPerPlan`, which variant resolution has already baked in.
    *
    * @param foods - Pool of candidate foods.
    * @param numMeals - Number of meal slots in the plan.
-   * @param requiredFoods - Foods that must appear with at least the given
-   *   daily quantity (from `NutritionPlan.requiredFoods`).
    */
-  computeAllBounds(foods: Food[], numMeals: number, requiredFoods?: FoodTotal[]): FoodBounds[] {
-    const requiredDailyMins = new Map<Food, number>();
-    for (const { food, quantity } of requiredFoods ?? []) {
-      requiredDailyMins.set(food, quantity);
-    }
-
-    const pool = [...foods];
-    for (const food of requiredDailyMins.keys()) {
-      if (!pool.includes(food)) pool.push(food);
-    }
-
-    return pool.map((food) => this.computeBounds(food, numMeals, requiredDailyMins.get(food) ?? 0));
+  computeAllBounds(foods: Food[], numMeals: number): FoodBounds[] {
+    return foods.map((food) => this.computeBounds(food, numMeals));
   }
 
   /**
-   * Compute the FoodBounds for a single food given the meal count.
+   * Compute the FoodBounds for a single food given the meal count. A non-zero
+   * `minServingAmountPerPlan` makes the smallest valid quantity the first
+   * step-multiple `>= ` that floor and drops the zero entry, so the optimizer
+   * cannot leave the food out.
    *
    * @param food - The food to evaluate.
    * @param numMeals - How many meal slots exist in the plan.
-   * @param requiredDailyMin - Minimum daily quantity that must be allocated
-   *   for this food (from `NutritionPlan.requiredFoods`). The smallest valid
-   *   quantity will be the first step-multiple `>= requiredDailyMin`; the
-   *   zero entry is dropped so the optimizer cannot exclude the food.
    */
-  private computeBounds(food: Food, numMeals: number, requiredDailyMin: number): FoodBounds {
+  private computeBounds(food: Food, numMeals: number): FoodBounds {
     const step = food.allowedStepServingAmountPerMeal ?? food.serving.amount;
     const perMealMin = food.minServingAmountPerMeal ?? 0;
     const perMealMax =
       food.maxServingAmountPerMeal ?? food.serving.amount * PRACTICAL_MAX_SERVINGS_PER_MEAL;
 
     const dailyMax = Math.min(perMealMax * numMeals, food.maxServingAmountPerPlan ?? Infinity);
+    const requiredDailyMin = food.minServingAmountPerPlan ?? 0;
     const minUnits = perMealMin > 0 ? Math.ceil(perMealMin / step) : 0;
     const maxUnits = Math.floor(perMealMax / step);
 

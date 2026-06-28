@@ -1,4 +1,11 @@
-import { DayType, DietPhase, isDayType, isDietPhase, isFoodCategory } from '../util/types';
+import {
+  DayType,
+  DietPhase,
+  isDayType,
+  isDietPhase,
+  isFoodCategory,
+  isFoodOverrideMode
+} from '../util/types';
 import type { AllSwapStates } from './nutritionVariants';
 import nutritionVariants from './nutritionVariants';
 
@@ -108,6 +115,26 @@ class NutritionLocalData {
           for (const [category, selectedId] of Object.entries(categoryFoods)) {
             if (typeof selectedId === 'string' && isFoodCategory(category)) {
               fresh[phase][dayType].categoryFoods[category] = selectedId;
+            }
+          }
+        }
+
+        // Custom overrides: keyed by `food.id`, value must carry a known mode
+        // and a positive amount. An unknown food id is harmless — it simply
+        // resolves to no food when the variant is built.
+        const overrides = storedDay.overrides;
+        if (isPlainObject(overrides)) {
+          for (const [foodId, override] of Object.entries(overrides)) {
+            if (
+              isPlainObject(override) &&
+              isFoodOverrideMode(override.mode) &&
+              typeof override.amount === 'number' &&
+              override.amount > 0
+            ) {
+              fresh[phase][dayType].overrides[foodId] = {
+                mode: override.mode,
+                amount: override.amount
+              };
             }
           }
         }
