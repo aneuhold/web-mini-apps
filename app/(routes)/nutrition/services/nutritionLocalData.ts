@@ -69,8 +69,9 @@ class NutritionLocalData {
    * Overlay an untrusted (e.g. parsed-from-localStorage) swap-state tree onto a
    * fresh default tree. Anything missing or malformed in `stored` falls back
    * to its default — including unknown phases, unknown day types, unknown
-   * `FoodCategory` keys, and non-boolean toggle values. Older snapshots that
-   * predate a newly-added phase / day-type / toggle hydrate cleanly.
+   * `FoodCategory` keys, non-boolean optional toggles, and non-string category
+   * selections. Older snapshots that predate a newly-added phase / day-type /
+   * toggle hydrate cleanly.
    *
    * @param stored
    */
@@ -99,12 +100,14 @@ class NutritionLocalData {
           }
         }
 
-        // Category-food toggles: key must be a known `FoodCategory`, value boolean.
+        // Category selections: key must be a known `FoodCategory`, value the
+        // selected food's id. An invalid id is left to fall back to the default
+        // when the variant is resolved.
         const categoryFoods = storedDay.categoryFoods;
         if (isPlainObject(categoryFoods)) {
-          for (const [category, on] of Object.entries(categoryFoods)) {
-            if (typeof on === 'boolean' && isFoodCategory(category)) {
-              fresh[phase][dayType].categoryFoods[category] = on;
+          for (const [category, selectedId] of Object.entries(categoryFoods)) {
+            if (typeof selectedId === 'string' && isFoodCategory(category)) {
+              fresh[phase][dayType].categoryFoods[category] = selectedId;
             }
           }
         }
