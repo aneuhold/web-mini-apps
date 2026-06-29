@@ -220,8 +220,6 @@ export const oroweatWholeWheatBread: Food = {
   id: 'oroweatWholeWheatBread',
   name: 'Bread (Oroweat, 100% Whole Wheat)',
   serving: { amount: 1, unitLabel: 'slice', calories: 110, protein: 4, carbs: 21, fat: 2 },
-  // Currently out
-  maxServingAmountPerPlan: 0,
   allowedStepServingAmountPerMeal: 1
 };
 
@@ -229,8 +227,6 @@ export const privateSelectionArtisanBread: Food = {
   id: 'privateSelectionArtisanBread',
   name: 'Bread (Private Selection, Artisan Style)',
   serving: { amount: 1, unitLabel: 'slice', calories: 100, protein: 4, carbs: 20, fat: 1 },
-  // Currently out
-  maxServingAmountPerPlan: 0,
   allowedStepServingAmountPerMeal: 1
 };
 

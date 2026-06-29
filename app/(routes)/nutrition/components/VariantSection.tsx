@@ -130,7 +130,7 @@ const VariantSection = ({
                     });
                   }}
                 />
-                <span>{label}</span>
+                <span>{label ?? food.name}</span>
                 <span data-amount>
                   {requiredDailyQuantity} {food.serving.unitLabel}
                 </span>
@@ -159,7 +159,7 @@ const VariantSection = ({
                     });
                   }}
                 />
-                <span>{label}</span>
+                <span>{label ?? food.name}</span>
               </label>
             ))}
           </div>

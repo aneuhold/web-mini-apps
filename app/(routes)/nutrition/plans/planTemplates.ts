@@ -8,7 +8,9 @@ import {
   jifChunkyPB,
   kindThinsPBDarkChocolate,
   krogerChunkyPB,
+  oroweatWholeWheatBread,
   peasCanned,
+  privateSelectionArtisanBread,
   riceCakeAppleCinnamon,
   riceCakeWhiteCheddar,
   riceCakeWhiteCheddarSignatureSelect,
@@ -40,8 +42,8 @@ export type PlanTemplate = {
  */
 export type OptionalFood = {
   food: Food;
-  /** Checkbox label, e.g. "Chicken". */
-  label: string;
+  /** Checkbox label, e.g. "Chicken". Defaults to the food's `name` when omitted. */
+  label?: string;
   /**
    * When set and the toggle is ON, the food is included in the plan's
    * `requiredFoods` at this daily quantity (in the food's serving unit).
@@ -90,13 +92,14 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
         { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
-        { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
+        { food: riceCakeWhiteCheddar },
         {
-          food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Cheddar Rice Cakes'
+          food: riceCakeWhiteCheddarSignatureSelect
         },
-        { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
-        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' }
+        { food: riceCakeAppleCinnamon },
+        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
+        { food: oroweatWholeWheatBread },
+        { food: privateSelectionArtisanBread }
       ],
       categoryFoods: [
         {
@@ -127,13 +130,14 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
         { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
-        { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
+        { food: riceCakeWhiteCheddar },
         {
-          food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Cheddar Rice Cakes'
+          food: riceCakeWhiteCheddarSignatureSelect
         },
-        { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
-        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' }
+        { food: riceCakeAppleCinnamon },
+        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
+        { food: oroweatWholeWheatBread },
+        { food: privateSelectionArtisanBread }
       ],
       categoryFoods: [
         {
@@ -161,13 +165,14 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
       optionalFoods: [
         { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
         { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
-        { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
+        { food: riceCakeWhiteCheddar },
         {
-          food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Cheddar Rice Cakes'
+          food: riceCakeWhiteCheddarSignatureSelect
         },
-        { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
-        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' }
+        { food: riceCakeAppleCinnamon },
+        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
+        { food: oroweatWholeWheatBread },
+        { food: privateSelectionArtisanBread }
       ],
       categoryFoods: [
         {
@@ -206,14 +211,15 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
         { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
         { food: almonds, label: 'Almonds' },
-        { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
+        { food: riceCakeWhiteCheddar },
         {
-          food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Cheddar Rice Cakes'
+          food: riceCakeWhiteCheddarSignatureSelect
         },
-        { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
+        { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
-        { food: banana, label: 'Bananas' }
+        { food: banana, label: 'Bananas' },
+        { food: oroweatWholeWheatBread },
+        { food: privateSelectionArtisanBread }
       ],
       categoryFoods: [
         {
@@ -251,14 +257,15 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
         { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
         { food: almonds, label: 'Almonds' },
-        { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
+        { food: riceCakeWhiteCheddar },
         {
-          food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Cheddar Rice Cakes'
+          food: riceCakeWhiteCheddarSignatureSelect
         },
-        { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
+        { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
-        { food: banana, label: 'Bananas' }
+        { food: banana, label: 'Bananas' },
+        { food: oroweatWholeWheatBread },
+        { food: privateSelectionArtisanBread }
       ],
       categoryFoods: [
         {
@@ -293,14 +300,15 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
         { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
         { food: almonds, label: 'Almonds' },
-        { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
+        { food: riceCakeWhiteCheddar },
         {
-          food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Cheddar Rice Cakes'
+          food: riceCakeWhiteCheddarSignatureSelect
         },
-        { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
+        { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
-        { food: banana, label: 'Bananas' }
+        { food: banana, label: 'Bananas' },
+        { food: oroweatWholeWheatBread },
+        { food: privateSelectionArtisanBread }
       ],
       categoryFoods: [
         {
@@ -334,14 +342,15 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
         { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
         { food: almonds, label: 'Almonds' },
-        { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
+        { food: riceCakeWhiteCheddar },
         {
-          food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Cheddar Rice Cakes'
+          food: riceCakeWhiteCheddarSignatureSelect
         },
-        { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
+        { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
-        { food: banana, label: 'Bananas' }
+        { food: banana, label: 'Bananas' },
+        { food: oroweatWholeWheatBread },
+        { food: privateSelectionArtisanBread }
       ],
       categoryFoods: [
         {
@@ -374,14 +383,15 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
         { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
         { food: almonds, label: 'Almonds' },
-        { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
+        { food: riceCakeWhiteCheddar },
         {
-          food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Cheddar Rice Cakes'
+          food: riceCakeWhiteCheddarSignatureSelect
         },
-        { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
+        { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
-        { food: banana, label: 'Bananas' }
+        { food: banana, label: 'Bananas' },
+        { food: oroweatWholeWheatBread },
+        { food: privateSelectionArtisanBread }
       ],
       categoryFoods: [
         {
@@ -411,14 +421,15 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
         { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
         { food: almonds, label: 'Almonds' },
-        { food: riceCakeWhiteCheddar, label: 'Cheddar Rice Cakes' },
+        { food: riceCakeWhiteCheddar },
         {
-          food: riceCakeWhiteCheddarSignatureSelect,
-          label: 'Signature Select Cheddar Rice Cakes'
+          food: riceCakeWhiteCheddarSignatureSelect
         },
-        { food: riceCakeAppleCinnamon, label: 'Apple Rice Cakes' },
+        { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
-        { food: banana, label: 'Bananas' }
+        { food: banana, label: 'Bananas' },
+        { food: oroweatWholeWheatBread },
+        { food: privateSelectionArtisanBread }
       ],
       categoryFoods: [
         {
