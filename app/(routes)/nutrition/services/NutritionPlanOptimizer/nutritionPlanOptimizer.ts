@@ -34,11 +34,7 @@ class NutritionPlanOptimizer {
     const targets = nutritionPlanCalculator.computeTargets(targetPlan);
     const floors = nutritionPlanCalculator.computeFloors(targetPlan);
 
-    const allBounds = foodBoundsCalculator.computeAllBounds(
-      availableFoods,
-      numMeals,
-      targetPlan.requiredFoods
-    );
+    const allBounds = foodBoundsCalculator.computeAllBounds(availableFoods, numMeals);
     const boundsMap = new Map<Food, FoodBounds>(allBounds.map((b) => [b.food, b]));
 
     const dailyQuantities = dailyQuantityOptimizer.optimize(

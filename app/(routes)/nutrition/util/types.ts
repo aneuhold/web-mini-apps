@@ -53,9 +53,14 @@ export interface Food {
    * across the entire day. Use for caps like "no more than 50g of peanut
    * butter total per day." The optimizer will not allocate more than this
    * in the daily total. Combine with `maxServingAmountPerMeal` to constrain
-   * both per-meal and per-day.
+   * both per-meal and per-day. A value of 0 disables the food entirely.
    */
   maxServingAmountPerPlan?: number;
+  /**
+   * Self-imposed minimum quantity (in `serving.unitLabel`) for this food
+   * across the entire day.
+   */
+  minServingAmountPerPlan?: number;
   /**
    * The step-size of a serving amount if used in a meal. For example, if a food's serving
    * amount is 200g and `allowedStepServingAmountPerMeal` is 50g, then valid meal quantities
@@ -153,6 +158,25 @@ export enum FoodCategory {
  */
 export const isFoodCategory = (value: unknown): value is FoodCategory =>
   typeof value === 'string' && value in FoodCategory;
+
+/**
+ * How a custom override pins a food's daily quantity. `Minimum` requires at
+ * least the configured amount and lets the optimizer use more; `Exact` pins
+ * the daily total to the amount (floor and ceiling both set to it).
+ */
+export enum FoodOverrideMode {
+  Minimum = 'Minimum',
+  Exact = 'Exact'
+}
+
+/**
+ * Type guard for `FoodOverrideMode` — true when the value is a valid enum
+ * member, letting `localStorage` validation narrow from `unknown`.
+ *
+ * @param value
+ */
+export const isFoodOverrideMode = (value: unknown): value is FoodOverrideMode =>
+  typeof value === 'string' && value in FoodOverrideMode;
 
 /**
  * Canonical name of a meal slot in a plan. Used wherever code needs to
@@ -274,19 +298,11 @@ export interface NutritionPlan {
   activityLevel: ActivityLevel;
   /**
    * Foods that must not appear in this plan when the optimizer selects from
-   * the full food pool. Use for plans like "No Chicken" where a normally
-   * available food is intentionally off the table.
+   * the full food pool. Authored on templates for foods that are intentionally
+   * off the table (e.g. the canned veggies kept out of every bulking variant);
+   * variant resolution folds these into each food's effective daily ceiling.
    */
   excludedFoods?: Food[];
-  /**
-   * Foods that must appear in this plan with at least the specified daily
-   * total quantity (in `food.serving.unitLabel`). Use for constraints like
-   * "include at least 200g of chicken breast every day." The optimizer
-   * adds these foods to the candidate pool even if absent from
-   * `availableFoods` and will not let their daily total drop below the
-   * requested quantity (rounded up to the food's step).
-   */
-  requiredFoods?: FoodTotal[];
   meals: Meal[];
   notes?: string;
   /**

@@ -3,7 +3,7 @@ import { FoodCategory, MealName } from './types';
 
 export const chickenBreast: Food = {
   id: 'chickenBreast',
-  name: 'Chicken breast',
+  name: 'Chicken Breast',
   serving: { amount: 476, unitLabel: 'g', calories: 514, protein: 96.9, carbs: 0, fat: 14.6 },
   minServingAmountPerMeal: 200,
   // Only because I don't have enough chicken in the week to support more than this per day.
@@ -24,7 +24,7 @@ export const chickenBreast: Food = {
 
 export const bodyStrongWheyChocolate: Food = {
   id: 'bodyStrongWheyChocolate',
-  name: 'BodyStrong Whey, Chocolate',
+  name: 'Whey Protein (BodyStrong, Chocolate)',
   serving: { amount: 2, unitLabel: 'scoop', calories: 280, protein: 50, carbs: 7, fat: 4.6 },
   category: FoodCategory.ProteinPowder,
   minServingAmountPerMeal: 2,
@@ -36,7 +36,7 @@ export const bodyStrongWheyChocolate: Food = {
 
 export const optimumNutritionGoldStandardWhey: Food = {
   id: 'optimumNutritionGoldStandardWhey',
-  name: 'Optimum Nutrition Gold Standard Whey',
+  name: 'Whey Protein (Optimum Nutrition, Chocolate)',
   serving: { amount: 1, unitLabel: 'scoop', calories: 120, protein: 24, carbs: 3, fat: 1.5 },
   category: FoodCategory.ProteinPowder,
   minServingAmountPerMeal: 2,
@@ -46,7 +46,7 @@ export const optimumNutritionGoldStandardWhey: Food = {
 
 export const caseinProteinShakeVanilla: Food = {
   id: 'caseinProteinShakeVanilla',
-  name: 'Casein Protein Shake, Vanilla',
+  name: 'Casein Protein Shake (Vanilla)',
   serving: { amount: 1, unitLabel: 'bottle', calories: 170, protein: 30, carbs: 8, fat: 3.5 },
   maxServingAmountPerMeal: 2,
   // Currently out
@@ -56,21 +56,28 @@ export const caseinProteinShakeVanilla: Food = {
 
 export const riceCakeWhiteCheddar: Food = {
   id: 'riceCakeWhiteCheddar',
-  name: 'Rice cake (white cheddar)',
+  name: 'Rice Cake (Kroger, White Cheddar)',
   serving: { amount: 1, unitLabel: 'rice cake', calories: 45, protein: 1, carbs: 9, fat: 0.5 },
   allowedStepServingAmountPerMeal: 1
 };
 
 export const riceCakeWhiteCheddarSignatureSelect: Food = {
   id: 'riceCakeWhiteCheddarSignatureSelect',
-  name: 'Rice cake (Signature Select white cheddar)',
+  name: 'Rice Cake (Signature Select, White Cheddar)',
   serving: { amount: 1, unitLabel: 'rice cake', calories: 45, protein: 1, carbs: 9, fat: 0.5 },
+  allowedStepServingAmountPerMeal: 1
+};
+
+export const riceCakeWhiteCheddarQuaker: Food = {
+  id: 'riceCakeWhiteCheddarQuaker',
+  name: 'Rice Cake (Quaker, White Cheddar)',
+  serving: { amount: 1, unitLabel: 'rice cake', calories: 60, protein: 0.5, carbs: 9, fat: 2 },
   allowedStepServingAmountPerMeal: 1
 };
 
 export const riceCakeAppleCinnamon: Food = {
   id: 'riceCakeAppleCinnamon',
-  name: 'Rice cake (apple cinnamon)',
+  name: 'Rice Cake (Apple Cinnamon)',
   serving: { amount: 1, unitLabel: 'rice cake', calories: 50, protein: 0.5, carbs: 11, fat: 0 },
   allowedStepServingAmountPerMeal: 1
 };
@@ -84,14 +91,14 @@ export const banana: Food = {
 
 export const kindThinsPBDarkChocolate: Food = {
   id: 'kindThinsPBDarkChocolate',
-  name: 'Kind Thins PB Dark Chocolate',
+  name: 'Thins (PB Dark Chocolate)',
   serving: { amount: 2, unitLabel: 'bar', calories: 200, protein: 6, carbs: 20, fat: 14 },
   allowedStepServingAmountPerMeal: 1
 };
 
 export const clifBuildersMiniChocMint: Food = {
   id: 'clifBuildersMiniChocMint',
-  name: 'Clif Builders Mini Choc Mint',
+  name: 'Clif Builders Mini (Chocolate Mint)',
   serving: { amount: 1, unitLabel: 'bar', calories: 140, protein: 10, carbs: 15, fat: 4.5 },
   category: FoodCategory.ProteinBar,
   maxServingAmountPerPlan: 3,
@@ -100,7 +107,7 @@ export const clifBuildersMiniChocMint: Food = {
 
 export const krogerChunkyPB: Food = {
   id: 'krogerChunkyPB',
-  name: 'Kroger Chunky PB',
+  name: 'Chunky Peanut Butter (Kroger)',
   serving: { amount: 32, unitLabel: 'g', calories: 180, protein: 7, carbs: 9, fat: 15 },
   category: FoodCategory.PeanutButter,
   minServingAmountPerMeal: 10,
@@ -110,7 +117,7 @@ export const krogerChunkyPB: Food = {
 
 export const jifChunkyPB: Food = {
   id: 'jifChunkyPB',
-  name: 'JIF Chunky PB',
+  name: 'Chunky Peanut Butter (Jif)',
   serving: { amount: 32, unitLabel: 'g', calories: 190, protein: 7, carbs: 8, fat: 16 },
   category: FoodCategory.PeanutButter,
   minServingAmountPerMeal: 10,
@@ -120,7 +127,7 @@ export const jifChunkyPB: Food = {
 
 export const greenBeansCanned: Food = {
   id: 'greenBeansCanned',
-  name: 'Green beans (canned)',
+  name: 'Green Beans (canned)',
   serving: { amount: 1, unitLabel: 'can', calories: 52.5, protein: 3.5, carbs: 10.5, fat: 0 },
   category: FoodCategory.CannedVegetable,
   // Stock-limited: 2/day keeps the week supplied
@@ -148,7 +155,7 @@ export const cornCanned: Food = {
 
 export const krogerChunkLightTunaPouch: Food = {
   id: 'krogerChunkLightTunaPouch',
-  name: 'Kroger Chunk Light Tuna pouch',
+  name: 'Tuna Pouch (Kroger, Chunk Light)',
   serving: { amount: 1, unitLabel: 'pouch', calories: 80, protein: 18, carbs: 0, fat: 1 },
   category: FoodCategory.TunaPouch,
   // Currently out
@@ -158,7 +165,7 @@ export const krogerChunkLightTunaPouch: Food = {
 
 export const starkistHickorySmokedTunaPouch: Food = {
   id: 'starkistHickorySmokedTunaPouch',
-  name: 'StarKist Tuna Creations Hickory Smoked',
+  name: 'Tuna Pouch (StarKist Creations, Hickory Smoked)',
   serving: { amount: 1, unitLabel: 'pouch', calories: 110, protein: 17, carbs: 0, fat: 4.5 },
   category: FoodCategory.TunaPouch,
   // Max amount in a day because of amount available
@@ -168,7 +175,7 @@ export const starkistHickorySmokedTunaPouch: Food = {
 
 export const starkistTunaCreationsBaconRanch: Food = {
   id: 'starkistTunaCreationsBaconRanch',
-  name: 'StarKist Tuna Creations Bacon Ranch',
+  name: 'Tuna Pouch (StarKist Creations, Bacon Ranch)',
   serving: { amount: 1, unitLabel: 'pouch', calories: 80, protein: 15, carbs: 2, fat: 1 },
   category: FoodCategory.TunaPouch,
   // Currently out
@@ -178,7 +185,7 @@ export const starkistTunaCreationsBaconRanch: Food = {
 
 export const dannonLightFitGreekBlueberry: Food = {
   id: 'dannonLightFitGreekBlueberry',
-  name: 'Dannon Light + Fit Greek Yogurt (Blueberry)',
+  name: 'Greek Yogurt (Dannon Light + Fit, Blueberry)',
   serving: { amount: 1, unitLabel: 'container', calories: 80, protein: 12, carbs: 8, fat: 0 },
   // Max amount in a day because of amount available
   maxServingAmountPerPlan: 1,
@@ -187,7 +194,7 @@ export const dannonLightFitGreekBlueberry: Food = {
 
 export const oikosTripleZeroYogurt: Food = {
   id: 'oikosTripleZeroYogurt',
-  name: 'Oikos Triple Zero Greek Yogurt',
+  name: 'Greek Yogurt (Oikos Triple Zero)',
   serving: { amount: 1, unitLabel: 'container', calories: 90, protein: 15, carbs: 7, fat: 0 },
   // Currently out
   maxServingAmountPerPlan: 0,
@@ -196,16 +203,30 @@ export const oikosTripleZeroYogurt: Food = {
 
 export const stringCheese: Food = {
   id: 'stringCheese',
-  name: 'Mozzarella String Cheese',
+  name: 'String Cheese (Mozzarella)',
   serving: { amount: 1, unitLabel: 'stick', calories: 90, protein: 7, carbs: 0, fat: 7 },
   allowedStepServingAmountPerMeal: 1
 };
 
 export const almonds: Food = {
   id: 'almonds',
-  name: 'Roasted Salted Almonds',
+  name: 'Almonds',
   serving: { amount: 28, unitLabel: 'g', calories: 170, protein: 6, carbs: 5, fat: 16 },
   minServingAmountPerMeal: 10,
+  allowedStepServingAmountPerMeal: 1
+};
+
+export const oroweatWholeWheatBread: Food = {
+  id: 'oroweatWholeWheatBread',
+  name: 'Bread (Oroweat, 100% Whole Wheat)',
+  serving: { amount: 1, unitLabel: 'slice', calories: 110, protein: 4, carbs: 21, fat: 2 },
+  allowedStepServingAmountPerMeal: 1
+};
+
+export const privateSelectionArtisanBread: Food = {
+  id: 'privateSelectionArtisanBread',
+  name: 'Bread (Private Selection, Artisan Style)',
+  serving: { amount: 1, unitLabel: 'slice', calories: 100, protein: 4, carbs: 20, fat: 1 },
   allowedStepServingAmountPerMeal: 1
 };
 
@@ -217,6 +238,7 @@ export const allFoods: Food[] = [
   caseinProteinShakeVanilla,
   riceCakeWhiteCheddar,
   riceCakeWhiteCheddarSignatureSelect,
+  riceCakeWhiteCheddarQuaker,
   riceCakeAppleCinnamon,
   banana,
   kindThinsPBDarkChocolate,
@@ -231,5 +253,7 @@ export const allFoods: Food[] = [
   dannonLightFitGreekBlueberry,
   oikosTripleZeroYogurt,
   stringCheese,
-  almonds
+  almonds,
+  oroweatWholeWheatBread,
+  privateSelectionArtisanBread
 ];
