@@ -13,6 +13,7 @@ import {
   privateSelectionArtisanBread,
   riceCakeAppleCinnamon,
   riceCakeWhiteCheddar,
+  riceCakeWhiteCheddarQuaker,
   riceCakeWhiteCheddarSignatureSelect,
   stringCheese
 } from '../util/foods';
@@ -45,8 +46,8 @@ export type OptionalFood = {
   /** Checkbox label, e.g. "Chicken". Defaults to the food's `name` when omitted. */
   label?: string;
   /**
-   * When set and the toggle is ON, the food is included in the plan's
-   * `requiredFoods` at this daily quantity (in the food's serving unit).
+   * When set and the toggle is ON, the food's daily total is pinned to at
+   * least this quantity (in the food's serving unit).
    */
   requiredDailyQuantity?: number;
 };
@@ -96,6 +97,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         {
           food: riceCakeWhiteCheddarSignatureSelect
         },
+        { food: riceCakeWhiteCheddarQuaker },
         { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
         { food: oroweatWholeWheatBread },
@@ -134,6 +136,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         {
           food: riceCakeWhiteCheddarSignatureSelect
         },
+        { food: riceCakeWhiteCheddarQuaker },
         { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
         { food: oroweatWholeWheatBread },
@@ -169,6 +172,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         {
           food: riceCakeWhiteCheddarSignatureSelect
         },
+        { food: riceCakeWhiteCheddarQuaker },
         { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
         { food: oroweatWholeWheatBread },
@@ -215,6 +219,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         {
           food: riceCakeWhiteCheddarSignatureSelect
         },
+        { food: riceCakeWhiteCheddarQuaker },
         { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
         { food: banana, label: 'Bananas' },
@@ -261,6 +266,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         {
           food: riceCakeWhiteCheddarSignatureSelect
         },
+        { food: riceCakeWhiteCheddarQuaker },
         { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
         { food: banana, label: 'Bananas' },
@@ -304,6 +310,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         {
           food: riceCakeWhiteCheddarSignatureSelect
         },
+        { food: riceCakeWhiteCheddarQuaker },
         { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
         { food: banana, label: 'Bananas' },
@@ -346,6 +353,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         {
           food: riceCakeWhiteCheddarSignatureSelect
         },
+        { food: riceCakeWhiteCheddarQuaker },
         { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
         { food: banana, label: 'Bananas' },
@@ -387,6 +395,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         {
           food: riceCakeWhiteCheddarSignatureSelect
         },
+        { food: riceCakeWhiteCheddarQuaker },
         { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
         { food: banana, label: 'Bananas' },
@@ -425,6 +434,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         {
           food: riceCakeWhiteCheddarSignatureSelect
         },
+        { food: riceCakeWhiteCheddarQuaker },
         { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
         { food: banana, label: 'Bananas' },
