@@ -6,19 +6,25 @@ on:
     branches:
       - main
 
+# Cancel an in-progress run when a newer push supersedes it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   testAndDeploy:
     name: 'Test and Deploy'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up PNPM
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 'lts/*'
           cache: 'pnpm'
@@ -26,16 +32,30 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Lint
+      - name: Run tests
+        run: pnpm test
+
+      - name: Run Linting
         run: pnpm lint
+
+      - name: Run type check
+        run: pnpm check
 
       - name: Build the Next.js site
         run: pnpm build
 
-      - name: Deploy to Netlify (CLI Preview)
-        id: deploy
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3
+        with:
+          publish-dir: './out'
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: '${{ github.event.pull_request.title }} Deploy Preview'
+          enable-pull-request-comment: false
+          enable-commit-comment: false
+          overwrites-pull-request-comment: false
+          github-deployment-description: 'Netlify Deploy Preview'
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        run: pnpm exec netlify deploy --message "${{ github.event.pull_request.title }} Deploy Preview"
-        timeout-minutes: 2
+        timeout-minutes: 1
