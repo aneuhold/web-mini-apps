@@ -1,0 +1,66 @@
+/* Design tokens (--surface, --border, --danger, …) are declared on the route's
+   `.shell` wrapper in layout.module.css and inherit down to these elements. */
+
+/* One override: a food name, mode dropdown, amount input, and remove button
+   bundled into a single pill. */
+.override {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.name {
+  font-weight: 600;
+}
+
+.unit {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.amount {
+  width: 3.5rem;
+  padding: 0.2rem 0.4rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.amount.invalid {
+  border-color: var(--danger);
+  outline: none;
+}
+
+.remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* A comfortable square tap target; negative margins let it reach the pill's
+     padded edges without making the row taller. */
+  min-width: 2rem;
+  min-height: 2rem;
+  margin: -0.3rem -0.4rem -0.3rem 0;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--text-muted);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.remove:hover {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent);
+}

@@ -86,6 +86,7 @@ export const banana: Food = {
   id: 'banana',
   name: 'Banana (110g average)',
   serving: { amount: 1, unitLabel: 'banana', calories: 97, protein: 0.8, carbs: 25.3, fat: 0.4 },
+  maxServingAmountPerPlan: 2,
   allowedStepServingAmountPerMeal: 1
 };
 

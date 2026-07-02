@@ -5,6 +5,7 @@
   --border: #2a3340;
   --accent: #84cc16;
   --accent-2: #f97316;
+  --danger: #ef4444;
   --text: #e7ecf3;
   --text-muted: #8a96a8;
 
@@ -237,65 +238,6 @@
 
   [data-swap-controls] select:hover {
     border-color: var(--accent);
-  }
-
-  /* Custom override: a food name, mode dropdown, amount input, and remove
-     button bundled into one pill. */
-  [data-swap-controls] [data-override] {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.3rem 0.5rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-size: 0.85rem;
-  }
-
-  [data-swap-controls] [data-override-name] {
-    font-weight: 600;
-  }
-
-  [data-swap-controls] [data-override-unit] {
-    color: var(--text-muted);
-    font-size: 0.72rem;
-    font-weight: 700;
-  }
-
-  [data-swap-controls] input[type='number'] {
-    width: 3.5rem;
-    padding: 0.2rem 0.4rem;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font: inherit;
-    font-size: 0.85rem;
-    font-variant-numeric: tabular-nums;
-    color: var(--text);
-  }
-
-  [data-swap-controls] [data-override] button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    /* A comfortable square tap target; negative margins let it reach the pill's
-       padded edges without making the row taller. */
-    min-width: 2rem;
-    min-height: 2rem;
-    margin: -0.3rem -0.4rem -0.3rem 0;
-    padding: 0;
-    border: none;
-    border-radius: 6px;
-    background: none;
-    color: var(--text-muted);
-    font-size: 1.3rem;
-    line-height: 1;
-    cursor: pointer;
-  }
-
-  [data-swap-controls] [data-override] button:hover {
-    background: color-mix(in srgb, var(--accent) 14%, transparent);
-    color: var(--accent);
   }
 
   [data-missing-variant] {
