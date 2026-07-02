@@ -34,6 +34,13 @@ describe('nutritionVariants.resolveFoods', () => {
     expect(resolved?.minServingAmountPerPlan).toBe(4);
     expect(resolved?.maxServingAmountPerPlan).toBe(4);
   });
+
+  it('caps the ceiling without requiring any for a Maximum override', () => {
+    const resolved = resolvedRiceCake(withOverride(FoodOverrideMode.Maximum, 2));
+    expect(resolved?.maxServingAmountPerPlan).toBe(2);
+    // A maximum imposes no floor, so none of the food is required.
+    expect(resolved?.minServingAmountPerPlan).toBeUndefined();
+  });
 });
 
 describe('nutritionVariants.buildKey', () => {

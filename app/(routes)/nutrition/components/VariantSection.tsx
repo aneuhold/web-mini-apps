@@ -15,7 +15,8 @@ import VariantTable from './VariantTable';
 /** Human-facing label for each override mode in the picker. */
 const OVERRIDE_MODE_LABEL: Record<FoodOverrideMode, string> = {
   [FoodOverrideMode.Minimum]: 'At least',
-  [FoodOverrideMode.Exact]: 'Exactly'
+  [FoodOverrideMode.Exact]: 'Exactly',
+  [FoodOverrideMode.Maximum]: 'At most'
 };
 
 /**

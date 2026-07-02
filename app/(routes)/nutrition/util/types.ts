@@ -162,11 +162,14 @@ export const isFoodCategory = (value: unknown): value is FoodCategory =>
 /**
  * How a custom override pins a food's daily quantity. `Minimum` requires at
  * least the configured amount and lets the optimizer use more; `Exact` pins
- * the daily total to the amount (floor and ceiling both set to it).
+ * the daily total to the amount (floor and ceiling both set to it); `Maximum`
+ * caps the daily total at the amount without requiring any of it (ceiling set
+ * to the amount, floor left at the food's base minimum).
  */
 export enum FoodOverrideMode {
   Minimum = 'Minimum',
-  Exact = 'Exact'
+  Exact = 'Exact',
+  Maximum = 'Maximum'
 }
 
 /**

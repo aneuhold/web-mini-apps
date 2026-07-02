@@ -28,8 +28,9 @@ export type SwapState = {
 /**
  * A user-authored pin on one food's daily total, layered on top of the
  * template toggles. `Minimum` requires at least `amount`; `Exact` pins the
- * daily total to exactly `amount`. An override always wins over the
- * optional-food and category selections for the same food.
+ * daily total to exactly `amount`; `Maximum` caps the daily total at `amount`
+ * without requiring any of it. An override always wins over the optional-food
+ * and category selections for the same food.
  */
 export type FoodOverride = {
   mode: FoodOverrideMode;
@@ -243,21 +244,27 @@ class NutritionVariants {
 
     // Overrides win over every selection above. `Minimum` sets a floor (lifting
     // the base ceiling only when the floor would exceed it); `Exact` pins both
-    // ends. Per-meal caps and step sizes can still keep the optimizer from
-    // landing exactly, which is the intended "unless something else restricts
-    // it" behavior.
+    // ends; `Maximum` sets a ceiling but leaves the floor at the food's base
+    // minimum, so none of it is required. Per-meal caps and step sizes can
+    // still keep the optimizer from landing exactly, which is the intended
+    // "unless something else restricts it" behavior.
     for (const [foodId, { mode, amount }] of Object.entries(overrides)) {
       if (amount <= 0) continue;
       const candidate = pool.get(foodId);
       if (candidate === undefined) continue;
-      candidate.minServingAmountPerPlan = amount;
       if (mode === FoodOverrideMode.Exact) {
+        candidate.minServingAmountPerPlan = amount;
         candidate.maxServingAmountPerPlan = amount;
-      } else if (
-        candidate.maxServingAmountPerPlan !== undefined &&
-        candidate.maxServingAmountPerPlan < amount
-      ) {
-        candidate.maxServingAmountPerPlan = undefined;
+      } else if (mode === FoodOverrideMode.Maximum) {
+        candidate.maxServingAmountPerPlan = amount;
+      } else {
+        candidate.minServingAmountPerPlan = amount;
+        if (
+          candidate.maxServingAmountPerPlan !== undefined &&
+          candidate.maxServingAmountPerPlan < amount
+        ) {
+          candidate.maxServingAmountPerPlan = undefined;
+        }
       }
     }
 
