@@ -231,6 +231,13 @@ export const privateSelectionArtisanBread: Food = {
   allowedStepServingAmountPerMeal: 1
 };
 
+export const privateSelectionRusticPotatoBread: Food = {
+  id: 'privateSelectionRusticPotatoBread',
+  name: 'Bread (Private Selection, Rustic Potato)',
+  serving: { amount: 1, unitLabel: 'slice', calories: 100, protein: 3, carbs: 21, fat: 1 },
+  allowedStepServingAmountPerMeal: 1
+};
+
 /** Every food defined in this module; used as the default candidate pool for the optimizer. */
 export const allFoods: Food[] = [
   chickenBreast,
@@ -256,5 +263,6 @@ export const allFoods: Food[] = [
   stringCheese,
   almonds,
   oroweatWholeWheatBread,
-  privateSelectionArtisanBread
+  privateSelectionArtisanBread,
+  privateSelectionRusticPotatoBread
 ];
