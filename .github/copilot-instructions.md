@@ -3,7 +3,7 @@
 - Contains small web apps/utilities
 - Generally TypeScript source code with pnpm package management
 - Avoid code duplication; reuse existing code when possible
-- Whenever running tests, always use the Vitest extension, and don't run the test command in the terminal
+- Tests run with Vitest. Run them from the terminal using `pnpm test`.
 - This is a Next.js project, so we are using React components and the file-based routing system
 - The site is fully static (exported via `next build` + `output: 'export'`); there are no server components, server actions, or runtime APIs — every component is a client component and every data dependency must resolve at build time or in the browser
 
