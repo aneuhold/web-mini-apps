@@ -40,6 +40,14 @@ export default function Page() {
             Presentations
           </Link>
         </li>
+        <li>
+          <Link
+            href="/aurora-colony-pub-tech-explainer"
+            aria-label="Aurora Colony Pub tech explainer link"
+          >
+            Aurora Colony Pub Tech Explainer
+          </Link>
+        </li>
       </ul>
       <Footer />
     </div>
