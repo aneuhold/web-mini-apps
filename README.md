@@ -9,6 +9,7 @@ Some tiny static apps that are deployed to the web for utilities. These are thin
 - [design-patterns](https://utils.tonyneuhold.com/design-patterns)
 - [nutrition](https://utils.tonyneuhold.com/nutrition)
 - [presentations](https://utils.tonyneuhold.com/presentations)
+- [aurora-colony-pub-tech-explainer](https://utils.tonyneuhold.com/aurora-colony-pub-tech-explainer)
 
 ## Deployment Proces
 

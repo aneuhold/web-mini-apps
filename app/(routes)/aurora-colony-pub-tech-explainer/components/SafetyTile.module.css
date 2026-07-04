@@ -1,0 +1,26 @@
+.tile {
+  background: var(--cream);
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 1.25rem;
+  box-shadow: 3px 3px 0 rgba(90, 58, 33, 0.1);
+}
+
+.icon {
+  font-size: 1.6rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-size: 1.05rem;
+  color: var(--walnut);
+  margin: 0 0 0.4rem;
+}
+
+.text {
+  color: var(--muted);
+  line-height: 1.5;
+  font-size: 0.92rem;
+  margin: 0;
+}

@@ -1,0 +1,174 @@
+.container {
+  --ink: #2a2018;
+  --muted: #6b5d4f;
+  --amber: #b46a1f;
+  --amber-soft: #f3e2c7;
+  --walnut: #5a3a21;
+  --cream: #fbf6ec;
+  --line: #d8c7ab;
+
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+  color: var(--ink);
+}
+
+/* Hero */
+
+.hero {
+  text-align: center;
+  padding: 2.5rem 1rem 2rem;
+  border-bottom: 2px dashed var(--line);
+  margin-bottom: 2.5rem;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--amber);
+  margin: 0 0 0.5rem;
+}
+
+.title {
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  margin: 0 0 0.75rem;
+  color: var(--walnut);
+}
+
+.subtitle {
+  max-width: 640px;
+  margin: 0 auto 1.5rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.heroLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.heroLink {
+  background: var(--walnut);
+  color: var(--cream);
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.heroLink:hover {
+  background: var(--amber);
+}
+
+.heroTag {
+  background: var(--amber-soft);
+  color: var(--walnut);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Sections */
+
+.section {
+  margin-bottom: 3rem;
+}
+
+.sectionTitle {
+  font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+  color: var(--walnut);
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 3px solid var(--amber-soft);
+}
+
+.sectionLead {
+  max-width: 720px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0 0 1.5rem;
+}
+
+/* Big-picture diagram */
+
+.stackDiagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stackLayer {
+  width: 100%;
+  max-width: 560px;
+  background: var(--cream);
+  border: 2px solid var(--walnut);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  text-align: center;
+  box-shadow: 3px 3px 0 rgba(90, 58, 33, 0.15);
+}
+
+.stackTier {
+  display: block;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--walnut);
+}
+
+.stackDesc {
+  display: block;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-top: 0.2rem;
+}
+
+.stackConnector {
+  color: var(--amber);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+/* Card grids — the cards themselves live in their own components */
+
+.helperGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.storageGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.safetyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+/* Footer note */
+
+.pageFooter {
+  border-top: 2px dashed var(--line);
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.pageFooter p {
+  max-width: 640px;
+  margin: 0 auto;
+}

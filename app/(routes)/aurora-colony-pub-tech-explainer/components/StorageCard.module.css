@@ -1,0 +1,31 @@
+.card {
+  background: var(--cream);
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 4px 4px 0 rgba(90, 58, 33, 0.12);
+  display: flex;
+  flex-direction: column;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.icon {
+  font-size: 1.8rem;
+}
+
+.name {
+  font-size: 1.15rem;
+  color: var(--walnut);
+  margin: 0;
+}
+
+.summary {
+  line-height: 1.55;
+  margin: 0 0 1rem;
+}
