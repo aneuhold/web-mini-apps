@@ -16,6 +16,7 @@ import {
   riceCakeWhiteCheddar,
   riceCakeWhiteCheddarQuaker,
   riceCakeWhiteCheddarSignatureSelect,
+  signatureSelectHoneyWheatBerryBread,
   stringCheese
 } from '../util/foods';
 import type { Food, NutritionPlan } from '../util/types';
@@ -103,7 +104,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
         { food: oroweatWholeWheatBread },
         { food: privateSelectionArtisanBread },
-        { food: privateSelectionRusticPotatoBread }
+        { food: privateSelectionRusticPotatoBread },
+        { food: signatureSelectHoneyWheatBerryBread }
       ],
       categoryFoods: [
         {
@@ -143,7 +145,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
         { food: oroweatWholeWheatBread },
         { food: privateSelectionArtisanBread },
-        { food: privateSelectionRusticPotatoBread }
+        { food: privateSelectionRusticPotatoBread },
+        { food: signatureSelectHoneyWheatBerryBread }
       ],
       categoryFoods: [
         {
@@ -180,7 +183,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
         { food: oroweatWholeWheatBread },
         { food: privateSelectionArtisanBread },
-        { food: privateSelectionRusticPotatoBread }
+        { food: privateSelectionRusticPotatoBread },
+        { food: signatureSelectHoneyWheatBerryBread }
       ],
       categoryFoods: [
         {
@@ -229,7 +233,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: banana, label: 'Bananas' },
         { food: oroweatWholeWheatBread },
         { food: privateSelectionArtisanBread },
-        { food: privateSelectionRusticPotatoBread }
+        { food: privateSelectionRusticPotatoBread },
+        { food: signatureSelectHoneyWheatBerryBread }
       ],
       categoryFoods: [
         {
@@ -277,7 +282,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: banana, label: 'Bananas' },
         { food: oroweatWholeWheatBread },
         { food: privateSelectionArtisanBread },
-        { food: privateSelectionRusticPotatoBread }
+        { food: privateSelectionRusticPotatoBread },
+        { food: signatureSelectHoneyWheatBerryBread }
       ],
       categoryFoods: [
         {
@@ -322,7 +328,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: banana, label: 'Bananas' },
         { food: oroweatWholeWheatBread },
         { food: privateSelectionArtisanBread },
-        { food: privateSelectionRusticPotatoBread }
+        { food: privateSelectionRusticPotatoBread },
+        { food: signatureSelectHoneyWheatBerryBread }
       ],
       categoryFoods: [
         {
@@ -366,7 +373,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: banana, label: 'Bananas' },
         { food: oroweatWholeWheatBread },
         { food: privateSelectionArtisanBread },
-        { food: privateSelectionRusticPotatoBread }
+        { food: privateSelectionRusticPotatoBread },
+        { food: signatureSelectHoneyWheatBerryBread }
       ],
       categoryFoods: [
         {
@@ -409,7 +417,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: banana, label: 'Bananas' },
         { food: oroweatWholeWheatBread },
         { food: privateSelectionArtisanBread },
-        { food: privateSelectionRusticPotatoBread }
+        { food: privateSelectionRusticPotatoBread },
+        { food: signatureSelectHoneyWheatBerryBread }
       ],
       categoryFoods: [
         {
@@ -449,7 +458,8 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: banana, label: 'Bananas' },
         { food: oroweatWholeWheatBread },
         { food: privateSelectionArtisanBread },
-        { food: privateSelectionRusticPotatoBread }
+        { food: privateSelectionRusticPotatoBread },
+        { food: signatureSelectHoneyWheatBerryBread }
       ],
       categoryFoods: [
         {
