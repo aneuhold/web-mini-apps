@@ -112,6 +112,10 @@ export default function NutritionPage() {
         View Stats →
       </NextLink>
 
+      <NextLink href="/nutrition/fogo" data-explainer-button>
+        Fogo de Chão Tracker →
+      </NextLink>
+
       <a href="/index-files/nutrition-optimizer-explainer.html" data-explainer-button>
         How the Optimizer Works →
       </a>
