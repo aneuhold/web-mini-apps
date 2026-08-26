@@ -245,6 +245,13 @@ export const signatureSelectHoneyWheatBerryBread: Food = {
   allowedStepServingAmountPerMeal: 1
 };
 
+export const franzHoneyOatNutBread: Food = {
+  id: 'franzHoneyOatNutBread',
+  name: 'Bread (Franz, Honey Oat & Nut)',
+  serving: { amount: 1, unitLabel: 'slice', calories: 110, protein: 4, carbs: 20, fat: 2 },
+  allowedStepServingAmountPerMeal: 1
+};
+
 /** Every food defined in this module; used as the default candidate pool for the optimizer. */
 export const allFoods: Food[] = [
   chickenBreast,
@@ -272,5 +279,6 @@ export const allFoods: Food[] = [
   oroweatWholeWheatBread,
   privateSelectionArtisanBread,
   privateSelectionRusticPotatoBread,
-  signatureSelectHoneyWheatBerryBread
+  signatureSelectHoneyWheatBerryBread,
+  franzHoneyOatNutBread
 ];
