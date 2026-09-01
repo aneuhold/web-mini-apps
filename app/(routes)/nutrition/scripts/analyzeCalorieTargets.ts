@@ -156,26 +156,34 @@ const printAnalysis = (rows: AnalysisRow[], latestAvgLb: number): void => {
     );
   }
 
-  const drifts = Object.values(DietPhase)
+  // Only templates that pin `bodyweightLb` can drift; the rest follow the
+  // trend by construction, so there is nothing to warn about.
+  const pinned = Object.values(DietPhase)
     .flatMap((phase) =>
       Object.values(DayType).map((dayType) => ({
         phase,
         dayType,
-        template: planTemplates[phase][dayType].template
+        pinnedBodyweightLb: planTemplates[phase][dayType].template.bodyweightLb
       }))
     )
-    .map((t) => ({ ...t, drift: Math.abs(t.template.bodyweightLb - latestAvgLb) }))
+    .filter((t) => t.pinnedBodyweightLb !== undefined);
+
+  console.log('');
+  console.log(
+    `${pinned.length === 0 ? 'All' : `${9 - pinned.length} of 9`} templates track the weight log (${latestAvgLb.toFixed(
+      1
+    )} lb).`
+  );
+
+  const drifts = pinned
+    .map((t) => ({ ...t, drift: Math.abs((t.pinnedBodyweightLb ?? 0) - latestAvgLb) }))
     .filter((t) => t.drift >= 3);
   if (drifts.length === 0) return;
   console.log('');
-  console.log(
-    `⚠️  Some templates' bodyweightLb is ≥ 3 lb off from current weekly avg (${latestAvgLb.toFixed(
-      1
-    )} lb):`
-  );
+  console.log(`⚠️  Some pinned bodyweights are ≥ 3 lb off from the current weekly avg:`);
   for (const d of drifts) {
     console.log(
-      `   ${d.phase} · ${d.dayType}: ${d.template.bodyweightLb} lb (drift ${d.drift.toFixed(1)} lb)`
+      `   ${d.phase} · ${d.dayType}: ${d.pinnedBodyweightLb} lb (drift ${d.drift.toFixed(1)} lb)`
     );
   }
 };

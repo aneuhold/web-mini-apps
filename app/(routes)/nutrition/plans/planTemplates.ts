@@ -24,6 +24,26 @@ import type { Food, NutritionPlan } from '../util/types';
 import { ActivityLevel, DayType, DietPhase, FoodCategory, MealName } from '../util/types';
 
 /**
+ * A hand-authored plan shell. Identical to `NutritionPlan` except that
+ * `bodyweightLb` is optional: omitting it is the normal case and makes the
+ * plan track the weight log, while setting it pins the plan to a fixed
+ * bodyweight. `nutritionVariants.resolveBodyweightLb` fills the value in, so
+ * every plan downstream of variant resolution still carries a concrete
+ * number.
+ */
+export type TemplatePlan = Omit<NutritionPlan, 'bodyweightLb'> & {
+  /**
+   * Fixed bodyweight (lb) to size this plan's macros against. Omit to track
+   * the weight log's current trend bodyweight, which is what every template
+   * here does — bodyweight is a measurement, so it should follow the scale
+   * rather than be restated by hand on each edit. Pin it only for a
+   * deliberately frozen plan (a hypothetical, or a printed plan you want to
+   * stay put while the trend moves).
+   */
+  bodyweightLb?: number;
+};
+
+/**
  * Complete description of a (phase × day-type) plan: the baseline plan shell
  * the optimizer reshapes, plus the swap toggles the UI exposes as
  * checkboxes.
@@ -34,7 +54,7 @@ export type PlanTemplate = {
    * activity level, and phase. The meal `items` lists are a baseline food set
    * the optimizer reshapes into the rendered plan at runtime.
    */
-  template: NutritionPlan;
+  template: TemplatePlan;
   optionalFoods: OptionalFood[];
   categoryFoods: CategoryFood[];
 };
@@ -81,10 +101,9 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         id: 'cutting-training-template',
         title: 'Cutting · Training Day',
         phase: DietPhase.Cutting,
-        bodyweightLb: 183,
         calorieTarget: 1700,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-08-26T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
         meals: [
           { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
           { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
@@ -122,10 +141,9 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         id: 'cutting-training-camping-template',
         title: 'Cutting · Training + Active Camping',
         phase: DietPhase.Cutting,
-        bodyweightLb: 183,
         calorieTarget: 2000,
         activityLevel: ActivityLevel.Moderate,
-        lastUpdatedAt: '2026-08-26T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
         meals: [
           { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
           { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
@@ -164,10 +182,9 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         id: 'cutting-non-training-template',
         title: 'Cutting · Non-Training Day',
         phase: DietPhase.Cutting,
-        bodyweightLb: 183,
         calorieTarget: 1400,
         activityLevel: ActivityLevel.NonTraining,
-        lastUpdatedAt: '2026-08-26T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
         meals: [
           { time: 'Meal 1', name: MealName.Meal1, items: [] },
           { time: 'Meal 2', name: MealName.Meal2, items: [] },
@@ -205,10 +222,9 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         id: 'bulking-training-template',
         title: 'Bulking · Training Day',
         phase: DietPhase.Bulking,
-        bodyweightLb: 183,
         calorieTarget: 2540,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-08-26T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
         // Green beans, peas, and corn are kept out of every bulking variant: on a
         // surplus the rest of the food already fills me up, and these canned
         // veggies are filling enough that adding them would make the meals take
@@ -254,10 +270,9 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         id: 'bulking-training-camping-template',
         title: 'Bulking · Training + Active Camping',
         phase: DietPhase.Bulking,
-        bodyweightLb: 183,
         calorieTarget: 2840,
         activityLevel: ActivityLevel.Moderate,
-        lastUpdatedAt: '2026-08-26T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
         // Green beans, peas, and corn are kept out of every bulking variant: on a
         // surplus the rest of the food already fills me up, and these canned
         // veggies are filling enough that adding them would make the meals take
@@ -304,10 +319,9 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         id: 'bulking-non-training-template',
         title: 'Bulking · Non-Training Day',
         phase: DietPhase.Bulking,
-        bodyweightLb: 183,
         calorieTarget: 2290,
         activityLevel: ActivityLevel.NonTraining,
-        lastUpdatedAt: '2026-08-26T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
         // Green beans, peas, and corn are kept out of every bulking variant: on a
         // surplus the rest of the food already fills me up, and these canned
         // veggies are filling enough that adding them would make the meals take
@@ -353,10 +367,9 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         id: 'maintenance-training-template',
         title: 'Maintenance · Training Day',
         phase: DietPhase.Maintenance,
-        bodyweightLb: 183,
         calorieTarget: 2200,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-08-26T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
         meals: [
           { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
           { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
@@ -397,10 +410,9 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         id: 'maintenance-training-camping-template',
         title: 'Maintenance · Training + Active Camping',
         phase: DietPhase.Maintenance,
-        bodyweightLb: 183,
         calorieTarget: 2500,
         activityLevel: ActivityLevel.Moderate,
-        lastUpdatedAt: '2026-08-26T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
         meals: [
           { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
           { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
@@ -442,10 +454,9 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         id: 'maintenance-non-training-template',
         title: 'Maintenance · Non-Training Day',
         phase: DietPhase.Maintenance,
-        bodyweightLb: 183,
         calorieTarget: 1950,
         activityLevel: ActivityLevel.NonTraining,
-        lastUpdatedAt: '2026-08-26T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
         meals: [
           { time: 'Meal 1', name: MealName.Meal1, items: [] },
           { time: 'Meal 2', name: MealName.Meal2, items: [] },

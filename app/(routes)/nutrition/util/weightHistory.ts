@@ -10,9 +10,15 @@ export interface WeightEntry {
 }
 
 /**
- * Bodyweight log, oldest first. Append new entries to the end. Coaching
+ * Bodyweight log, newest first. Add new entries at the top. Coaching
  * adjustments require ~2–3 weeks of trend data, so keep entries dense
  * enough (daily or near-daily) to compute a moving average.
+ *
+ * Consumers sort by `date` rather than trusting this order, but keeping it
+ * consistent makes the newest weigh-ins the first thing visible in a diff.
+ * The most recent 7-day window here also sizes every plan whose template
+ * doesn't pin its own `bodyweightLb`, so an entry added here changes the
+ * macro targets on the plans page.
  */
 export const weightHistory: WeightEntry[] = [
   { date: '2026-08-31', weightLb: 190.4 },

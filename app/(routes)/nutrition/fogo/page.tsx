@@ -123,9 +123,13 @@ export default function FogoTrackerPage() {
     }
   }
 
-  const dayTarget = nutritionPlanCalculator.computeTargets(
-    planTemplates[state.phase][state.dayType].template
-  );
+  // The template's bodyweight is optional (it normally tracks the weight log),
+  // so resolve it the same way variant resolution does before sizing the day.
+  const { template } = planTemplates[state.phase][state.dayType];
+  const dayTarget = nutritionPlanCalculator.computeTargets({
+    ...template,
+    bodyweightLb: nutritionVariants.resolveBodyweightLb(template)
+  });
 
   const sections = SECTION_ORDER.map((section) => ({
     section,

@@ -1,9 +1,11 @@
-import type { CategoryFood } from '../plans/planTemplates';
+import type { CategoryFood, TemplatePlan } from '../plans/planTemplates';
 import { planTemplates } from '../plans/planTemplates';
 import { allFoods } from '../util/foods';
 import type { Food, NutritionPlan } from '../util/types';
 import { DayType, DietPhase, FoodCategory, FoodOverrideMode, MealName } from '../util/types';
 import nutritionPlanOptimizer from './NutritionPlanOptimizer/nutritionPlanOptimizer';
+import nutritionStatsCalculator from './nutritionStatsCalculator';
+import { weightHistory } from '../util/weightHistory';
 
 /**
  * Full swap-state tree across every (phase × day-type). Keeping per-pair
@@ -48,6 +50,15 @@ const ASSIGN_SEPARATOR = '=';
  * edit) invalidates that template's cached variants automatically.
  */
 const OPTIMIZED_PLAN_STORAGE_PREFIX = 'v1-nutrition:optimized-plan:';
+
+/**
+ * Bodyweight used only when a template tracks the trend and the weight log
+ * is empty — a state the checked-in log never reaches. It exists so plan
+ * resolution can't fail on the page; a plan that genuinely needs a fixed
+ * bodyweight should pin `bodyweightLb` on its template instead of relying
+ * on this.
+ */
+const FALLBACK_BODYWEIGHT_LB = 180;
 
 /**
  * Single entry point for everything variant-shaped: key building,
@@ -281,13 +292,18 @@ class NutritionVariants {
   getOptimizedPlan(phase: DietPhase, dayType: DayType, swapState: SwapState): NutritionPlan {
     const { template } = planTemplates[phase][dayType];
     const id = this.buildKey(phase, dayType, swapState);
-    const storageKey = `${OPTIMIZED_PLAN_STORAGE_PREFIX}${id}@${template.lastUpdatedAt}`;
+    const bodyweightLb = this.resolveBodyweightLb(template);
+    // A trend-tracking template's macros move when a weigh-in lands without
+    // `lastUpdatedAt` changing, so the resolved bodyweight has to key the cache
+    // too — otherwise a new weigh-in would keep serving the previous plan.
+    const storageKey = `${OPTIMIZED_PLAN_STORAGE_PREFIX}${id}@${template.lastUpdatedAt}@${bodyweightLb}`;
 
     const cached = this.readCachedPlan(storageKey);
     if (cached !== undefined) return cached;
 
     const targetPlan: NutritionPlan = {
       ...template,
+      bodyweightLb,
       id,
       meals: template.meals.map((meal) => ({ ...meal, items: [...meal.items] }))
     };
@@ -304,6 +320,18 @@ class NutritionVariants {
     const plan: NutritionPlan = { ...optimizedPlan, id, title: template.title };
     this.writeCachedPlan(storageKey, plan);
     return plan;
+  }
+
+  /**
+   * Resolve the bodyweight a template's macros are sized against: its pinned
+   * `bodyweightLb` when it has one, otherwise the weight log's current trend
+   * bodyweight.
+   *
+   * @param template
+   */
+  resolveBodyweightLb(template: TemplatePlan): number {
+    if (template.bodyweightLb !== undefined) return template.bodyweightLb;
+    return nutritionStatsCalculator.trendBodyweightLb(weightHistory) ?? FALLBACK_BODYWEIGHT_LB;
   }
 
   /**

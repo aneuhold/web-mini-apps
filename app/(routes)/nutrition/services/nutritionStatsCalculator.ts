@@ -11,6 +11,12 @@ export const DEFAULT_CUT_RATE_PERCENT = 0.75;
 export const DEFAULT_BULK_RATE_PERCENT = 0.375;
 /** Trend windows shown by default (latest + 3 prior). */
 export const DEFAULT_TREND_WEEKS = 4;
+/**
+ * Windows averaged by `trendBodyweightLb`. One 7-day window smooths out
+ * day-to-day water/glycogen swings without lagging behind a real change in
+ * bodyweight the way a multi-week average would.
+ */
+export const TREND_BODYWEIGHT_WEEKS = 1;
 
 /**
  * One 7-day rolling window from the weight log with its average computed.
@@ -226,6 +232,26 @@ class NutritionStatsCalculator {
       buckets.push({ startDate, endDate, entries: inWindow, averageLb });
     }
     return buckets;
+  }
+
+  /**
+   * The current trend bodyweight: the average of the most recent 7-day
+   * window in the log, rounded to one decimal. This is the value plans size
+   * their macros against when their template doesn't pin a fixed bodyweight.
+   *
+   * Because `bucketByWeek` anchors on the newest *entry* rather than on the
+   * wall clock, this only moves when a weigh-in is logged — the same input
+   * always yields the same number, which is what keeps the optimizer's
+   * cached output valid between edits.
+   *
+   * Returns `undefined` for an empty log, where there is no trend to read.
+   *
+   * @param entries
+   */
+  trendBodyweightLb(entries: WeightEntry[]): number | undefined {
+    const buckets = this.bucketByWeek(entries, TREND_BODYWEIGHT_WEEKS);
+    if (buckets.length === 0) return undefined;
+    return Math.round(buckets[0].averageLb * 10) / 10;
   }
 
   /**
