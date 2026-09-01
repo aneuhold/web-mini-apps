@@ -117,27 +117,25 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         }
       ]
     },
-    [DayType.TrainingCamping]: {
+    [DayType.LightCamping]: {
       template: {
-        id: 'cutting-training-camping-template',
-        title: 'Cutting · Training + Active Camping',
+        id: 'cutting-light-camping-template',
+        title: 'Cutting · Light Camping',
         phase: DietPhase.Cutting,
         bodyweightLb: 183,
-        calorieTarget: 2000,
-        activityLevel: ActivityLevel.Moderate,
-        lastUpdatedAt: '2026-08-26T00:00:00.000Z',
+        calorieTarget: 1700,
+        activityLevel: ActivityLevel.Light,
+        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
+        // Chicken, yogurt, and bananas need a fridge or don't survive the trip,
+        // so camping days keep them out of the food pool entirely.
+        excludedFoods: [chickenBreast, dannonLightFitGreekBlueberry, banana],
         meals: [
-          { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
-          { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
-          { time: '11:00 AM', name: MealName.Lunch, items: [], calorieShareWeight: 1.15 },
-          { time: '2:40 PM', name: MealName.PreWorkout, items: [] },
-          { time: '4:50 PM', name: MealName.CampDinner, items: [] },
-          { time: '9:00 PM', name: MealName.CampLateSnack, items: [] }
+          { time: 'Meal 1', name: MealName.Meal1, items: [] },
+          { time: 'Meal 2', name: MealName.Meal2, items: [] },
+          { time: 'Meal 3', name: MealName.Meal3, items: [] }
         ]
       },
       optionalFoods: [
-        { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
-        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
         { food: riceCakeWhiteCheddar },
         {
           food: riceCakeWhiteCheddarSignatureSelect
@@ -249,32 +247,36 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         }
       ]
     },
-    [DayType.TrainingCamping]: {
+    [DayType.LightCamping]: {
       template: {
-        id: 'bulking-training-camping-template',
-        title: 'Bulking · Training + Active Camping',
+        id: 'bulking-light-camping-template',
+        title: 'Bulking · Light Camping',
         phase: DietPhase.Bulking,
         bodyweightLb: 183,
-        calorieTarget: 2840,
-        activityLevel: ActivityLevel.Moderate,
-        lastUpdatedAt: '2026-08-26T00:00:00.000Z',
+        calorieTarget: 2540,
+        activityLevel: ActivityLevel.Light,
+        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
         // Green beans, peas, and corn are kept out of every bulking variant: on a
         // surplus the rest of the food already fills me up, and these canned
         // veggies are filling enough that adding them would make the meals take
         // too long to eat.
-        excludedFoods: [greenBeansCanned, peasCanned, cornCanned],
+        // Chicken, yogurt, and bananas need a fridge or don't survive the trip,
+        // so camping days keep them out of the food pool entirely.
+        excludedFoods: [
+          greenBeansCanned,
+          peasCanned,
+          cornCanned,
+          chickenBreast,
+          dannonLightFitGreekBlueberry,
+          banana
+        ],
         meals: [
-          { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
-          { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
-          { time: '11:00 AM', name: MealName.Lunch, items: [], calorieShareWeight: 1.15 },
-          { time: '2:40 PM', name: MealName.PreWorkout, items: [] },
-          { time: '4:50 PM', name: MealName.CampDinner, items: [] },
-          { time: '9:00 PM', name: MealName.CampLateSnack, items: [] }
+          { time: 'Meal 1', name: MealName.Meal1, items: [] },
+          { time: 'Meal 2', name: MealName.Meal2, items: [] },
+          { time: 'Meal 3', name: MealName.Meal3, items: [] }
         ]
       },
       optionalFoods: [
-        { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
-        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
         { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
         { food: almonds, label: 'Almonds' },
         { food: riceCakeWhiteCheddar },
@@ -284,7 +286,6 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: riceCakeWhiteCheddarQuaker },
         { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
-        { food: banana, label: 'Bananas' },
         { food: oroweatWholeWheatBread },
         { food: privateSelectionArtisanBread },
         { food: privateSelectionRusticPotatoBread },
@@ -392,27 +393,25 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         }
       ]
     },
-    [DayType.TrainingCamping]: {
+    [DayType.LightCamping]: {
       template: {
-        id: 'maintenance-training-camping-template',
-        title: 'Maintenance · Training + Active Camping',
+        id: 'maintenance-light-camping-template',
+        title: 'Maintenance · Light Camping',
         phase: DietPhase.Maintenance,
         bodyweightLb: 183,
-        calorieTarget: 2500,
-        activityLevel: ActivityLevel.Moderate,
-        lastUpdatedAt: '2026-08-26T00:00:00.000Z',
+        calorieTarget: 2200,
+        activityLevel: ActivityLevel.Light,
+        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
+        // Chicken, yogurt, and bananas need a fridge or don't survive the trip,
+        // so camping days keep them out of the food pool entirely.
+        excludedFoods: [chickenBreast, dannonLightFitGreekBlueberry, banana],
         meals: [
-          { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
-          { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
-          { time: '11:00 AM', name: MealName.Lunch, items: [], calorieShareWeight: 1.15 },
-          { time: '2:40 PM', name: MealName.PreWorkout, items: [] },
-          { time: '4:50 PM', name: MealName.CampDinner, items: [] },
-          { time: '9:00 PM', name: MealName.CampLateSnack, items: [] }
+          { time: 'Meal 1', name: MealName.Meal1, items: [] },
+          { time: 'Meal 2', name: MealName.Meal2, items: [] },
+          { time: 'Meal 3', name: MealName.Meal3, items: [] }
         ]
       },
       optionalFoods: [
-        { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
-        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
         { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
         { food: almonds, label: 'Almonds' },
         { food: riceCakeWhiteCheddar },
@@ -422,7 +421,6 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         { food: riceCakeWhiteCheddarQuaker },
         { food: riceCakeAppleCinnamon },
         { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
-        { food: banana, label: 'Bananas' },
         { food: oroweatWholeWheatBread },
         { food: privateSelectionArtisanBread },
         { food: privateSelectionRusticPotatoBread },
