@@ -101,7 +101,7 @@ export const isDietPhase = (value: unknown): value is DietPhase =>
  */
 export enum DayType {
   Training = 'Training',
-  TrainingCamping = 'TrainingCamping',
+  LightCamping = 'LightCamping',
   NonTraining = 'NonTraining'
 }
 
@@ -120,7 +120,7 @@ export const isDayType = (value: unknown): value is DayType =>
  */
 export const DAY_TYPE_LABEL: Record<DayType, string> = {
   [DayType.Training]: 'Training Day',
-  [DayType.TrainingCamping]: 'Training + Active Camping',
+  [DayType.LightCamping]: 'Light Camping',
   [DayType.NonTraining]: 'Non-Training Day'
 };
 
@@ -194,8 +194,6 @@ export enum MealName {
   Lunch = 'Lunch',
   PreWorkout = 'PreWorkout',
   Dinner = 'Dinner',
-  CampDinner = 'CampDinner',
-  CampLateSnack = 'CampLateSnack',
   Meal1 = 'Meal1',
   Meal2 = 'Meal2',
   Meal3 = 'Meal3'
@@ -212,8 +210,6 @@ export const MEAL_NAME_LABEL: Record<MealName, string> = {
   [MealName.Lunch]: 'Lunch',
   [MealName.PreWorkout]: 'Pre-workout',
   [MealName.Dinner]: 'Dinner',
-  [MealName.CampDinner]: 'Dinner',
-  [MealName.CampLateSnack]: 'Evening Snack',
   [MealName.Meal1]: 'Meal 1',
   [MealName.Meal2]: 'Meal 2',
   [MealName.Meal3]: 'Meal 3'

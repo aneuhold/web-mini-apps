@@ -1,29 +1,35 @@
 import { checkbox, select } from '@inquirer/prompts';
 import { parseArgs } from 'util';
+import { planTemplates } from '../plans/planTemplates';
 import type { SwapState } from '../services/nutritionVariants';
 import nutritionVariants from '../services/nutritionVariants';
-import { DayType, DietPhase } from '../util/types';
+import { DayType, DietPhase, isFoodCategory } from '../util/types';
 
 const PHASE_VALUES: DietPhase[] = Object.values(DietPhase);
 const DAY_VALUES: DayType[] = Object.values(DayType);
+const SELECT_SEPARATOR = '=';
 
 /**
  * CLI-friendly spelling of each `DayType` for the `--day` flag.
  */
 const DAY_TYPE_CLI_FLAG: Record<DayType, string> = {
   [DayType.Training]: 'training',
-  [DayType.TrainingCamping]: 'training-camping',
+  [DayType.LightCamping]: 'light-camping',
   [DayType.NonTraining]: 'non-training'
 };
 
 /**
- * Parsed `--phase` / `--day` / `--variant-id` flags used by `nutrition:meals`
- * to narrow which variants it optimizes and prints.
+ * Parsed CLI flags used by `nutrition:meals` to pick which variants it
+ * optimizes and prints.
  */
 export type CliArgs = {
   phase?: DietPhase;
   day?: DayType;
   variantId?: string;
+  /** Ids of optional foods to switch on, on top of the template's defaults. */
+  on: string[];
+  /** `Category=foodId` picks for the template's category selections. */
+  selections: string[];
 };
 
 /**
@@ -38,6 +44,14 @@ export type VariantScope = {
 };
 
 /**
+ * Split a repeatable, optionally comma-separated flag into its values.
+ *
+ * @param values
+ */
+const splitListFlag = (values: string[] | undefined): string[] =>
+  (values ?? []).flatMap((value) => value.split(',')).filter((value) => value.length > 0);
+
+/**
  * Parse `process.argv` into structured CLI args using Node's built-in
  * `parseArgs`. Throws on unknown flags, missing values, or invalid flag
  * combinations (e.g. `--day` without `--phase`).
@@ -47,11 +61,15 @@ export const parseCliArgs = (): CliArgs => {
     options: {
       phase: { type: 'string' },
       day: { type: 'string' },
-      'variant-id': { type: 'string' }
+      'variant-id': { type: 'string' },
+      on: { type: 'string', multiple: true },
+      select: { type: 'string', multiple: true }
     },
     strict: true
   });
   const { phase: phaseInput, day: dayInput, 'variant-id': variantId } = values;
+  const on = splitListFlag(values.on);
+  const selections = splitListFlag(values.select);
 
   let phase: DietPhase | undefined;
   if (phaseInput !== undefined) {
@@ -74,22 +92,84 @@ export const parseCliArgs = (): CliArgs => {
   if (day && !phase) {
     throw new Error('--day requires --phase');
   }
-  if (variantId && (!phase || !day)) {
-    throw new Error('--variant-id requires both --phase and --day');
+  if ((on.length > 0 || selections.length > 0) && (!phase || !day)) {
+    throw new Error('--on and --select require both --phase and --day');
   }
-  return { phase, day, variantId };
+  if (variantId && (on.length > 0 || selections.length > 0)) {
+    throw new Error('--variant-id already spells out every toggle; drop --on / --select');
+  }
+  return { phase, day, variantId, on, selections };
 };
 
 /**
- * Expand a (phase × day-type) into every variant key under that scope.
+ * Pair a swap state with the variant key it resolves to.
+ *
+ * @param phase
+ * @param dayType
+ * @param swapState
+ */
+const toScope = (phase: DietPhase, dayType: DayType, swapState: SwapState): VariantScope => ({
+  phase,
+  dayType,
+  key: nutritionVariants.buildKey(phase, dayType, swapState),
+  swapState
+});
+
+/**
+ * The variant a (phase × day-type) shows with no toggles touched: every
+ * optional food off and each category on its default food.
  *
  * @param phase
  * @param dayType
  */
-const expand = (phase: DietPhase, dayType: DayType): VariantScope[] =>
-  nutritionVariants
-    .enumerateAll(phase, dayType)
-    .map(({ key, swapState }) => ({ phase, dayType, key, swapState }));
+const defaultScope = (phase: DietPhase, dayType: DayType): VariantScope =>
+  toScope(phase, dayType, nutritionVariants.defaultSwapState(phase, dayType));
+
+/**
+ * Build the swap state named by `--on` / `--select`, starting from the
+ * template's defaults. Throws when a flag names a food or category the
+ * template doesn't offer.
+ *
+ * @param phase
+ * @param dayType
+ * @param on
+ * @param selections
+ */
+const swapStateFromFlags = (
+  phase: DietPhase,
+  dayType: DayType,
+  on: string[],
+  selections: string[]
+): SwapState => {
+  const { optionalFoods, categoryFoods } = planTemplates[phase][dayType];
+  const swapState = nutritionVariants.defaultSwapState(phase, dayType);
+
+  for (const foodId of on) {
+    if (!optionalFoods.some(({ food }) => food.id === foodId)) {
+      const allowed = optionalFoods.map(({ food }) => food.id).join(', ');
+      throw new Error(`--on ${foodId} is not an optional food here. Available: ${allowed}`);
+    }
+    swapState.optionalFoods[foodId] = true;
+  }
+
+  for (const selection of selections) {
+    const [category, foodId] = selection.split(SELECT_SEPARATOR);
+    const categoryFood = isFoodCategory(category)
+      ? categoryFoods.find((entry) => entry.category === category)
+      : undefined;
+    if (categoryFood === undefined) {
+      const allowed = categoryFoods.map((entry) => entry.category).join(', ');
+      throw new Error(`--select ${selection} names an unknown category. Available: ${allowed}`);
+    }
+    if (!categoryFood.foods.some((food) => food.id === foodId)) {
+      const allowed = categoryFood.foods.map((food) => food.id).join(', ');
+      throw new Error(`--select ${selection} names an unknown food. Available: ${allowed}`);
+    }
+    swapState.categoryFoods[categoryFood.category] = foodId;
+  }
+
+  return swapState;
+};
 
 /**
  * Prompt for a phase. `undefined` means "All".
@@ -113,75 +193,84 @@ const promptDay = async (): Promise<DayType | undefined> =>
   });
 
 /**
- * Prompt for whether the caller wants every variant in scope or wants to
- * cherry-pick a subset. Returning `false` means "All".
+ * Prompt for one (phase × day-type)'s toggles: which optional foods are on
+ * and which food each category selection uses.
+ *
+ * @param phase
+ * @param dayType
  */
-const promptVariantSubset = async (): Promise<boolean> =>
-  select<boolean>({
-    message: 'Variants',
-    choices: [
-      { name: 'All', value: false },
-      { name: 'Pick specific…', value: true }
-    ]
-  });
+const promptSwapState = async (phase: DietPhase, dayType: DayType): Promise<SwapState> => {
+  const { optionalFoods, categoryFoods } = planTemplates[phase][dayType];
+  const swapState = nutritionVariants.defaultSwapState(phase, dayType);
+
+  if (optionalFoods.length > 0) {
+    const picked = await checkbox<string>({
+      message: 'Optional foods to switch on',
+      pageSize: Math.min(20, optionalFoods.length),
+      choices: optionalFoods.map(({ food, label }) => ({
+        name: label ?? food.name,
+        value: food.id
+      }))
+    });
+    for (const foodId of picked) {
+      swapState.optionalFoods[foodId] = true;
+    }
+  }
+
+  for (const { category, foods, label } of categoryFoods) {
+    swapState.categoryFoods[category] = await select<string>({
+      message: label,
+      choices: foods.map((food) => ({ name: food.name, value: food.id }))
+    });
+  }
+
+  return swapState;
+};
 
 /**
- * Resolve CLI args (possibly via interactive prompts when no narrowing flags
- * are passed) into the concrete set of (phase × day-type × variant) entries
- * the script should operate on.
+ * Resolve CLI args into the concrete variants the script should operate on.
+ * A scope wider than one (phase × day-type) uses each template's default
+ * variant; naming a single pair allows its toggles to be spelled out with
+ * `--on` / `--select`, or reproduced wholesale with `--variant-id`. Falls
+ * back to interactive prompts when no flags narrow the scope.
  *
  * @param args
  */
 export const resolveScope = async (args: CliArgs): Promise<VariantScope[]> => {
-  if (args.variantId !== undefined && args.phase !== undefined && args.day !== undefined) {
-    const candidates = expand(args.phase, args.day);
-    const match = candidates.find((c) => c.key === args.variantId);
-    if (!match) {
-      throw new Error(`No variant matches --variant-id ${args.variantId}`);
+  if (args.variantId !== undefined) {
+    const selection = nutritionVariants.parseKey(args.variantId);
+    if (selection === undefined) {
+      throw new Error(`--variant-id ${args.variantId} is not a valid variant key`);
     }
-    return [match];
+    const { phase, dayType, swapState } = selection;
+    return [toScope(phase, dayType, swapState)];
   }
 
   if (args.phase !== undefined && args.day !== undefined) {
-    return expand(args.phase, args.day);
+    return [
+      toScope(
+        args.phase,
+        args.day,
+        swapStateFromFlags(args.phase, args.day, args.on, args.selections)
+      )
+    ];
   }
   if (args.phase !== undefined) {
     const argPhase = args.phase;
-    return DAY_VALUES.flatMap((d) => expand(argPhase, d));
+    return DAY_VALUES.map((d) => defaultScope(argPhase, d));
   }
 
-  // Fully interactive. "All" at any level short-circuits the deeper prompts
-  // — picking "All" means "don't ask me again".
+  // Fully interactive. "All" at either level short-circuits the deeper
+  // prompts and falls back to each template's default variant.
   const pickedPhase = await promptPhase();
   if (pickedPhase === undefined) {
-    return PHASE_VALUES.flatMap((p) => DAY_VALUES.flatMap((d) => expand(p, d)));
+    return PHASE_VALUES.flatMap((p) => DAY_VALUES.map((d) => defaultScope(p, d)));
   }
 
   const pickedDay = await promptDay();
   if (pickedDay === undefined) {
-    return DAY_VALUES.flatMap((d) => expand(pickedPhase, d));
+    return DAY_VALUES.map((d) => defaultScope(pickedPhase, d));
   }
 
-  const candidates = expand(pickedPhase, pickedDay);
-  if (candidates.length <= 1) return candidates;
-
-  const wantsSubset = await promptVariantSubset();
-  if (!wantsSubset) return candidates;
-
-  const selectedKeys = await checkbox<string>({
-    message: 'Variants',
-    pageSize: Math.min(20, candidates.length),
-    choices: candidates.map((c) => ({ name: c.key, value: c.key, checked: true }))
-  });
-  return candidates.filter((c) => selectedKeys.includes(c.key));
+  return [toScope(pickedPhase, pickedDay, await promptSwapState(pickedPhase, pickedDay))];
 };
-
-/**
- * Returns `true` when no narrowing flags were passed and the script ran the
- * interactive prompt flow. Useful for scripts that want to show a final
- * confirmation step only in interactive mode.
- *
- * @param args
- */
-export const isInteractive = (args: CliArgs): boolean =>
-  args.phase === undefined && args.day === undefined && args.variantId === undefined;

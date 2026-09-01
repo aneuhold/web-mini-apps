@@ -93,17 +93,20 @@ When you update `foods.ts` or `planTemplates.ts`, run `pnpm nutrition:meals` to 
 Two scripts. They answer different questions, so pick the right one:
 
 - `pnpm nutrition:targets` — **Run this at the start of every session.** Prints the rolling weekly-average weight trend, the RP Table 10.1 calorie reference at the current weekly-avg bodyweight (one row per `ActivityLevel`, with maintenance / cutting / bulking columns), and a configured-vs-recommended analysis for every (phase × day-type) template in `planTemplates.ts`. The analysis Δ column uses `recommended − configured`: positive means "add calories to align," negative means "cut calories to align." Optional flags: `--cut-rate <pct>` (default 0.75), `--bulk-rate <pct>` (default 0.375), `--bodyweight <lb>` (override the trend-derived weight for hypotheticals), `--weeks <n>` (trend windows shown, default 4).
-- `pnpm nutrition:meals` — optimizes each in-scope variant at runtime and prints it exactly as the user sees it on the page. For each (phase × day-type × swap-combo) in scope, it treats the food pool (minus the swap state's excluded foods) as a search space and returns the macro-optimal daily quantities + meal layout, with a score and delta vs. target. This is your primary tool for "does this food fit?" and "what replaces this food if it's gone?", and for inspecting a specific variant's `Target` line + meal breakdown. If you see an issue with the output, DO NOT just discount it; adjust the food/template parameters and rerun. ACTUALLY LOOK AT THE OUTPUT — it changes quantities and meal composition together to hit targets.
+- `pnpm nutrition:meals` — optimizes each in-scope variant at runtime and prints it exactly as the user sees it on the page. For each variant in scope, it treats the food pool (minus the swap state's excluded foods) as a search space and returns the macro-optimal daily quantities + meal layout, with a score and delta vs. target. This is your primary tool for "does this food fit?" and "what replaces this food if it's gone?", and for inspecting a specific variant's `Target` line + meal breakdown. If you see an issue with the output, DO NOT just discount it; adjust the food/template parameters and rerun. ACTUALLY LOOK AT THE OUTPUT — it changes quantities and meal composition together to hit targets.
 
 ### Scoping flags (`nutrition:meals`)
 
 `nutrition:meals` is non-interactive from this skill's perspective — always pass flags explicitly. Running it with no flags starts a prompt-driven session that this skill can't drive. (`nutrition:targets` uses its own flags listed above and is fine to run with no flags.)
 
-- `nutrition:meals --phase cutting --day training --variant-id <key>` — exactly one entry. Use when only one user-facing checkbox combination needs to be inspected.
-- `nutrition:meals --phase cutting --day training` — every swap-combo for that pair (the most common scope while iterating).
-- `nutrition:meals --phase cutting` — every (day-type × swap-combo) in that phase. Use after a food-pool change that affects the whole phase.
+A run prints exactly one variant per (phase × day-type) in scope. Swap combinations are never enumerated, so inspecting "what if X is on" means naming X rather than printing everything.
 
-`--day` requires `--phase`; `--variant-id` requires both `--phase` and `--day`. Variant keys follow the form `<Phase>:<DayType>:<sortedSwapParts>`; find a key by running `nutrition:meals --phase <p> --day <d>` and reading the printed plan ids. Every valid swap combination resolves on demand.
+- `nutrition:meals --phase cutting --day training` — that pair's default variant: every optional food off, each category on its first food.
+- `nutrition:meals --phase cutting --day training --on chickenBreast,franzHoneyOatNutBread --select PeanutButter=jifChunkyPB` — the same pair with specific checkboxes on. `--on` takes optional-food ids and `--select` takes `Category=foodId`; both are repeatable, accept comma-separated lists, and require `--phase` and `--day`. Naming an id the template doesn't offer errors with the available ids.
+- `nutrition:meals --phase cutting` — the default variant of every day type in that phase. Use after a food-pool change that affects the whole phase.
+- `nutrition:meals --variant-id <key>` — reproduce one exact variant from its key (the plan id in the printed header, also shown on the page). Keys follow `<Phase>:<DayType>:<sortedSwapParts>` and carry their own phase and day type, so no other flag is needed.
+
+`--day` requires `--phase`.
 
 ### Division of labor
 
@@ -114,7 +117,7 @@ Two scripts. They answer different questions, so pick the right one:
 
 1. **New food candidate.** Add it to `util/foods.ts` (with the right `id`, `category`, `minServingAmountPerMeal`, `maxServingAmountPerMeal`, `maxServingAmountPerPlan`, `allowedStepServingAmountPerMeal`). Read the JSDoc on those fields in `util/types.ts`. Then run `pnpm nutrition:meals` for the affected (phase × day-type)s. If the food lands in any optimized variant, integrate it; if not, the optimizer preferred existing foods.
 2. **Food temporarily unavailable.** Either add it to the relevant plan template's swap list as an OFF-by-default toggle, or set `maxServingAmountPerPlan: 0` on the food in `util/foods.ts`. Then run `pnpm nutrition:meals` and translate the result back to the user.
-3. **New plan variant (per-phase × day-type toggle).** Add an `OptionalFood` or `CategoryFood` entry under the relevant `planTemplates[phase][dayType]` block in `plans/planTemplates.ts` and bump that template's `lastUpdatedAt`. Then run `pnpm nutrition:meals --phase <p> --day <d>` to inspect every new variant.
+3. **New plan variant (per-phase × day-type toggle).** Add an `OptionalFood` or `CategoryFood` entry under the relevant `planTemplates[phase][dayType]` block in `plans/planTemplates.ts` and bump that template's `lastUpdatedAt`. Then run `pnpm nutrition:meals --phase <p> --day <d> --on <foodId>` (or `--select <Category>=<foodId>`) to inspect what the new toggle does.
 4. **Calorie / bodyweight retarget for a phase.** Edit the relevant template's `calorieTarget` (and `bodyweightLb` if needed) in `plans/planTemplates.ts`, bump its `lastUpdatedAt`, then `pnpm nutrition:meals --phase <p> --day <d>` for each affected pair.
 5. **"Will X fit?" questions.** Don't mental-math across calories + 3 macros + multiple meals — let the optimizer search and read the score and delta to see the real cost of the constraint.
 

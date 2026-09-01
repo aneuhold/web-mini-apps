@@ -145,12 +145,12 @@ const printAnalysis = (rows: AnalysisRow[], latestAvgLb: number): void => {
   console.log(`\n=== Analysis ===\n`);
   console.log('Configured plan templates vs RP-recommended (Δ = recommended − configured):');
   console.log('');
-  console.log('Phase       | Day type    | Activity    | Configured | Recommended |     Δ');
-  console.log('------------+-------------+-------------+------------+-------------+------');
+  console.log('Phase       | Day type     | Activity    | Configured | Recommended |     Δ');
+  console.log('------------+--------------+-------------+------------+-------------+------');
   for (const row of rows) {
     const diff = row.recommended - row.configured;
     console.log(
-      `${row.phase.padEnd(11)} | ${row.dayType.padEnd(11)} | ${row.activityLevel.padEnd(11)} | ${String(
+      `${row.phase.padEnd(11)} | ${row.dayType.padEnd(12)} | ${row.activityLevel.padEnd(11)} | ${String(
         row.configured
       ).padStart(10)} | ${String(row.recommended).padStart(11)} | ${formatSigned(diff).padStart(5)}`
     );

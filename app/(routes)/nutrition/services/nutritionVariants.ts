@@ -2,7 +2,17 @@ import type { CategoryFood } from '../plans/planTemplates';
 import { planTemplates } from '../plans/planTemplates';
 import { allFoods } from '../util/foods';
 import type { Food, NutritionPlan } from '../util/types';
-import { DayType, DietPhase, FoodCategory, FoodOverrideMode, MealName } from '../util/types';
+import {
+  DayType,
+  DietPhase,
+  FoodCategory,
+  FoodOverrideMode,
+  isDayType,
+  isDietPhase,
+  isFoodCategory,
+  isFoodOverrideMode,
+  MealName
+} from '../util/types';
 import nutritionPlanOptimizer from './NutritionPlanOptimizer/nutritionPlanOptimizer';
 
 /**
@@ -37,9 +47,22 @@ export type FoodOverride = {
   amount: number;
 };
 
+/**
+ * A variant key decoded back into the (phase × day-type) it belongs to and
+ * the swap state it encodes.
+ */
+export type VariantSelection = {
+  phase: DietPhase;
+  dayType: DayType;
+  swapState: SwapState;
+};
+
 const KEY_SEPARATOR = ':';
 const PART_SEPARATOR = ',';
 const ASSIGN_SEPARATOR = '=';
+const OVERRIDE_SEPARATOR = '@';
+const TOGGLE_ON = 'on';
+const TOGGLE_OFF = 'off';
 
 /**
  * `sessionStorage` namespace for memoized optimizer output. Each entry is
@@ -50,9 +73,9 @@ const ASSIGN_SEPARATOR = '=';
 const OPTIMIZED_PLAN_STORAGE_PREFIX = 'v1-nutrition:optimized-plan:';
 
 /**
- * Single entry point for everything variant-shaped: key building,
- * default swap states, enumeration across a (phase × day-type), and plan
- * resolution that optimizes the hand-authored template at runtime.
+ * Single entry point for everything variant-shaped: key building and parsing,
+ * default swap states, and plan resolution that optimizes the hand-authored
+ * template at runtime.
  */
 class NutritionVariants {
   /**
@@ -70,7 +93,7 @@ class NutritionVariants {
 
     for (const { food } of template.optionalFoods) {
       const on = swapState.optionalFoods[food.id];
-      parts.push(`${food.id}${ASSIGN_SEPARATOR}${on ? 'on' : 'off'}`);
+      parts.push(`${food.id}${ASSIGN_SEPARATOR}${on ? TOGGLE_ON : TOGGLE_OFF}`);
     }
 
     for (const categoryFood of template.categoryFoods) {
@@ -82,7 +105,7 @@ class NutritionVariants {
     // off `food.id` directly. With no overrides set this adds nothing, leaving
     // existing variant keys (and their caches) unchanged.
     for (const [foodId, { mode, amount }] of Object.entries(swapState.overrides)) {
-      parts.push(`${foodId}${ASSIGN_SEPARATOR}${mode}@${amount}`);
+      parts.push(`${foodId}${ASSIGN_SEPARATOR}${mode}${OVERRIDE_SEPARATOR}${amount}`);
     }
 
     parts.sort();
@@ -116,82 +139,61 @@ class NutritionVariants {
     return {
       [DietPhase.Cutting]: {
         [DayType.Training]: this.defaultSwapState(DietPhase.Cutting, DayType.Training),
-        [DayType.TrainingCamping]: this.defaultSwapState(
-          DietPhase.Cutting,
-          DayType.TrainingCamping
-        ),
+        [DayType.LightCamping]: this.defaultSwapState(DietPhase.Cutting, DayType.LightCamping),
         [DayType.NonTraining]: this.defaultSwapState(DietPhase.Cutting, DayType.NonTraining)
       },
       [DietPhase.Bulking]: {
         [DayType.Training]: this.defaultSwapState(DietPhase.Bulking, DayType.Training),
-        [DayType.TrainingCamping]: this.defaultSwapState(
-          DietPhase.Bulking,
-          DayType.TrainingCamping
-        ),
+        [DayType.LightCamping]: this.defaultSwapState(DietPhase.Bulking, DayType.LightCamping),
         [DayType.NonTraining]: this.defaultSwapState(DietPhase.Bulking, DayType.NonTraining)
       },
       [DietPhase.Maintenance]: {
         [DayType.Training]: this.defaultSwapState(DietPhase.Maintenance, DayType.Training),
-        [DayType.TrainingCamping]: this.defaultSwapState(
-          DietPhase.Maintenance,
-          DayType.TrainingCamping
-        ),
+        [DayType.LightCamping]: this.defaultSwapState(DietPhase.Maintenance, DayType.LightCamping),
         [DayType.NonTraining]: this.defaultSwapState(DietPhase.Maintenance, DayType.NonTraining)
       }
     };
   }
 
   /**
-   * Enumerate every variant key for a (phase × day-type) by walking the cross
-   * product of its swap toggles. Returns each key paired with the swap state
-   * that produced it. Used by the optimizer to know which entries to
-   * regenerate.
+   * Decode a variant key back into the pair it belongs to and the swap state
+   * it encodes, so a key copied off the page can be reproduced elsewhere.
+   * Returns `undefined` when the key names an unknown phase or day type;
+   * unreadable parts are skipped and whatever the key leaves out keeps the
+   * template's default, so a key written against an older template still
+   * resolves.
    *
-   * @param phase
-   * @param dayType
+   * @param key
    */
-  enumerateAll(phase: DietPhase, dayType: DayType): { key: string; swapState: SwapState }[] {
-    const template = planTemplates[phase][dayType];
+  parseKey(key: string): VariantSelection | undefined {
+    const segments = key.split(KEY_SEPARATOR);
+    if (segments.length < 3) return undefined;
+    const [phase, dayType, parts] = segments;
+    if (!isDietPhase(phase) || !isDayType(dayType)) return undefined;
 
-    // Each axis is the list of mutations that set one toggle to one of its
-    // possible values: optional foods have two (off / on), category foods
-    // have one per selectable food. The variants are the cross product.
-    const axes: ((swapState: SwapState) => void)[][] = [
-      ...template.optionalFoods.map(({ food }) => [
-        (swapState: SwapState): void => {
-          swapState.optionalFoods[food.id] = false;
-        },
-        (swapState: SwapState): void => {
-          swapState.optionalFoods[food.id] = true;
-        }
-      ]),
-      ...template.categoryFoods.map(({ category, foods }) =>
-        foods.map((food) => (swapState: SwapState): void => {
-          swapState.categoryFoods[category] = food.id;
-        })
-      )
-    ];
+    const swapState = this.defaultSwapState(phase, dayType);
+    for (const part of parts.split(PART_SEPARATOR)) {
+      const assignIndex = part.indexOf(ASSIGN_SEPARATOR);
+      if (assignIndex === -1) continue;
+      const name = part.slice(0, assignIndex);
+      const value = part.slice(assignIndex + 1);
 
-    const results: { key: string; swapState: SwapState }[] = [];
-    const walk = (axisIndex: number, current: SwapState): void => {
-      if (axisIndex === axes.length) {
-        results.push({ key: this.buildKey(phase, dayType, current), swapState: current });
-        return;
+      if (isFoodCategory(name)) {
+        swapState.categoryFoods[name] = value;
+        continue;
       }
-      for (const apply of axes[axisIndex]) {
-        const next: SwapState = {
-          optionalFoods: { ...current.optionalFoods },
-          categoryFoods: { ...current.categoryFoods },
-          overrides: { ...current.overrides }
-        };
-        apply(next);
-        walk(axisIndex + 1, next);
+      if (value === TOGGLE_ON || value === TOGGLE_OFF) {
+        swapState.optionalFoods[name] = value === TOGGLE_ON;
+        continue;
       }
-    };
-    // Overrides are open-ended (any food, any amount), so they aren't an
-    // enumeration axis; enumerated variants always carry the empty default.
-    walk(0, { optionalFoods: {}, categoryFoods: {}, overrides: {} });
-    return results;
+
+      const [mode, rawAmount] = value.split(OVERRIDE_SEPARATOR);
+      const amount = Number(rawAmount);
+      if (isFoodOverrideMode(mode) && Number.isFinite(amount) && amount > 0) {
+        swapState.overrides[name] = { mode, amount };
+      }
+    }
+    return { phase, dayType, swapState };
   }
 
   /**

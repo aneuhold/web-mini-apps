@@ -18,7 +18,7 @@ import type { FogoTrackerState } from './services/fogoTrackerLocalData';
 import fogoTrackerLocalData from './services/fogoTrackerLocalData';
 
 const PHASE_ORDER: DietPhase[] = [DietPhase.Cutting, DietPhase.Bulking, DietPhase.Maintenance];
-const DAY_ORDER: DayType[] = [DayType.Training, DayType.TrainingCamping, DayType.NonTraining];
+const DAY_ORDER: DayType[] = [DayType.Training, DayType.LightCamping, DayType.NonTraining];
 const SECTION_ORDER: FogoMenuSection[] = [
   FogoMenuSection.Churrasco,
   FogoMenuSection.SeafoodEntrees,
