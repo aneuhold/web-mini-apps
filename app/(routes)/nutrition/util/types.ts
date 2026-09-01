@@ -125,11 +125,10 @@ export const DAY_TYPE_LABEL: Record<DayType, string> = {
 };
 
 /**
- * Training intensity descriptor for a plan. Drives the carb multiplier in
- * the Maintenance branch of `nutritionPlanCalculator.computeTargets`;
- * harmless on cutting and bulking plans (carbs there come from the
- * remainder formula), but kept required so every plan declares the
- * training intensity it is sized for.
+ * Daily activity descriptor for a plan. Selects the plan's row in the RP
+ * Table 10.1 maintenance lookup, and so its calorie target, and drives the
+ * carb multiplier in the Maintenance branch of
+ * `nutritionPlanCalculator.computeTargets`.
  */
 export enum ActivityLevel {
   NonTraining = 'NonTraining',
@@ -282,18 +281,20 @@ export interface FoodTotal {
 }
 
 /**
- * A complete daily nutrition plan: targets, the ordered meals, and an
- * optional notes paragraph rendered below the table.
+ * A complete daily nutrition plan: the ordered meals plus the phase and
+ * activity level its macros are sized from, and an optional notes paragraph
+ * rendered below the table.
+ *
+ * Bodyweight and the calorie target are deliberately absent: both are
+ * measurements-in-disguise, derived from the weight log's trend bodyweight
+ * by `nutritionPlanCalculator.computeTargets` rather than restated by hand
+ * on every plan.
  */
 export interface NutritionPlan {
   id: string;
   title: string;
   phase: DietPhase;
-  /** Fixed bodyweight (lb) the plan is sized for. Drives macro target math. */
-  bodyweightLb: number;
-  /** Daily calorie target (kcal) for the plan. */
-  calorieTarget: number;
-  /** Training intensity descriptor; consumed by the Maintenance branch of `computeTargets`. */
+  /** Daily activity descriptor; selects the plan's RP maintenance row. */
   activityLevel: ActivityLevel;
   /**
    * Foods that must not appear in this plan when the optimizer selects from

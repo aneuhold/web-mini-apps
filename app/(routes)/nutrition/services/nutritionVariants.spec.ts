@@ -9,37 +9,30 @@ const withOverride = (mode: FoodOverrideMode, amount: number): SwapState => ({
   overrides: { [riceCakeWhiteCheddar.id]: { mode, amount } }
 });
 
-const resolvedRiceCake = (state: SwapState) =>
+/** Rice cakes served across the whole optimized day, in rice cakes. */
+const riceCakesInPlan = (state: SwapState): number =>
   nutritionVariants
-    .resolveFoods(DietPhase.Cutting, DayType.Training, state)
-    .find((food) => food.id === riceCakeWhiteCheddar.id);
+    .getOptimizedPlan(DietPhase.Cutting, DayType.Training, state)
+    .meals.flatMap((meal) => meal.items)
+    .filter((item) => item.food.id === riceCakeWhiteCheddar.id)
+    .reduce((total, item) => total + item.quantity, 0);
 
-describe('nutritionVariants.resolveFoods', () => {
-  it('drops an optional food that is toggled off by default', () => {
+describe('nutritionVariants.getOptimizedPlan', () => {
+  it('leaves out an optional food that is toggled off by default', () => {
     const base = nutritionVariants.defaultSwapState(DietPhase.Cutting, DayType.Training);
-    expect(resolvedRiceCake(base)).toBeUndefined();
+    expect(riceCakesInPlan(base)).toBe(0);
   });
 
-  it('applies a Minimum override as a daily floor on a cloned food', () => {
-    const resolved = resolvedRiceCake(withOverride(FoodOverrideMode.Minimum, 3));
-    expect(resolved?.minServingAmountPerPlan).toBe(3);
-    // A minimum imposes no ceiling.
-    expect(resolved?.maxServingAmountPerPlan).toBeUndefined();
-    // The shared base definition is never mutated.
-    expect(resolved).not.toBe(riceCakeWhiteCheddar);
+  it('serves at least the amount of a Minimum override', () => {
+    expect(riceCakesInPlan(withOverride(FoodOverrideMode.Minimum, 3))).toBeGreaterThanOrEqual(3);
   });
 
-  it('pins both ends of the interval for an Exact override', () => {
-    const resolved = resolvedRiceCake(withOverride(FoodOverrideMode.Exact, 4));
-    expect(resolved?.minServingAmountPerPlan).toBe(4);
-    expect(resolved?.maxServingAmountPerPlan).toBe(4);
+  it('serves exactly the amount of an Exact override', () => {
+    expect(riceCakesInPlan(withOverride(FoodOverrideMode.Exact, 4))).toBe(4);
   });
 
-  it('caps the ceiling without requiring any for a Maximum override', () => {
-    const resolved = resolvedRiceCake(withOverride(FoodOverrideMode.Maximum, 2));
-    expect(resolved?.maxServingAmountPerPlan).toBe(2);
-    // A maximum imposes no floor, so none of the food is required.
-    expect(resolved?.minServingAmountPerPlan).toBeUndefined();
+  it("serves no more than the amount of a Maximum override, and needn't serve any", () => {
+    expect(riceCakesInPlan(withOverride(FoodOverrideMode.Maximum, 2))).toBeLessThanOrEqual(2);
   });
 });
 

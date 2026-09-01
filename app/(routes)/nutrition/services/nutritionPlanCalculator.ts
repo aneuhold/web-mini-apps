@@ -9,6 +9,7 @@ import type {
 } from '../util/types';
 import { ActivityLevel, DietPhase } from '../util/types';
 import macroScorer from './NutritionPlanOptimizer/macroScorer';
+import nutritionStatsCalculator from './nutritionStatsCalculator';
 
 const KCAL_PER_G_PROTEIN = 4;
 const KCAL_PER_G_CARBS = 4;
@@ -35,14 +36,17 @@ const ACTIVITY_CARB_MULTIPLIER: Record<ActivityLevel, number> = {
  */
 class NutritionPlanCalculator {
   /**
-   * Derive the daily macro target for a plan from its fixed bodyweight,
-   * calorie target, diet phase, and activity level. Returns the canonical
-   * target every consumer (page, printer, optimizer) should use.
+   * Derive the daily macro target for a plan from its diet phase and
+   * activity level, sized against the weight log's current trend bodyweight.
+   * Returns the canonical target every consumer (page, printer, optimizer)
+   * should use.
    *
    * @param plan - The plan to derive targets for.
    */
   computeTargets(plan: NutritionPlan): MacroTotals {
-    const { bodyweightLb: bw, calorieTarget: t, phase } = plan;
+    const { phase, activityLevel } = plan;
+    const bw = nutritionStatsCalculator.currentBodyweightLb();
+    const t = nutritionStatsCalculator.calorieTargetFor(phase, activityLevel, bw);
     switch (phase) {
       case DietPhase.Cutting: {
         const protein = CUTTING_PROTEIN_G_PER_LB * bw;
@@ -58,7 +62,7 @@ class NutritionPlanCalculator {
       }
       case DietPhase.Maintenance: {
         const protein = PROTEIN_BASELINE_G_PER_LB * bw;
-        const carbs = ACTIVITY_CARB_MULTIPLIER[plan.activityLevel] * bw;
+        const carbs = ACTIVITY_CARB_MULTIPLIER[activityLevel] * bw;
         const rawFat =
           (t - protein * KCAL_PER_G_PROTEIN - carbs * KCAL_PER_G_CARBS) / KCAL_PER_G_FAT;
         const fat = Math.max(rawFat, FAT_FLOOR_G_PER_LB * bw);
@@ -79,10 +83,11 @@ class NutritionPlanCalculator {
    *
    * See macro-target-calculations.md for the math behind this.
    *
-   * @param plan - The plan whose phase and bodyweight drive the floors.
+   * @param plan - The plan whose phase drives the floors.
    */
   computeFloors(plan: NutritionPlan): MacroFloors {
-    const { bodyweightLb: bw, phase } = plan;
+    const { phase } = plan;
+    const bw = nutritionStatsCalculator.currentBodyweightLb();
     switch (phase) {
       case DietPhase.Cutting:
         return { protein: PROTEIN_BASELINE_G_PER_LB * bw, carbs: 0, fat: 0 };

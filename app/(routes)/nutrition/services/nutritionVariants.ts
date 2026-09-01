@@ -14,6 +14,7 @@ import {
   MealName
 } from '../util/types';
 import nutritionPlanOptimizer from './NutritionPlanOptimizer/nutritionPlanOptimizer';
+import nutritionStatsCalculator from './nutritionStatsCalculator';
 
 /**
  * Full swap-state tree across every (phase × day-type). Keeping per-pair
@@ -197,6 +198,45 @@ class NutritionVariants {
   }
 
   /**
+   * Optimize a variant at runtime.
+   *
+   * @param phase
+   * @param dayType
+   * @param swapState
+   */
+  getOptimizedPlan(phase: DietPhase, dayType: DayType, swapState: SwapState): NutritionPlan {
+    const { template } = planTemplates[phase][dayType];
+    const id = this.buildKey(phase, dayType, swapState);
+    // Targets are derived from the weight log, so a plan's macros move when a
+    // weigh-in lands without `lastUpdatedAt` changing. The bodyweight has to
+    // key the cache too, or a new weigh-in would keep serving the old plan.
+    const bodyweightLb = nutritionStatsCalculator.currentBodyweightLb();
+    const storageKey = `${OPTIMIZED_PLAN_STORAGE_PREFIX}${id}@${template.lastUpdatedAt}@${bodyweightLb}`;
+
+    const cached = this.readCachedPlan(storageKey);
+    if (cached !== undefined) return cached;
+
+    const targetPlan: NutritionPlan = {
+      ...template,
+      id,
+      meals: template.meals.map((meal) => ({ ...meal, items: [...meal.items] }))
+    };
+    const availableFoods = this.resolveFoods(phase, dayType, swapState);
+    const preWorkoutIndex = targetPlan.meals.findIndex((meal) => meal.name === MealName.PreWorkout);
+    const preWorkoutMealIndex = preWorkoutIndex === -1 ? undefined : preWorkoutIndex;
+
+    const { optimizedPlan } = nutritionPlanOptimizer.optimize({
+      targetPlan,
+      availableFoods,
+      preWorkoutMealIndex
+    });
+
+    const plan: NutritionPlan = { ...optimizedPlan, id, title: template.title };
+    this.writeCachedPlan(storageKey, plan);
+    return plan;
+  }
+
+  /**
    * Resolve the candidate food pool for a variant. Clones every food, then
    * layers the template exclusions, optional toggles, category selection, and
    * custom overrides — in that precedence order — onto each clone's daily
@@ -207,7 +247,7 @@ class NutritionVariants {
    * @param dayType
    * @param swapState
    */
-  resolveFoods(phase: DietPhase, dayType: DayType, swapState: SwapState): Food[] {
+  private resolveFoods(phase: DietPhase, dayType: DayType, swapState: SwapState): Food[] {
     const { template, optionalFoods, categoryFoods } = planTemplates[phase][dayType];
     const { overrides } = swapState;
 
@@ -271,41 +311,6 @@ class NutritionVariants {
     }
 
     return [...pool.values()].filter((food) => food.maxServingAmountPerPlan !== 0);
-  }
-
-  /**
-   * Optimize a variant at runtime.
-   *
-   * @param phase
-   * @param dayType
-   * @param swapState
-   */
-  getOptimizedPlan(phase: DietPhase, dayType: DayType, swapState: SwapState): NutritionPlan {
-    const { template } = planTemplates[phase][dayType];
-    const id = this.buildKey(phase, dayType, swapState);
-    const storageKey = `${OPTIMIZED_PLAN_STORAGE_PREFIX}${id}@${template.lastUpdatedAt}`;
-
-    const cached = this.readCachedPlan(storageKey);
-    if (cached !== undefined) return cached;
-
-    const targetPlan: NutritionPlan = {
-      ...template,
-      id,
-      meals: template.meals.map((meal) => ({ ...meal, items: [...meal.items] }))
-    };
-    const availableFoods = this.resolveFoods(phase, dayType, swapState);
-    const preWorkoutIndex = targetPlan.meals.findIndex((meal) => meal.name === MealName.PreWorkout);
-    const preWorkoutMealIndex = preWorkoutIndex === -1 ? undefined : preWorkoutIndex;
-
-    const { optimizedPlan } = nutritionPlanOptimizer.optimize({
-      targetPlan,
-      availableFoods,
-      preWorkoutMealIndex
-    });
-
-    const plan: NutritionPlan = { ...optimizedPlan, id, title: template.title };
-    this.writeCachedPlan(storageKey, plan);
-    return plan;
   }
 
   /**
