@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { planTemplates } from '../plans/planTemplates';
+import nutritionPlanCalculator from '../services/nutritionPlanCalculator';
 import type { SwapState } from '../services/nutritionVariants';
 import nutritionVariants from '../services/nutritionVariants';
 import { DAY_TYPE_LABEL, DayType, DietPhase } from '../util/types';
@@ -38,12 +39,13 @@ const VariantSection = ({
     ({ requiredDailyQuantity }) => requiredDailyQuantity === undefined
   );
   const { categoryFoods } = template;
+  const { calories } = nutritionPlanCalculator.computeTargets(template.template);
 
   return (
     <div data-day-section>
       <h3>
         {DAY_TYPE_LABEL[dayType]}
-        <span> · {template.template.calorieTarget} cal</span>
+        <span> · {nutritionPlanCalculator.formatCalories(calories)} cal</span>
       </h3>
 
       {categoryFoods.length > 0 && (

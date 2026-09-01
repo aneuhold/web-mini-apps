@@ -14,9 +14,9 @@ import { weightHistory } from '../util/weightHistory';
 
 /**
  * Stats page. Renders the latest weight trend, the RP calorie reference at
- * the current weekly-avg bodyweight, and a configured-vs-recommended
- * analysis of every plan template. All math comes from
- * `nutritionStatsCalculator`; this page is presentation only.
+ * the current weekly-avg bodyweight, and the target every plan template
+ * resolves to. All math comes from `nutritionStatsCalculator`; this page is
+ * presentation only.
  */
 export default function NutritionStatsPage() {
   const buckets = nutritionStatsCalculator.bucketByWeek(weightHistory, DEFAULT_TREND_WEEKS);
@@ -57,7 +57,7 @@ export default function NutritionStatsPage() {
 
       <header>
         <h1>Stats</h1>
-        <p>Weight trend, RP calorie targets, configured-vs-recommended analysis</p>
+        <p>Weight trend, RP calorie targets, and what each plan template resolves to</p>
       </header>
 
       <h2 data-stats-section-title>Weight Trend</h2>
@@ -73,8 +73,8 @@ export default function NutritionStatsPage() {
       <CalorieTargetsTable rows={targetRows} />
 
       <h2 data-stats-section-title>
-        Configured vs Recommended
-        <small>Δ = recommended − configured</small>
+        Plan Templates
+        <small>derived from phase + activity level at {latest.averageLb.toFixed(1)} lb</small>
       </h2>
       <TemplateAnalysisTable rows={analysisRows} />
 

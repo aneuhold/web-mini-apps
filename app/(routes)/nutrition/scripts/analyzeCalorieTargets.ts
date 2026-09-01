@@ -1,5 +1,4 @@
 import { parseArgs } from 'util';
-import { planTemplates } from '../plans/planTemplates';
 import nutritionStatsCalculator, {
   DEFAULT_BULK_RATE_PERCENT,
   DEFAULT_CUT_RATE_PERCENT,
@@ -8,7 +7,6 @@ import nutritionStatsCalculator, {
   type AnalysisRow,
   type WeekBucket
 } from '../services/nutritionStatsCalculator';
-import { DayType, DietPhase } from '../util/types';
 import { weightHistory } from '../util/weightHistory';
 
 type CliArgs = {
@@ -134,48 +132,28 @@ const printTargetsTable = (
 };
 
 /**
- * Render the configured-vs-recommended analysis for every existing
- * (phase × day-type) plan template, and flag bodyweight drift relative to
- * the latest weekly-avg weight.
+ * Render the calorie target every (phase × day-type) template resolves to at
+ * the given bodyweight, flagging the rows where `MIN_CALORIE_TARGET` is
+ * holding the target above what the RP arithmetic asked for.
  *
  * @param rows
- * @param latestAvgLb
+ * @param bodyweightLb
  */
-const printAnalysis = (rows: AnalysisRow[], latestAvgLb: number): void => {
-  console.log(`\n=== Analysis ===\n`);
-  console.log('Configured plan templates vs RP-recommended (Δ = recommended − configured):');
-  console.log('');
-  console.log('Phase       | Day type    | Activity    | Configured | Recommended |     Δ');
-  console.log('------------+-------------+-------------+------------+-------------+------');
-  for (const row of rows) {
-    const diff = row.recommended - row.configured;
-    console.log(
-      `${row.phase.padEnd(11)} | ${row.dayType.padEnd(11)} | ${row.activityLevel.padEnd(11)} | ${String(
-        row.configured
-      ).padStart(10)} | ${String(row.recommended).padStart(11)} | ${formatSigned(diff).padStart(5)}`
-    );
-  }
-
-  const drifts = Object.values(DietPhase)
-    .flatMap((phase) =>
-      Object.values(DayType).map((dayType) => ({
-        phase,
-        dayType,
-        template: planTemplates[phase][dayType].template
-      }))
-    )
-    .map((t) => ({ ...t, drift: Math.abs(t.template.bodyweightLb - latestAvgLb) }))
-    .filter((t) => t.drift >= 3);
-  if (drifts.length === 0) return;
-  console.log('');
+const printAnalysis = (rows: AnalysisRow[], bodyweightLb: number): void => {
+  console.log(`\n=== Plan Templates @ ${bodyweightLb.toFixed(1)} lb ===\n`);
   console.log(
-    `⚠️  Some templates' bodyweightLb is ≥ 3 lb off from current weekly avg (${latestAvgLb.toFixed(
-      1
-    )} lb):`
+    `Targets are derived: each template's phase + activity level against this bodyweight.`
   );
-  for (const d of drifts) {
+  console.log('');
+  console.log('Phase       | Day type     | Activity    | Target | Note');
+  console.log('------------+--------------+-------------+--------+----------------------');
+  for (const row of rows) {
+    const floored = row.calorieTarget !== row.rawCalorieTarget;
+    const note = floored ? `floor (RP math: ${row.rawCalorieTarget})` : '';
     console.log(
-      `   ${d.phase} · ${d.dayType}: ${d.template.bodyweightLb} lb (drift ${d.drift.toFixed(1)} lb)`
+      `${row.phase.padEnd(11)} | ${row.dayType.padEnd(12)} | ${row.activityLevel.padEnd(
+        11
+      )} | ${String(row.calorieTarget).padStart(6)} | ${note}`
     );
   }
 };
@@ -210,7 +188,7 @@ const main = (): void => {
     args.cutRatePercent,
     args.bulkRatePercent
   );
-  printAnalysis(analysisRows, latestAvg);
+  printAnalysis(analysisRows, bodyweightLb);
   console.log('');
 };
 

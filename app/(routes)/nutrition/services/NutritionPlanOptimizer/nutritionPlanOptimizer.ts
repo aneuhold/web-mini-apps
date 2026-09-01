@@ -62,8 +62,6 @@ class NutritionPlanOptimizer {
       id: `${targetPlan.id}-optimized`,
       title: `${targetPlan.title} (Optimized)`,
       phase: targetPlan.phase,
-      bodyweightLb: targetPlan.bodyweightLb,
-      calorieTarget: targetPlan.calorieTarget,
       activityLevel: targetPlan.activityLevel,
       meals: optimizedMeals,
       lastUpdatedAt: targetPlan.lastUpdatedAt

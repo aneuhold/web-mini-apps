@@ -101,7 +101,7 @@ export const isDietPhase = (value: unknown): value is DietPhase =>
  */
 export enum DayType {
   Training = 'Training',
-  TrainingCamping = 'TrainingCamping',
+  LightCamping = 'LightCamping',
   NonTraining = 'NonTraining'
 }
 
@@ -120,16 +120,15 @@ export const isDayType = (value: unknown): value is DayType =>
  */
 export const DAY_TYPE_LABEL: Record<DayType, string> = {
   [DayType.Training]: 'Training Day',
-  [DayType.TrainingCamping]: 'Training + Active Camping',
+  [DayType.LightCamping]: 'Light Camping',
   [DayType.NonTraining]: 'Non-Training Day'
 };
 
 /**
- * Training intensity descriptor for a plan. Drives the carb multiplier in
- * the Maintenance branch of `nutritionPlanCalculator.computeTargets`;
- * harmless on cutting and bulking plans (carbs there come from the
- * remainder formula), but kept required so every plan declares the
- * training intensity it is sized for.
+ * Daily activity descriptor for a plan. Selects the plan's row in the RP
+ * Table 10.1 maintenance lookup, and so its calorie target, and drives the
+ * carb multiplier in the Maintenance branch of
+ * `nutritionPlanCalculator.computeTargets`.
  */
 export enum ActivityLevel {
   NonTraining = 'NonTraining',
@@ -194,8 +193,6 @@ export enum MealName {
   Lunch = 'Lunch',
   PreWorkout = 'PreWorkout',
   Dinner = 'Dinner',
-  CampDinner = 'CampDinner',
-  CampLateSnack = 'CampLateSnack',
   Meal1 = 'Meal1',
   Meal2 = 'Meal2',
   Meal3 = 'Meal3'
@@ -212,8 +209,6 @@ export const MEAL_NAME_LABEL: Record<MealName, string> = {
   [MealName.Lunch]: 'Lunch',
   [MealName.PreWorkout]: 'Pre-workout',
   [MealName.Dinner]: 'Dinner',
-  [MealName.CampDinner]: 'Dinner',
-  [MealName.CampLateSnack]: 'Evening Snack',
   [MealName.Meal1]: 'Meal 1',
   [MealName.Meal2]: 'Meal 2',
   [MealName.Meal3]: 'Meal 3'
@@ -286,18 +281,20 @@ export interface FoodTotal {
 }
 
 /**
- * A complete daily nutrition plan: targets, the ordered meals, and an
- * optional notes paragraph rendered below the table.
+ * A complete daily nutrition plan: the ordered meals plus the phase and
+ * activity level its macros are sized from, and an optional notes paragraph
+ * rendered below the table.
+ *
+ * Bodyweight and the calorie target are deliberately absent: both are
+ * measurements-in-disguise, derived from the weight log's trend bodyweight
+ * by `nutritionPlanCalculator.computeTargets` rather than restated by hand
+ * on every plan.
  */
 export interface NutritionPlan {
   id: string;
   title: string;
   phase: DietPhase;
-  /** Fixed bodyweight (lb) the plan is sized for. Drives macro target math. */
-  bodyweightLb: number;
-  /** Daily calorie target (kcal) for the plan. */
-  calorieTarget: number;
-  /** Training intensity descriptor; consumed by the Maintenance branch of `computeTargets`. */
+  /** Daily activity descriptor; selects the plan's RP maintenance row. */
   activityLevel: ActivityLevel;
   /**
    * Foods that must not appear in this plan when the optimizer selects from

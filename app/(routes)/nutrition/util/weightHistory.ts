@@ -10,11 +10,26 @@ export interface WeightEntry {
 }
 
 /**
- * Bodyweight log, oldest first. Append new entries to the end. Coaching
+ * Bodyweight log, newest first. Add new entries at the top. Coaching
  * adjustments require ~2–3 weeks of trend data, so keep entries dense
  * enough (daily or near-daily) to compute a moving average.
  */
 export const weightHistory: WeightEntry[] = [
+  { date: '2026-08-31', weightLb: 190.4 },
+  { date: '2026-08-28', weightLb: 188.2 },
+  { date: '2026-08-27', weightLb: 188.4 },
+  { date: '2026-08-26', weightLb: 187.8 },
+  { date: '2026-08-25', weightLb: 188.0 },
+  { date: '2026-08-24', weightLb: 186.2 },
+  { date: '2026-08-23', weightLb: 186.9 },
+  { date: '2026-08-21', weightLb: 187.8 },
+  { date: '2026-08-20', weightLb: 186.9 },
+  { date: '2026-08-19', weightLb: 186.5 },
+  { date: '2026-08-18', weightLb: 186.5 },
+  { date: '2026-08-13', weightLb: 187.3 },
+  { date: '2026-08-12', weightLb: 186.0 },
+  { date: '2026-08-11', weightLb: 185.1 },
+  { date: '2026-08-10', weightLb: 188.2 },
   { date: '2026-08-04', weightLb: 184.9 },
   { date: '2026-08-03', weightLb: 185.4 },
   { date: '2026-08-01', weightLb: 183.4 },
