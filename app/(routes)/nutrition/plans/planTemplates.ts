@@ -125,10 +125,18 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         bodyweightLb: 183,
         calorieTarget: 1700,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-01T00:23:00.000Z',
         // Chicken, yogurt, and bananas need a fridge or don't survive the trip,
-        // so camping days keep them out of the food pool entirely.
-        excludedFoods: [chickenBreast, dannonLightFitGreekBlueberry, banana],
+        // and canned veggies are too much to haul, so camping days keep them out
+        // of the food pool entirely.
+        excludedFoods: [
+          chickenBreast,
+          dannonLightFitGreekBlueberry,
+          banana,
+          greenBeansCanned,
+          peasCanned,
+          cornCanned
+        ],
         meals: [
           { time: 'Meal 1', name: MealName.Meal1, items: [] },
           { time: 'Meal 2', name: MealName.Meal2, items: [] },
@@ -401,10 +409,18 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         bodyweightLb: 183,
         calorieTarget: 2200,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-01T00:23:00.000Z',
         // Chicken, yogurt, and bananas need a fridge or don't survive the trip,
-        // so camping days keep them out of the food pool entirely.
-        excludedFoods: [chickenBreast, dannonLightFitGreekBlueberry, banana],
+        // and canned veggies are too much to haul, so camping days keep them out
+        // of the food pool entirely.
+        excludedFoods: [
+          chickenBreast,
+          dannonLightFitGreekBlueberry,
+          banana,
+          greenBeansCanned,
+          peasCanned,
+          cornCanned
+        ],
         meals: [
           { time: 'Meal 1', name: MealName.Meal1, items: [] },
           { time: 'Meal 2', name: MealName.Meal2, items: [] },
