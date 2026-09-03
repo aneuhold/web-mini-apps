@@ -82,7 +82,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         title: 'Cutting · Training Day',
         phase: DietPhase.Cutting,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-03T00:00:00.000Z',
         meals: [
           { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
           { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
@@ -121,7 +121,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         title: 'Cutting · Light Camping',
         phase: DietPhase.Cutting,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-09-01T00:23:00.000Z',
+        lastUpdatedAt: '2026-09-03T00:00:00.000Z',
         // Chicken, yogurt, and bananas need a fridge or don't survive the trip,
         // and canned veggies are too much to haul, so camping days keep them out
         // of the food pool entirely.
@@ -167,7 +167,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         title: 'Cutting · Non-Training Day',
         phase: DietPhase.Cutting,
         activityLevel: ActivityLevel.NonTraining,
-        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-03T00:00:00.000Z',
         meals: [
           { time: 'Meal 1', name: MealName.Meal1, items: [] },
           { time: 'Meal 2', name: MealName.Meal2, items: [] },
@@ -206,7 +206,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         title: 'Bulking · Training Day',
         phase: DietPhase.Bulking,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-03T00:00:00.000Z',
         // Green beans, peas, and corn are kept out of every bulking variant: on a
         // surplus the rest of the food already fills me up, and these canned
         // veggies are filling enough that adding them would make the meals take
@@ -253,7 +253,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         title: 'Bulking · Light Camping',
         phase: DietPhase.Bulking,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-03T00:00:00.000Z',
         // Green beans, peas, and corn are kept out of every bulking variant: on a
         // surplus the rest of the food already fills me up, and these canned
         // veggies are filling enough that adding them would make the meals take
@@ -304,7 +304,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         title: 'Bulking · Non-Training Day',
         phase: DietPhase.Bulking,
         activityLevel: ActivityLevel.NonTraining,
-        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-03T00:00:00.000Z',
         // Green beans, peas, and corn are kept out of every bulking variant: on a
         // surplus the rest of the food already fills me up, and these canned
         // veggies are filling enough that adding them would make the meals take
@@ -351,7 +351,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         title: 'Maintenance · Training Day',
         phase: DietPhase.Maintenance,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-03T00:00:00.000Z',
         meals: [
           { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
           { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
@@ -393,7 +393,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         title: 'Maintenance · Light Camping',
         phase: DietPhase.Maintenance,
         activityLevel: ActivityLevel.Light,
-        lastUpdatedAt: '2026-09-01T00:23:00.000Z',
+        lastUpdatedAt: '2026-09-03T00:00:00.000Z',
         // Chicken, yogurt, and bananas need a fridge or don't survive the trip,
         // and canned veggies are too much to haul, so camping days keep them out
         // of the food pool entirely.
@@ -441,7 +441,7 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
         title: 'Maintenance · Non-Training Day',
         phase: DietPhase.Maintenance,
         activityLevel: ActivityLevel.NonTraining,
-        lastUpdatedAt: '2026-09-01T00:00:00.000Z',
+        lastUpdatedAt: '2026-09-03T00:00:00.000Z',
         meals: [
           { time: 'Meal 1', name: MealName.Meal1, items: [] },
           { time: 'Meal 2', name: MealName.Meal2, items: [] },
