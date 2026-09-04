@@ -15,17 +15,12 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Set up PNPM
-        uses: pnpm/action-setup@v6
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
+      - name: Setup Node, PNPM, and install deps
+        uses: pnpm/setup@v2
         with:
-          node-version: 'lts/*'
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install
+          runtime: 'node@lts'
+          cache: true
+          require-lockfile: true
 
       - name: Build the Next.js site
         run: pnpm build
