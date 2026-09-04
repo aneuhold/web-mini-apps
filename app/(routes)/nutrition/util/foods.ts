@@ -50,9 +50,7 @@ export const premierProteinShakeChocolatePeanutButter: Food = {
   id: 'premierProteinShakeChocolatePeanutButter',
   name: 'Premier Protein Shake (Chocolate Peanut Butter)',
   serving: { amount: 1, unitLabel: 'bottle', calories: 160, protein: 30, carbs: 5, fat: 3 },
-  maxServingAmountPerMeal: 2,
-  // Stock-limited: a 12-pack has to cover the week
-  maxServingAmountPerPlan: 2,
+  maxServingAmountPerPlan: 0,
   allowedStepServingAmountPerMeal: 1
 };
 

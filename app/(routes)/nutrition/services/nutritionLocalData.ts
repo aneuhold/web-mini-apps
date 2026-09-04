@@ -120,7 +120,7 @@ class NutritionLocalData {
         }
 
         // Custom overrides: keyed by `food.id`, value must carry a known mode
-        // and a positive amount. An unknown food id is harmless — it simply
+        // and a non-negative amount. An unknown food id is harmless — it simply
         // resolves to no food when the variant is built.
         const overrides = storedDay.overrides;
         if (isPlainObject(overrides)) {
@@ -129,7 +129,7 @@ class NutritionLocalData {
               isPlainObject(override) &&
               isFoodOverrideMode(override.mode) &&
               typeof override.amount === 'number' &&
-              override.amount > 0
+              override.amount >= 0
             ) {
               fresh[phase][dayType].overrides[foodId] = {
                 mode: override.mode,
