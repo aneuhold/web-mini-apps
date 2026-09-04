@@ -2,7 +2,7 @@
   "name": "react",
   "author": "Anton G. Neuhold Jr",
   "license": "ISC",
-  "packageManager": "pnpm@10.18.2",
+  "packageManager": "pnpm@12.3.1",
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
