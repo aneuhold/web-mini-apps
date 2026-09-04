@@ -46,6 +46,14 @@ export const caseinProteinShakeVanilla: Food = {
   allowedStepServingAmountPerMeal: 1
 };
 
+export const premierProteinShakeChocolatePeanutButter: Food = {
+  id: 'premierProteinShakeChocolatePeanutButter',
+  name: 'Premier Protein Shake (Chocolate Peanut Butter)',
+  serving: { amount: 1, unitLabel: 'bottle', calories: 160, protein: 30, carbs: 5, fat: 3 },
+  maxServingAmountPerPlan: 0,
+  allowedStepServingAmountPerMeal: 1
+};
+
 export const riceCakeWhiteCheddar: Food = {
   id: 'riceCakeWhiteCheddar',
   name: 'Rice Cake (Kroger, White Cheddar)',
@@ -250,6 +258,7 @@ export const allFoods: Food[] = [
   bodyStrongWheyChocolate,
   optimumNutritionGoldStandardWhey,
   caseinProteinShakeVanilla,
+  premierProteinShakeChocolatePeanutButter,
   riceCakeWhiteCheddar,
   riceCakeWhiteCheddarSignatureSelect,
   riceCakeWhiteCheddarQuaker,

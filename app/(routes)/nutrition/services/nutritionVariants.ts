@@ -190,7 +190,7 @@ class NutritionVariants {
 
       const [mode, rawAmount] = value.split(OVERRIDE_SEPARATOR);
       const amount = Number(rawAmount);
-      if (isFoodOverrideMode(mode) && Number.isFinite(amount) && amount > 0) {
+      if (isFoodOverrideMode(mode) && amount >= 0) {
         swapState.overrides[name] = { mode, amount };
       }
     }
@@ -291,7 +291,7 @@ class NutritionVariants {
     // still keep the optimizer from landing exactly, which is the intended
     // "unless something else restricts it" behavior.
     for (const [foodId, { mode, amount }] of Object.entries(overrides)) {
-      if (amount <= 0) continue;
+      if (amount < 0) continue;
       const candidate = pool.get(foodId);
       if (candidate === undefined) continue;
       if (mode === FoodOverrideMode.Exact) {
