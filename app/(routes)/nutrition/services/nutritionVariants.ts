@@ -141,17 +141,29 @@ class NutritionVariants {
       [DietPhase.Cutting]: {
         [DayType.Training]: this.defaultSwapState(DietPhase.Cutting, DayType.Training),
         [DayType.LightCamping]: this.defaultSwapState(DietPhase.Cutting, DayType.LightCamping),
-        [DayType.NonTraining]: this.defaultSwapState(DietPhase.Cutting, DayType.NonTraining)
+        [DayType.NonTraining]: this.defaultSwapState(DietPhase.Cutting, DayType.NonTraining),
+        [DayType.NonTrainingWorkday]: this.defaultSwapState(
+          DietPhase.Cutting,
+          DayType.NonTrainingWorkday
+        )
       },
       [DietPhase.Bulking]: {
         [DayType.Training]: this.defaultSwapState(DietPhase.Bulking, DayType.Training),
         [DayType.LightCamping]: this.defaultSwapState(DietPhase.Bulking, DayType.LightCamping),
-        [DayType.NonTraining]: this.defaultSwapState(DietPhase.Bulking, DayType.NonTraining)
+        [DayType.NonTraining]: this.defaultSwapState(DietPhase.Bulking, DayType.NonTraining),
+        [DayType.NonTrainingWorkday]: this.defaultSwapState(
+          DietPhase.Bulking,
+          DayType.NonTrainingWorkday
+        )
       },
       [DietPhase.Maintenance]: {
         [DayType.Training]: this.defaultSwapState(DietPhase.Maintenance, DayType.Training),
         [DayType.LightCamping]: this.defaultSwapState(DietPhase.Maintenance, DayType.LightCamping),
-        [DayType.NonTraining]: this.defaultSwapState(DietPhase.Maintenance, DayType.NonTraining)
+        [DayType.NonTraining]: this.defaultSwapState(DietPhase.Maintenance, DayType.NonTraining),
+        [DayType.NonTrainingWorkday]: this.defaultSwapState(
+          DietPhase.Maintenance,
+          DayType.NonTrainingWorkday
+        )
       }
     };
   }

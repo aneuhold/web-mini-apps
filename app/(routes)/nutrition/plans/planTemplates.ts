@@ -197,6 +197,45 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
           label: 'Peanut Butter'
         }
       ]
+    },
+    [DayType.NonTrainingWorkday]: {
+      template: {
+        id: 'cutting-non-training-workday-template',
+        title: 'Cutting · Non-Training Workday',
+        phase: DietPhase.Cutting,
+        activityLevel: ActivityLevel.NonTraining,
+        lastUpdatedAt: '2026-09-18T00:00:00.000Z',
+        meals: [
+          { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
+          { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
+          { time: '11:00 AM', name: MealName.Lunch, items: [], calorieShareWeight: 1.15 },
+          { time: '2:40 PM', name: MealName.AfternoonSnack, items: [], calorieShareWeight: 0.7 },
+          { time: '7:30 PM', name: MealName.Dinner, items: [] }
+        ]
+      },
+      optionalFoods: [
+        { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
+        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
+        { food: riceCakeWhiteCheddar },
+        {
+          food: riceCakeWhiteCheddarSignatureSelect
+        },
+        { food: riceCakeWhiteCheddarQuaker },
+        { food: riceCakeAppleCinnamon },
+        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
+        { food: oroweatWholeWheatBread },
+        { food: privateSelectionArtisanBread },
+        { food: privateSelectionRusticPotatoBread },
+        { food: signatureSelectHoneyWheatBerryBread },
+        { food: franzHoneyOatNutBread }
+      ],
+      categoryFoods: [
+        {
+          category: FoodCategory.PeanutButter,
+          foods: [krogerChunkyPB, jifChunkyPB],
+          label: 'Peanut Butter'
+        }
+      ]
     }
   },
   [DietPhase.Bulking]: {
@@ -342,6 +381,53 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
           label: 'Peanut Butter'
         }
       ]
+    },
+    [DayType.NonTrainingWorkday]: {
+      template: {
+        id: 'bulking-non-training-workday-template',
+        title: 'Bulking · Non-Training Workday',
+        phase: DietPhase.Bulking,
+        activityLevel: ActivityLevel.NonTraining,
+        lastUpdatedAt: '2026-09-18T00:00:00.000Z',
+        // Green beans, peas, and corn are kept out of every bulking variant: on a
+        // surplus the rest of the food already fills me up, and these canned
+        // veggies are filling enough that adding them would make the meals take
+        // too long to eat.
+        excludedFoods: [greenBeansCanned, peasCanned, cornCanned],
+        meals: [
+          { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
+          { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
+          { time: '11:00 AM', name: MealName.Lunch, items: [], calorieShareWeight: 1.15 },
+          { time: '2:40 PM', name: MealName.AfternoonSnack, items: [], calorieShareWeight: 0.7 },
+          { time: '7:30 PM', name: MealName.Dinner, items: [] }
+        ]
+      },
+      optionalFoods: [
+        { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
+        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
+        { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
+        { food: almonds, label: 'Almonds' },
+        { food: riceCakeWhiteCheddar },
+        {
+          food: riceCakeWhiteCheddarSignatureSelect
+        },
+        { food: riceCakeWhiteCheddarQuaker },
+        { food: riceCakeAppleCinnamon },
+        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
+        { food: banana, label: 'Bananas' },
+        { food: oroweatWholeWheatBread },
+        { food: privateSelectionArtisanBread },
+        { food: privateSelectionRusticPotatoBread },
+        { food: signatureSelectHoneyWheatBerryBread },
+        { food: franzHoneyOatNutBread }
+      ],
+      categoryFoods: [
+        {
+          category: FoodCategory.PeanutButter,
+          foods: [krogerChunkyPB, jifChunkyPB],
+          label: 'Peanut Butter'
+        }
+      ]
     }
   },
   [DietPhase.Maintenance]: {
@@ -446,6 +532,48 @@ export const planTemplates: Record<DietPhase, Record<DayType, PlanTemplate>> = {
           { time: 'Meal 1', name: MealName.Meal1, items: [] },
           { time: 'Meal 2', name: MealName.Meal2, items: [] },
           { time: 'Meal 3', name: MealName.Meal3, items: [] }
+        ]
+      },
+      optionalFoods: [
+        { food: chickenBreast, label: 'Chicken', requiredDailyQuantity: 400 },
+        { food: dannonLightFitGreekBlueberry, label: 'Dannon Yogurt', requiredDailyQuantity: 1 },
+        { food: stringCheese, label: 'String Cheese', requiredDailyQuantity: 1 },
+        { food: almonds, label: 'Almonds' },
+        { food: riceCakeWhiteCheddar },
+        {
+          food: riceCakeWhiteCheddarSignatureSelect
+        },
+        { food: riceCakeWhiteCheddarQuaker },
+        { food: riceCakeAppleCinnamon },
+        { food: kindThinsPBDarkChocolate, label: 'Kind Thins' },
+        { food: banana, label: 'Bananas' },
+        { food: oroweatWholeWheatBread },
+        { food: privateSelectionArtisanBread },
+        { food: privateSelectionRusticPotatoBread },
+        { food: signatureSelectHoneyWheatBerryBread },
+        { food: franzHoneyOatNutBread }
+      ],
+      categoryFoods: [
+        {
+          category: FoodCategory.PeanutButter,
+          foods: [krogerChunkyPB, jifChunkyPB],
+          label: 'Peanut Butter'
+        }
+      ]
+    },
+    [DayType.NonTrainingWorkday]: {
+      template: {
+        id: 'maintenance-non-training-workday-template',
+        title: 'Maintenance · Non-Training Workday',
+        phase: DietPhase.Maintenance,
+        activityLevel: ActivityLevel.NonTraining,
+        lastUpdatedAt: '2026-09-18T00:00:00.000Z',
+        meals: [
+          { time: '5:30 AM', name: MealName.Breakfast, items: [], calorieShareWeight: 1.15 },
+          { time: '8:30 AM', name: MealName.Break, items: [], calorieShareWeight: 0.7 },
+          { time: '11:00 AM', name: MealName.Lunch, items: [], calorieShareWeight: 1.15 },
+          { time: '2:40 PM', name: MealName.AfternoonSnack, items: [], calorieShareWeight: 0.7 },
+          { time: '7:30 PM', name: MealName.Dinner, items: [] }
         ]
       },
       optionalFoods: [

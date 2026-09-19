@@ -15,7 +15,8 @@ const SELECT_SEPARATOR = '=';
 const DAY_TYPE_CLI_FLAG: Record<DayType, string> = {
   [DayType.Training]: 'training',
   [DayType.LightCamping]: 'light-camping',
-  [DayType.NonTraining]: 'non-training'
+  [DayType.NonTraining]: 'non-training',
+  [DayType.NonTrainingWorkday]: 'non-training-workday'
 };
 
 /**

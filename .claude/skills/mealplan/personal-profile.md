@@ -32,6 +32,7 @@ Reference document for nutrition coaching context. Covers lifestyle, schedule, a
 
 - No fixed schedule — flexible eating windows
 - Higher hunger tolerance allows for tighter calorie days when cutting
+- On a cut, some weekend days are easier spread over 5 meals than 3 at the same calories
 
 ## Hunger Tolerance Rules
 
