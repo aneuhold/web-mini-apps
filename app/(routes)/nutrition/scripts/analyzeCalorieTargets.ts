@@ -145,13 +145,13 @@ const printAnalysis = (rows: AnalysisRow[], bodyweightLb: number): void => {
     `Targets are derived: each template's phase + activity level against this bodyweight.`
   );
   console.log('');
-  console.log('Phase       | Day type     | Activity    | Target | Note');
-  console.log('------------+--------------+-------------+--------+----------------------');
+  console.log('Phase       | Day type           | Activity    | Target | Note');
+  console.log('------------+--------------------+-------------+--------+----------------------');
   for (const row of rows) {
     const floored = row.calorieTarget !== row.rawCalorieTarget;
     const note = floored ? `floor (RP math: ${row.rawCalorieTarget})` : '';
     console.log(
-      `${row.phase.padEnd(11)} | ${row.dayType.padEnd(12)} | ${row.activityLevel.padEnd(
+      `${row.phase.padEnd(11)} | ${row.dayType.padEnd(18)} | ${row.activityLevel.padEnd(
         11
       )} | ${String(row.calorieTarget).padStart(6)} | ${note}`
     );
