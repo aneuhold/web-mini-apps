@@ -4,7 +4,21 @@ import { FoodCategory, MealName } from './types';
 export const chickenBreast: Food = {
   id: 'chickenBreast',
   name: 'Chicken Breast',
-  serving: { amount: 476, unitLabel: 'g', calories: 514, protein: 96.9, carbs: 0, fat: 14.6 },
+  // Macros are per 100g of cooked weight when boiling the chicken at home.
+  //
+  // Measured 2026-09-20.
+  //
+  // Package label, raw: 130 cal, 25g protein, 3g fat, 0g carbs per 4oz (112g).
+  // Visible fat and cartilage come off before weighing, so the raw basis here is
+  // USDA FoodData Central Foundation 2646170 (breast, boneless, skinless, raw:
+  // 22.5g protein, 1.93g fat per 100g), which is a meat-only figure:
+  // https://fdc.nal.usda.gov/food-details/2646170/nutrients
+  //
+  // Batch weights, trimmed raw to cooked: 1932g to 1221g, and 1957g to 1273g.
+  //
+  // Yield: 2494g / 3889g = 64.1%. So divide the grams of each macro by 0.641. That
+  // gets the below values.
+  serving: { amount: 100, unitLabel: 'g', calories: 167, protein: 35.1, carbs: 0, fat: 3 },
   minServingAmountPerMeal: 200,
   // Only because I don't have enough chicken in the week to support more than this per day.
   maxServingAmountPerPlan: 400,
