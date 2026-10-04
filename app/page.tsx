@@ -48,6 +48,11 @@ export default function Page() {
             Aurora Colony Pub Tech Explainer
           </Link>
         </li>
+        <li>
+          <Link href="/3d-models" aria-label="3D models app link">
+            3D Models
+          </Link>
+        </li>
       </ul>
       <Footer />
     </div>
