@@ -2,11 +2,11 @@
 
 import SceneViewer from '../../components/SceneViewer';
 import { scenesData } from '../../scenesData';
-import CatModel from './CatModel';
+import CatScene from './CatScene';
 
 /**
  * Shows the sleeping cat model in the interactive viewer.
  */
 export default function CatPage() {
-  return <SceneViewer info={scenesData.cat} sceneClass={CatModel} />;
+  return <SceneViewer info={scenesData.cat} sceneClass={CatScene} />;
 }

@@ -1,6 +1,6 @@
 import type { Manifold, ManifoldToplevel, Vec2, Vec3 } from 'manifold-3d';
-import type { GlowPoint, ModelPart } from '../../../services/ManifoldScene';
-import HalloweenHouseModel, { FogBlob, HOUSE_PALETTE } from '../HalloweenHouseModel';
+import type { GlowPoint, ScenePart } from '../../../services/ManifoldScene';
+import HalloweenHouseScene, { FogBlob, HOUSE_PALETTE } from '../HalloweenHouseScene';
 
 /**
  * A selectable object in the upstairs room. One item is made of one or more
@@ -101,9 +101,9 @@ const PALETTE = {
  * The whiteboards on that wall are left out, since they would float in
  * front of the camera.
  */
-export default class UpstairsModel extends HalloweenHouseModel<UpstairsItem> {
+export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
   readonly items = Object.values(UpstairsItem);
-  readonly parts: ModelPart<UpstairsItem>[];
+  readonly parts: ScenePart<UpstairsItem>[];
   override readonly glowPoints: GlowPoint[];
   override readonly north: Vec2 = [0, 1];
 
@@ -138,7 +138,7 @@ export default class UpstairsModel extends HalloweenHouseModel<UpstairsItem> {
    * window, curtains, art, the mini-split, and the ceiling lights, which stay
    * off for the party.
    */
-  private buildRoom(): ModelPart<UpstairsItem>[] {
+  private buildRoom(): ScenePart<UpstairsItem>[] {
     const stairwellHole = this.box(
       [ROOM_WIDTH - STAIR_TOP_X + 0.3, STAIRWELL_DEPTH + 0.2, 1],
       [STAIR_TOP_X, -0.2, -0.5]
@@ -235,7 +235,7 @@ export default class UpstairsModel extends HalloweenHouseModel<UpstairsItem> {
    * 4 ft out from the back wall where they normally sit, each desk and its
    * tower covered by large black creepy cloth.
    */
-  private buildDesks(): ModelPart<UpstairsItem>[] {
+  private buildDesks(): ScenePart<UpstairsItem>[] {
     const front = DESK_BACK_Y - DESK_DEPTH;
     const sideTable = this.union([
       this.box([0.45, 0.45, 0.03], [0.42, front + 0.1, 0.52]),
@@ -317,7 +317,7 @@ export default class UpstairsModel extends HalloweenHouseModel<UpstairsItem> {
    * Builds the hexagon LED wall panels above the right desk, glowing dim
    * green, and the framed diploma above them.
    */
-  private buildPanels(): ModelPart<UpstairsItem>[] {
+  private buildPanels(): ScenePart<UpstairsItem>[] {
     const radius = 0.085;
     const columnSpacing = 1.5 * radius * 1.06;
     const rowSpacing = Math.sqrt(3) * radius * 1.06;
@@ -359,7 +359,7 @@ export default class UpstairsModel extends HalloweenHouseModel<UpstairsItem> {
    * whose eye sockets hold red LED eyes. The antler tips stay under the
    * ceiling.
    */
-  private buildWendigo(): ModelPart<UpstairsItem>[] {
+  private buildWendigo(): ScenePart<UpstairsItem>[] {
     const x = WENDIGO_X;
     const y = WENDIGO_Y;
 
@@ -455,7 +455,7 @@ export default class UpstairsModel extends HalloweenHouseModel<UpstairsItem> {
    * side of the stairs, and the wooden gate at the top of the stairs, swung
    * open against the half wall behind the fog machine.
    */
-  private buildStairs(): ModelPart<UpstairsItem>[] {
+  private buildStairs(): ScenePart<UpstairsItem>[] {
     const bottom = -STAIR_DROP - 0.1;
     const treads = Array.from({ length: STAIR_RISERS - 1 }, (_, step) => {
       const top = -(step + 1) * STAIR_RISE;
@@ -530,7 +530,7 @@ export default class UpstairsModel extends HalloweenHouseModel<UpstairsItem> {
    * Builds the black garland: swags along the top of the half wall, a spiral
    * around the newel post, and a spiral down the stair handrail.
    */
-  private buildGarland(): ModelPart<UpstairsItem>[] {
+  private buildGarland(): ScenePart<UpstairsItem>[] {
     const swagLength = 0.8;
     const halfWallStart = NEWEL_X + 0.1;
     const halfWall = Array.from({ length: 41 }, (_, index): Vec3 => {
@@ -619,7 +619,7 @@ export default class UpstairsModel extends HalloweenHouseModel<UpstairsItem> {
    * top of the stairs through the gate to the gap between the desks in front
    * of the wendigo, and in a ring around the wendigo's base.
    */
-  private buildLeaves(): ModelPart<UpstairsItem> {
+  private buildLeaves(): ScenePart<UpstairsItem> {
     const path: Vec2[] = [
       [1.0, 0.5],
       [1.0, 1.6],
@@ -647,7 +647,7 @@ export default class UpstairsModel extends HalloweenHouseModel<UpstairsItem> {
    * left wall; and the air purifier, moved out of the wendigo's spot into the
    * back corner behind the right desk.
    */
-  private buildFurniture(): ModelPart<UpstairsItem>[] {
+  private buildFurniture(): ScenePart<UpstairsItem>[] {
     const loveseat = this.union([
       this.roundedBox([0.85, 1.6, 0.42], [0.08, 3.5, 0.02], 0.06),
       this.roundedBox([0.3, 1.6, 0.95], [0.05, 3.5, 0.02], 0.08),

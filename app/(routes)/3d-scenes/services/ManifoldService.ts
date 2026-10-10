@@ -1,7 +1,7 @@
 import type { ManifoldToplevel } from 'manifold-3d';
 
 /**
- * Loads the Manifold WASM module once and shares it across every model.
+ * Loads the Manifold WASM module once and shares it across every scene.
  */
 class ManifoldService {
   private loading: Promise<ManifoldToplevel> | null = null;

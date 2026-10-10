@@ -25,7 +25,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import CameraMover, { CameraPose } from './CameraMover';
 import DimensionOverlay from './DimensionOverlay';
-import ManifoldScene, { ModelPart } from './ManifoldScene';
+import ManifoldScene, { ScenePart } from './ManifoldScene';
 
 /**
  * The page elements and callbacks a SceneRenderer draws into and reports to.
@@ -36,18 +36,18 @@ export type SceneRendererOptions<TItem extends string> = {
   labelLayer: HTMLElement;
   labelClassName: string;
   /**
-   * A compass over the canvas, kept turned so it points to the model's north.
-   * It is left alone for models without a north.
+   * A compass over the canvas, kept turned so it points to the scene's north.
+   * It is left alone for scenes without a north.
    */
   compass: HTMLElement;
   onSelect: (item: TItem | null) => void;
 };
 
-type ModelMesh = Mesh<BufferGeometry, MeshStandardMaterial>;
+type PartMesh = Mesh<BufferGeometry, MeshStandardMaterial>;
 
-/** Points from the model toward the camera's starting position. */
+/** Points from the scene toward the camera's starting position. */
 const HOME_DIRECTION = new Vector3(1, -0.8, 0.65);
-/** Points from the model toward the sun. */
+/** Points from the scene toward the sun. */
 const SUN_DIRECTION = new Vector3(0.6, -0.3, 0.7).normalize();
 /** Edges that bend more than this many degrees render sharp instead of smooth. */
 const SHARP_EDGE_ANGLE = 50;
@@ -78,17 +78,17 @@ export default class SceneRenderer<TItem extends string> {
   private readonly raycaster = new Raycaster();
   private readonly resizeObserver: ResizeObserver;
   private readonly ground: Mesh<PlaneGeometry, ShadowMaterial>;
-  private readonly meshes: ModelMesh[];
-  private readonly meshParts = new Map<Object3D, ModelPart<TItem>>();
+  private readonly meshes: PartMesh[];
+  private readonly meshParts = new Map<Object3D, ScenePart<TItem>>();
   private readonly homePose: CameraPose;
   private pointerDownAt = new Vector2();
 
   /**
    * The renderer draws with a transparent background, so the canvas's CSS
-   * background shows behind the model.
+   * background shows behind the scene.
    */
   constructor(
-    private readonly model: ManifoldScene<TItem>,
+    private readonly manifoldScene: ManifoldScene<TItem>,
     { canvas, labelLayer, labelClassName, compass, onSelect }: SceneRendererOptions<TItem>
   ) {
     this.canvas = canvas;
@@ -105,12 +105,12 @@ export default class SceneRenderer<TItem extends string> {
     this.cameraMover = new CameraMover(this.camera, this.controls);
     this.dimensions = new DimensionOverlay(this.scene, labelClassName);
 
-    const bounds = SceneRenderer.toBox3(model.getBounds());
+    const bounds = SceneRenderer.toBox3(manifoldScene.getBounds());
     const center = bounds.getCenter(new Vector3());
     const radius = bounds.getSize(new Vector3()).length() / 2;
     this.addLights(center, radius);
     this.ground = this.addGround(center, radius, bounds.min.z);
-    this.meshes = model.parts.map((part) => this.addPart(part));
+    this.meshes = manifoldScene.parts.map((part) => this.addPart(part));
 
     canvas.addEventListener('pointerdown', this.handlePointerDown);
     canvas.addEventListener('pointerup', this.handlePointerUp);
@@ -153,7 +153,7 @@ export default class SceneRenderer<TItem extends string> {
       this.dimensions.clear();
       return;
     }
-    const bounds = SceneRenderer.toBox3(this.model.getItemBounds(item));
+    const bounds = SceneRenderer.toBox3(this.manifoldScene.getItemBounds(item));
     const pose = this.cameraMover.framePose(
       bounds.getCenter(new Vector3()),
       bounds.getSize(new Vector3()).length() / 2
@@ -251,8 +251,8 @@ export default class SceneRenderer<TItem extends string> {
   };
 
   /**
-   * Adds soft fill light, a sun whose shadows cover the whole model, and a
-   * colored light at each of the model's glow points.
+   * Adds soft fill light, a sun whose shadows cover the whole scene, and a
+   * colored light at each of the scene's glow points.
    */
   private addLights(center: Vector3, radius: number) {
     this.scene.add(new AmbientLight(0xffffff, 1.3));
@@ -271,7 +271,7 @@ export default class SceneRenderer<TItem extends string> {
     sun.shadow.bias = -0.0005;
     this.scene.add(sun, sun.target);
 
-    this.model.glowPoints.forEach(({ position, color }) => {
+    this.manifoldScene.glowPoints.forEach(({ position, color }) => {
       const glow = new PointLight(color, 1.5, 3);
       glow.position.set(...position);
       this.scene.add(glow);
@@ -279,7 +279,7 @@ export default class SceneRenderer<TItem extends string> {
   }
 
   /**
-   * Adds an invisible ground plane under the model that only shows shadows.
+   * Adds an invisible ground plane under the scene that only shows shadows.
    */
   private addGround(
     center: Vector3,
@@ -302,8 +302,8 @@ export default class SceneRenderer<TItem extends string> {
    * top of the screen.
    */
   private turnCompass() {
-    if (!this.model.north) return;
-    const [northX, northY] = this.model.north;
+    if (!this.manifoldScene.north) return;
+    const [northX, northY] = this.manifoldScene.north;
     const forward = this.controls.target.clone().sub(this.camera.position);
     // Seen from above, the screen's right is a quarter turn clockwise from forward.
     const towardRight = northX * forward.y - northY * forward.x;
@@ -313,9 +313,9 @@ export default class SceneRenderer<TItem extends string> {
   }
 
   /**
-   * Adds one model part to the scene as a shaded mesh tagged with its item.
+   * Adds one scene part as a shaded mesh tagged with its item.
    */
-  private addPart(part: ModelPart<TItem>): ModelMesh {
+  private addPart(part: ScenePart<TItem>): PartMesh {
     const material = new MeshStandardMaterial({
       color: part.color,
       roughness: 0.8,

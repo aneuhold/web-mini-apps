@@ -38,10 +38,10 @@ export const scenesData = {
 } satisfies Record<string, SceneInfo>;
 
 /**
- * Display details for one 3D model.
+ * Display details for one 3D scene.
  */
 export type SceneInfo = {
-  /** The sub-route the model lives at under `/3d-models`. */
+  /** The sub-route the scene lives at under `/3d-scenes`. */
   path: string;
   title: string;
   description: string;

@@ -14,7 +14,7 @@ type SceneViewerProps<TItem extends string> = {
 };
 
 /**
- * Builds a Manifold model and renders it in an interactive 3D view. Clicking
+ * Builds a Manifold scene and renders it in an interactive 3D view. Clicking
  * an item (in the view or in the list) focuses the camera on it and shows its
  * dimensions.
  */
@@ -25,7 +25,7 @@ export default function SceneViewer<TItem extends string>({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const labelLayerRef = useRef<HTMLDivElement>(null);
   const compassRef = useRef<HTMLElement>(null);
-  const sceneRef = useRef<SceneRenderer<TItem> | null>(null);
+  const rendererRef = useRef<SceneRenderer<TItem> | null>(null);
   const [status, setStatus] = useState<string>('Loading Manifold…');
   const [items, setItems] = useState<TItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<TItem | null>(null);
@@ -36,41 +36,41 @@ export default function SceneViewer<TItem extends string>({
     const labelLayer = labelLayerRef.current;
     const compass = compassRef.current;
     if (!canvas || !labelLayer || !compass) return;
-    let model: ManifoldScene<TItem> | undefined;
+    let scene: ManifoldScene<TItem> | undefined;
     let cancelled = false;
 
     const start = async () => {
       try {
         const wasm = await manifoldService.load();
         if (cancelled) return;
-        model = new sceneClass(wasm);
-        sceneRef.current = new SceneRenderer(model, {
+        scene = new sceneClass(wasm);
+        rendererRef.current = new SceneRenderer(scene, {
           canvas,
           labelLayer,
           labelClassName: styles.dimensionLabel,
           compass,
           onSelect: setSelectedItem
         });
-        setItems(model.items);
-        setShowCompass(model.north !== null);
+        setItems(scene.items);
+        setShowCompass(scene.north !== null);
         setStatus('');
       } catch (error) {
-        setStatus(`Failed to build the model: ${String(error)}`);
+        setStatus(`Failed to build the scene: ${String(error)}`);
       }
     };
     void start();
 
     return () => {
       cancelled = true;
-      sceneRef.current?.dispose();
-      sceneRef.current = null;
-      model?.dispose();
+      rendererRef.current?.dispose();
+      rendererRef.current = null;
+      scene?.dispose();
     };
   }, [sceneClass]);
 
   return (
     <div className={`papercss ${styles.container}`}>
-      <Link href="/3d-models">← All models</Link>
+      <Link href="/3d-scenes">← All scenes</Link>
       <header>
         <h1>{info.title}</h1>
         <p>{info.description}</p>
@@ -87,7 +87,7 @@ export default function SceneViewer<TItem extends string>({
             type="button"
             className={`btn-small ${item === selectedItem ? 'btn-secondary' : ''}`}
             onClick={() => {
-              sceneRef.current?.select(item);
+              rendererRef.current?.select(item);
             }}
           >
             {item}
@@ -97,7 +97,7 @@ export default function SceneViewer<TItem extends string>({
           type="button"
           className="btn-small"
           onClick={() => {
-            sceneRef.current?.resetView();
+            rendererRef.current?.resetView();
           }}
         >
           Reset view

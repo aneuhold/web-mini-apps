@@ -1,11 +1,11 @@
 import type { Manifold, ManifoldToplevel, Vec2, Vec3 } from 'manifold-3d';
-import type { GlowPoint, ModelPart } from '../../../services/ManifoldScene';
-import HalloweenHouseModel, {
+import type { GlowPoint, ScenePart } from '../../../services/ManifoldScene';
+import HalloweenHouseScene, {
   CUTAWAY_HEIGHT,
   FogBlob,
   HOUSE_PALETTE,
   WALL_THICKNESS
-} from '../HalloweenHouseModel';
+} from '../HalloweenHouseScene';
 
 /**
  * A selectable object on the main floor. One item is made of one or more
@@ -177,9 +177,9 @@ const LIGHTS = {
  * and the wall between the kitchen and the living room, are cut down so the
  * camera can look in from the north east. Sizes are estimates.
  */
-export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
+export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
   readonly items = Object.values(MainFloorItem);
-  readonly parts: ModelPart<MainFloorItem>[];
+  readonly parts: ScenePart<MainFloorItem>[];
   override readonly glowPoints: GlowPoint[];
   override readonly north: Vec2 = [1, 0];
 
@@ -224,7 +224,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
    * Builds the floors, the walls, the front door, and the cat climbing post
    * by the doorway between the dining area and the kitchen.
    */
-  private buildRooms(): ModelPart<MainFloorItem>[] {
+  private buildRooms(): ScenePart<MainFloorItem>[] {
     const livingFloor = this.slab([
       [DIVIDER_X, 0],
       [LIVING_NORTH_X, 0],
@@ -305,7 +305,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
    * Builds the gray curtains around the bay at the west end and the small
    * black creepy cloth hanging from the curtain rods in front of them.
    */
-  private buildCurtainWall(): ModelPart<MainFloorItem>[] {
+  private buildCurtainWall(): ScenePart<MainFloorItem>[] {
     const segments: [Vec2, Vec2][] = [
       [
         [DIVIDER_X, BAY_START_Y],
@@ -361,7 +361,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
    * its purple LED lighting, the crow on top wrapped in cobwebs, and tea
    * lights on the open shelves.
    */
-  private buildTvCabinet(): ModelPart<MainFloorItem>[] {
+  private buildTvCabinet(): ScenePart<MainFloorItem>[] {
     // Built facing +Y with every cubby opening toward the room, then turned.
     const cubby = (x: number, width: number, z: number, height: number) =>
       this.box([width, 0.45, height], [x, 0.06, z]);
@@ -413,7 +413,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
       },
       ...this.teaLights(
         item,
-        shelfTops.map((point) => MainFloorModel.atTvPoint(point))
+        shelfTops.map((point) => MainFloorScene.atTvPoint(point))
       )
     ];
   }
@@ -423,7 +423,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
    * table in front of it, and the large round dog bed in front of the TV
    * cabinet.
    */
-  private buildLounge(): ModelPart<MainFloorItem>[] {
+  private buildLounge(): ScenePart<MainFloorItem>[] {
     const front = 5.2;
     const y = 4.7;
     const length = 2;
@@ -474,7 +474,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
    * the food) and a three-head torchiere in the west north corner (set to
    * green). Their cobwebs stay below the shades, away from the bulbs.
    */
-  private buildLamps(): ModelPart<MainFloorItem>[] {
+  private buildLamps(): ScenePart<MainFloorItem>[] {
     const [lampX, lampY] = [5.8, 4.25];
     const posts = [lampX, lampX + 0.27].flatMap((postX) =>
       [lampY, lampY + 0.27].map((postY) => this.box([0.03, 0.03, 1.3], [postX, postY, 0]))
@@ -528,7 +528,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
    * Builds the crystal chandelier over the dining area, hung with short
    * cobwebs and a few spiders that stay well above anything on the table.
    */
-  private buildChandelier(): ModelPart<MainFloorItem>[] {
+  private buildChandelier(): ScenePart<MainFloorItem>[] {
     const [x, y] = [4.2, 1.6];
     const ringZ = 1.95;
     const ringRadius = 0.21;
@@ -602,7 +602,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
    * the purple LED light bar beside the window. The window's gray curtains
    * are left out, since the wall they hang on is cut down.
    */
-  private buildDiningWindow(): ModelPart<MainFloorItem>[] {
+  private buildDiningWindow(): ScenePart<MainFloorItem>[] {
     const sill = this.box([1.6, 0.22, 0.03], [3.4, -0.08, SILL_HEIGHT]);
     const [barX, barY] = [LIGHTS.lightBar[0], LIGHTS.lightBar[1]];
     const barBase = this.cylinder(0.02, 0.1, 0.1, [barX, barY, 0], 24);
@@ -628,7 +628,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
    * black creepy cloth hanging off its front (south) edge under the
    * tablecloth.
    */
-  private buildDessertTable(): ModelPart<MainFloorItem>[] {
+  private buildDessertTable(): ScenePart<MainFloorItem>[] {
     const [x, y] = [5.4, 0.5];
     const [depth, width] = [0.7, 1.4];
 
@@ -660,7 +660,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
    * Builds the cold food and desserts on the dessert table in two rows of
    * three, each with a label card and a tea light beside it.
    */
-  private buildDesserts(): ModelPart<MainFloorItem>[] {
+  private buildDesserts(): ScenePart<MainFloorItem>[] {
     const z = TABLE_TOP;
     const rows = [1.6, 1.2, 0.8];
     const [backColumn, frontColumn] = [5.88, 5.6];
@@ -731,7 +731,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
    * its middle, the upper cabinets, the plants on the ledge, and tea lights
    * on the counters.
    */
-  private buildKitchen(): ModelPart<MainFloorItem>[] {
+  private buildKitchen(): ScenePart<MainFloorItem>[] {
     const inner = KITCHEN_INNER_X;
     const southDepth = SOUTH_RUN_FRONT_X - inner;
     const peninsulaLength = PENINSULA_NORTH_X - inner;
@@ -810,7 +810,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
    * Builds the fridge just inside from the entry, the stove on the west face
    * of the peninsula with the range hood above it, and the dishwasher.
    */
-  private buildAppliances(): ModelPart<MainFloorItem>[] {
+  private buildAppliances(): ScenePart<MainFloorItem>[] {
     const inner = KITCHEN_INNER_X;
     // The fridge doors face north, into the galley.
     const fridge = this.subtract(
@@ -855,7 +855,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
    * meatballs with toothpicks, the dip in its bread bowl, and the pot of
    * mulled cider on the stove.
    */
-  private buildHotFood(): ModelPart<MainFloorItem>[] {
+  private buildHotFood(): ScenePart<MainFloorItem>[] {
     const chili = this.chiliStation([1.88, 2.95, COUNTER_TOP]);
     const sliders = this.sliderStation([1.88, 2.05, COUNTER_TOP]);
     const meatballs = this.meatballDish([-0.22, 1.25, COUNTER_TOP]);
@@ -899,7 +899,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
    * cloth along its top, hanging longer over the edge in front of the fog
    * machine, and Spanish moss along its edge.
    */
-  private buildBar(): ModelPart<MainFloorItem>[] {
+  private buildBar(): ScenePart<MainFloorItem>[] {
     const edgeY = -0.41;
     const runner = this.union([
       this.drape(
@@ -940,7 +940,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
   /**
    * Builds the handmade potion bottles on the bar and on the plant ledge.
    */
-  private buildPotions(): ModelPart<MainFloorItem>[] {
+  private buildPotions(): ScenePart<MainFloorItem>[] {
     const potions: Potion[] = [
       { base: [1.0, -0.25, BAR_TOP], color: PALETTE.potionGreen, round: false },
       { base: [0.82, -0.3, BAR_TOP], color: PALETTE.potionPurple, round: true },
@@ -966,7 +966,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
    * Builds the punch dispenser and glasses at the south end of the bar, away
    * from the fog machine's vent.
    */
-  private buildDrinks(): ModelPart<MainFloorItem>[] {
+  private buildDrinks(): ScenePart<MainFloorItem>[] {
     const [x, y] = [-0.28, -0.25];
     const stand = this.box([0.22, 0.22, 0.08], [x - 0.11, y - 0.11, BAR_TOP]);
     const jar = this.cylinder(0.28, 0.1, 0.1, [x, y, BAR_TOP + 0.08]);
@@ -994,7 +994,7 @@ export default class MainFloorModel extends HalloweenHouseModel<MainFloorItem> {
    * door, the fog spreading toward the door and along the floor behind the
    * bar, and the green uplight.
    */
-  private buildFogMachine(): ModelPart<MainFloorItem>[] {
+  private buildFogMachine(): ScenePart<MainFloorItem>[] {
     const blobs: FogBlob[] = [
       { center: [0.95, -1.9, 0.12], radii: [0.3, 0.25, 0.12] },
       { center: [1.5, -1.75, 0.1], radii: [0.5, 0.38, 0.1] },

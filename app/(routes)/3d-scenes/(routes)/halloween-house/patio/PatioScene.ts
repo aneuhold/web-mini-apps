@@ -1,6 +1,6 @@
 import type { Vec2, Manifold, ManifoldToplevel, Vec3 } from 'manifold-3d';
-import { GlowPoint, ModelPart } from '../../../services/ManifoldScene';
-import HalloweenHouseModel, { HOUSE_PALETTE } from '../HalloweenHouseModel';
+import { GlowPoint, ScenePart } from '../../../services/ManifoldScene';
+import HalloweenHouseScene, { HOUSE_PALETTE } from '../HalloweenHouseScene';
 
 /**
  * A selectable object on the patio. One item is made of one or more parts.
@@ -58,9 +58,9 @@ const PALETTE = {
  * corner post are built. Nothing flammable goes up here because of the fire
  * table, so the string lights are the only decoration.
  */
-export default class PatioModel extends HalloweenHouseModel<PatioItem> {
+export default class PatioScene extends HalloweenHouseScene<PatioItem> {
   readonly items = Object.values(PatioItem);
-  readonly parts: ModelPart<PatioItem>[];
+  readonly parts: ScenePart<PatioItem>[];
   override readonly glowPoints: GlowPoint[] = [
     { position: [FIRE_CENTER[0], FIRE_CENTER[1], 0.8], color: PALETTE.fire },
     { position: [1.37, 1.37, 2.1], color: HOUSE_PALETTE.warmWhite },
@@ -105,7 +105,7 @@ export default class PatioModel extends HalloweenHouseModel<PatioItem> {
    * Builds the slab, the two siding walls with their openings, the roof's
    * edge beams, the corner post with its plant hook, and the ceiling light.
    */
-  private buildStructure(): ModelPart<PatioItem>[] {
+  private buildStructure(): ScenePart<PatioItem>[] {
     const size = PATIO_SIZE;
     const t = SIDING_THICKNESS;
     const slab = this.box([size + t, size + t, 0.1], [-t, 0, -0.1]);
@@ -156,7 +156,7 @@ export default class PatioModel extends HalloweenHouseModel<PatioItem> {
    * Builds the sliding glass door into the kitchen and the window into the
    * dining area, each with white trim.
    */
-  private buildDoorAndWindow(): ModelPart<PatioItem>[] {
+  private buildDoorAndWindow(): ScenePart<PatioItem>[] {
     const size = PATIO_SIZE;
     const doorFrame = this.union([
       this.subtract(
@@ -193,7 +193,7 @@ export default class PatioModel extends HalloweenHouseModel<PatioItem> {
    * Builds the pink and purple string lights along the front beam, the right
    * beam, and the top of the back wall.
    */
-  private buildLights(): ModelPart<PatioItem>[] {
+  private buildLights(): ScenePart<PatioItem>[] {
     const size = PATIO_SIZE;
     const z = CEILING_HEIGHT - 0.2;
     const { wire, pinkBulbs, purpleBulbs } = this.stringLights([
@@ -224,11 +224,11 @@ export default class PatioModel extends HalloweenHouseModel<PatioItem> {
       const length = Math.hypot(end[0] - start[0], end[1] - start[1]);
       const spans = Math.ceil(length / LIGHT_SPAN);
       for (let span = 0; span < spans; span++) {
-        const hookA = PatioModel.lerp(start, end, span / spans);
-        const hookB = PatioModel.lerp(start, end, (span + 1) / spans);
+        const hookA = PatioScene.lerp(start, end, span / spans);
+        const hookB = PatioScene.lerp(start, end, (span + 1) / spans);
         // Four straight pieces per span approximate the sag of the wire.
         const points = [0, 0.25, 0.5, 0.75, 1].map((t): Vec3 => {
-          const [x, y, pointZ] = PatioModel.lerp(hookA, hookB, t);
+          const [x, y, pointZ] = PatioScene.lerp(hookA, hookB, t);
           return [x, y, pointZ - LIGHT_SAG * 4 * t * (1 - t)];
         });
         points.slice(1).forEach((point, step) => {
@@ -251,7 +251,7 @@ export default class PatioModel extends HalloweenHouseModel<PatioItem> {
    * Builds the two sling chairs under the window, facing the yard, and the
    * two on the right side, facing the door.
    */
-  private buildChairs(): ModelPart<PatioItem>[] {
+  private buildChairs(): ScenePart<PatioItem>[] {
     const chairs = [
       this.slingChair([0.65, 2.39, 0], 0),
       this.slingChair([1.6, 2.39, 0], 0),
@@ -281,7 +281,7 @@ export default class PatioModel extends HalloweenHouseModel<PatioItem> {
    * @param angle Degrees around Z. At 0 the chair faces -Y.
    */
   private slingChair(origin: Vec3, angle: number): [Manifold, Manifold] {
-    const at = (point: Vec3) => PatioModel.turn(point, origin, angle);
+    const at = (point: Vec3) => PatioScene.turn(point, origin, angle);
     const rod = (start: Vec3, end: Vec3) => this.capsule(at(start), at(end), 0.012);
     const sides = [-0.25, 0.25].flatMap((x) => [
       rod([x, -0.24, 0], [x, -0.22, 0.42]),
@@ -335,7 +335,7 @@ export default class PatioModel extends HalloweenHouseModel<PatioItem> {
    * Builds the small side table between the window chairs and the square
    * fire table at the back right with its flame.
    */
-  private buildTables(): ModelPart<PatioItem>[] {
+  private buildTables(): ScenePart<PatioItem>[] {
     const sideTable = this.union([
       this.box([0.3, 0.3, 0.02], [1.0, 2.3, 0.48]),
       ...[
