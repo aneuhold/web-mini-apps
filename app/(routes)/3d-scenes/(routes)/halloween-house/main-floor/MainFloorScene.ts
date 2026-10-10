@@ -32,11 +32,11 @@ import MulledCiderPot from '../../../modelAssets/halloween-house/food/MulledCide
 import PretzelRods from '../../../modelAssets/halloween-house/food/PretzelRods';
 import PunchDispenser from '../../../modelAssets/halloween-house/food/PunchDispenser';
 import SliderStation from '../../../modelAssets/halloween-house/food/SliderStation';
-import CatClimbingPost from '../../../modelAssets/halloween-house/furniture/CatClimbingPost';
 import CoffeeTable from '../../../modelAssets/halloween-house/furniture/CoffeeTable';
 import DogBed from '../../../modelAssets/halloween-house/furniture/DogBed';
 import ReclinerSofa from '../../../modelAssets/halloween-house/furniture/ReclinerSofa';
 import TvCabinet from '../../../modelAssets/halloween-house/furniture/TvCabinet';
+import WallCatRamp from '../../../modelAssets/halloween-house/furniture/WallCatRamp';
 import WhiteDesk from '../../../modelAssets/halloween-house/furniture/WhiteDesk';
 import {
   CreepyClothColor,
@@ -201,8 +201,9 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
   }
 
   /**
-   * Builds the floors, the walls, the front door, and the cat climbing post
-   * by the doorway between the dining area and the kitchen.
+   * Builds the floors, the walls, the front door, and the cat ramp mounted
+   * on the dining side of the wall beside the doorway into the kitchen,
+   * climbing toward the doorway.
    */
   private buildRooms(): ScenePart<MainFloorItem>[] {
     const livingFloor = this.slab([
@@ -287,7 +288,14 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       this.part(item, 'Patio door track', PALETTE.steel, sliderTrack),
       this.part(item, 'Front door', PALETTE.door, frontDoor),
       this.part(item, 'Front door knob', PALETTE.brass, doorKnob),
-      ...this.placeAssets(item, [new CatClimbingPost(this.context, [2.35, 1.05, 0])])
+      ...this.placeAssets(item, [
+        new WallCatRamp(this.context, [DIVIDER_X + WALL_THICKNESS / 2, 0, 0], 0, [
+          [2.85, 0.15],
+          [2.3, 0.45],
+          [1.55, 1.55],
+          [DINING_DOORWAY_END_Y + 0.15, 1.75]
+        ])
+      ])
     ];
   }
 
