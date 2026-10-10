@@ -25,6 +25,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import CameraMover, { CameraPose } from './CameraMover';
 import DimensionOverlay from './DimensionOverlay';
+import ZoomThroughTarget from './ZoomThroughTarget';
 import ManifoldScene, { ScenePart } from '../baseClasses/ManifoldScene';
 
 /**
@@ -55,10 +56,15 @@ const HIGHLIGHT_COLOR = '#ffb347';
 const NO_HIGHLIGHT_COLOR = '#000000';
 /** Pointer travel, in pixels, beyond which a press counts as a drag rather than a click. */
 const CLICK_TOLERANCE = 4;
+/**
+ * How close, as a fraction of the scene's radius, the camera gets to its orbit
+ * target before zooming in pushes the target ahead.
+ */
+const MIN_TARGET_DISTANCE_RATIO = 0.1;
 
 /**
  * Renders a ManifoldScene with three.js inside a canvas. Dragging orbits the
- * camera, and clicking an item highlights it, moves the camera to frame it,
+ * camera, zooming moves toward the pointer, and clicking an item highlights it, moves the camera to frame it,
  * and shows its dimensions.
  *
  * Manifold uses a Z-up coordinate system, so the camera's up vector is set to
@@ -74,6 +80,7 @@ export default class SceneRenderService<TItem extends string> {
   private readonly camera = new PerspectiveCamera(45, 1, 0.01, 100);
   private readonly controls: OrbitControls;
   private readonly cameraMover: CameraMover;
+  private readonly zoomThroughTarget: ZoomThroughTarget;
   private readonly dimensions: DimensionOverlay;
   private readonly raycaster = new Raycaster();
   private readonly resizeObserver: ResizeObserver;
@@ -102,12 +109,18 @@ export default class SceneRenderService<TItem extends string> {
 
     this.camera.up.set(0, 0, 1);
     this.controls = new OrbitControls(this.camera, canvas);
+    this.controls.zoomToCursor = true;
     this.cameraMover = new CameraMover(this.camera, this.controls);
     this.dimensions = new DimensionOverlay(this.scene, labelClassName);
 
     const bounds = SceneRenderService.toBox3(manifoldScene.getBounds());
     const center = bounds.getCenter(new Vector3());
     const radius = bounds.getSize(new Vector3()).length() / 2;
+    this.zoomThroughTarget = new ZoomThroughTarget(
+      this.camera,
+      this.controls,
+      radius * MIN_TARGET_DISTANCE_RATIO
+    );
     this.addLights(center, radius);
     this.ground = this.addGround(center, radius, bounds.min.z);
     this.meshes = manifoldScene.parts.map((part) => this.addPart(part));
@@ -182,6 +195,7 @@ export default class SceneRenderService<TItem extends string> {
     this.canvas.removeEventListener('pointerup', this.handlePointerUp);
     this.resizeObserver.disconnect();
     this.cameraMover.dispose();
+    this.zoomThroughTarget.dispose();
     this.controls.dispose();
     this.dimensions.dispose();
     [...this.meshes, this.ground].forEach((mesh) => {

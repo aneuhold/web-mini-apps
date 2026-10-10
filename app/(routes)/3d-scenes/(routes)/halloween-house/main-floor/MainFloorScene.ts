@@ -12,6 +12,7 @@ import Fog, { FogBlob } from '../../../modelAssets/halloween-house/decorations/F
 import FogMachine from '../../../modelAssets/halloween-house/decorations/FogMachine';
 import HangingSpider from '../../../modelAssets/halloween-house/decorations/HangingSpider';
 import LabelCard from '../../../modelAssets/halloween-house/decorations/LabelCard';
+import LightedBottleShelf from '../../../modelAssets/halloween-house/decorations/LightedBottleShelf';
 import PotionBottle, {
   PotionColor
 } from '../../../modelAssets/halloween-house/decorations/PotionBottle';
@@ -71,10 +72,9 @@ enum MainFloorItem {
 }
 
 /**
- * One handmade potion bottle standing on a surface.
+ * One handmade potion bottle.
  */
 type Potion = {
-  base: Vec3;
   color: PotionColor;
   /** A round-bottomed flask instead of a tall bottle. */
   round: boolean;
@@ -116,8 +116,6 @@ const DINING_DOORWAY_END_Y = 0.9;
 const COUNTER_TOP = 0.91;
 /** The top of the moss green creepy cloth lying on the bar. */
 const BAR_TOP = COUNTER_TOP + 0.012;
-/** The top of the raised ledge along the middle of the peninsula. */
-const LEDGE_TOP = 1.05;
 /** The top surface of the white desk. */
 const DESK_HEIGHT = 0.75;
 /** The top of the black tablecloth on the white desk. */
@@ -144,7 +142,6 @@ const PALETTE = {
   curtain: '#5d6672',
   rod: '#2f2f33',
   oak: '#c48b3f',
-  darkOak: '#8a5a2b',
   counter: '#eeebe3',
   steel: '#a9adb2'
 };
@@ -194,7 +191,6 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       ...this.buildAppliances(),
       ...this.buildHotFood(),
       ...this.buildBar(),
-      ...this.buildPotions(),
       ...this.buildDrinks(),
       ...this.buildFogMachine()
     ];
@@ -508,9 +504,9 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
   /**
    * Builds the kitchen cabinets: the south run from the fridge to the
    * peninsula with the sink cut in, the drawer counter against the wall
-   * shared with the living room, the peninsula with the raised ledge along
-   * its middle, the upper cabinets, the plants on the ledge, and tea lights
-   * on the counters.
+   * shared with the living room, the peninsula, the upper cabinets, the
+   * plants on the peninsula behind the stove, and tea lights on the
+   * counters.
    */
   private buildKitchen(): ScenePart<MainFloorItem>[] {
     const inner = KITCHEN_INNER_X;
@@ -550,12 +546,6 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       ]),
       this.union([sink, stoveSlot])
     );
-    // A short raised wall along the middle of the peninsula, between the
-    // stove side and the bar side, with its ledge under the upper cabinets.
-    const ledge = this.subtract(
-      this.box([peninsulaLength, 0.12, LEDGE_TOP - COUNTER_TOP], [inner, -0.08, COUNTER_TOP]),
-      stoveSlot
-    );
     const uppers = this.union([
       this.box([0.33, 2.65, 0.75], [inner, 0.6, 1.45]),
       this.box([peninsulaLength, 0.35, 0.75], [inner, 0.05, 1.45])
@@ -571,10 +561,9 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       this.part(item, 'Base cabinets', PALETTE.oak, bases),
       this.part(item, 'Upper cabinets', PALETTE.oak, uppers),
       this.part(item, 'Countertops', PALETTE.counter, tops),
-      this.part(item, 'Plant ledge', PALETTE.darkOak, ledge),
       ...this.placeAssets(item, [
-        new PottedPlant(this.context, [-0.4, -0.02, LEDGE_TOP]),
-        new PottedPlant(this.context, [0.0, -0.02, LEDGE_TOP]),
+        new PottedPlant(this.context, [-0.4, 0.2, COUNTER_TOP]),
+        new PottedPlant(this.context, [0.0, 0.2, COUNTER_TOP]),
         new TeaLight(this.context, [...KITCHEN_CANDLE, COUNTER_TOP], true),
         ...teaLightSpots.map((spot) => new TeaLight(this.context, spot))
       ])
@@ -584,7 +573,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
   /**
    * Builds the fridge just inside from the entry with its doors facing north
    * into the galley, the stove facing west on the west face of the peninsula
-   * with its back guard against the raised ledge, the range hood above it,
+   * with its back toward the bar, the range hood above it,
    * and the dishwasher.
    */
   private buildAppliances(): ScenePart<MainFloorItem>[] {
@@ -615,12 +604,33 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
   /**
    * Builds the bar on the east face of the peninsula: the moss green creepy
    * cloth along its top, hanging longer over the edge in front of the fog
-   * machine, and Spanish moss along its edge.
+   * machine, Spanish moss along its edge, and the lighted bottle shelf at its
+   * north end with the handmade potion bottles in a row on its top step.
    */
   private buildBar(): ScenePart<MainFloorItem>[] {
     const edgeY = -0.41;
     const mossSpots = [1.1, 0.75, 0.4, 0.05];
+    const shelf = new LightedBottleShelf(
+      this.context,
+      [0.18, -0.34, BAR_TOP],
+      1,
+      LightColor.Purple
+    );
+    const potions: Potion[] = [
+      { color: PotionColor.Red, round: false },
+      { color: PotionColor.Green, round: true },
+      { color: PotionColor.Purple, round: false },
+      { color: PotionColor.Teal, round: true },
+      { color: PotionColor.Red, round: false },
+      { color: PotionColor.Purple, round: true },
+      { color: PotionColor.Green, round: false }
+    ];
     return this.placeAssets(MainFloorItem.Bar, [
+      shelf,
+      ...potions.map(
+        ({ color, round }, index) =>
+          new PotionBottle(this.context, shelf.bottleSpot(index, potions.length), color, round)
+      ),
       new CreepyCloth(
         this.context,
         [KITCHEN_INNER_X - 0.01, edgeY, 0.6],
@@ -643,25 +653,6 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
           )
       )
     ]);
-  }
-
-  /**
-   * Builds the handmade potion bottles on the bar and on the plant ledge.
-   */
-  private buildPotions(): ScenePart<MainFloorItem>[] {
-    const potions: Potion[] = [
-      { base: [1.0, -0.25, BAR_TOP], color: PotionColor.Green, round: false },
-      { base: [0.82, -0.3, BAR_TOP], color: PotionColor.Purple, round: true },
-      { base: [0.65, -0.22, BAR_TOP], color: PotionColor.Red, round: false },
-      { base: [0.48, -0.3, BAR_TOP], color: PotionColor.Teal, round: true },
-      { base: [-0.2, -0.02, LEDGE_TOP], color: PotionColor.Purple, round: false },
-      { base: [0.2, -0.02, LEDGE_TOP], color: PotionColor.Green, round: true },
-      { base: [1.16, -0.02, LEDGE_TOP], color: PotionColor.Red, round: false }
-    ];
-    return this.placeAssets(
-      MainFloorItem.Bar,
-      potions.map(({ base, color, round }) => new PotionBottle(this.context, base, color, round))
-    );
   }
 
   /**

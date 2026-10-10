@@ -22,7 +22,12 @@ export default class LightedBottleShelf extends HalloweenHouseAsset {
    * @param corner The shelf's minimum corner, on the surface it sits on.
    * @param length The shelf's length along X.
    */
-  constructor(context: ManifoldContext, corner: Vec3, length: number, color: LightColor) {
+  constructor(
+    context: ManifoldContext,
+    private readonly corner: Vec3,
+    private readonly length: number,
+    color: LightColor
+  ) {
     super(context);
     const [x, y, z] = corner;
     const steps = STEP_HEIGHTS.map((height, index) => ({
@@ -48,6 +53,20 @@ export default class LightedBottleShelf extends HalloweenHouseAsset {
     this.parts = [
       this.part('Bottle shelf case', CASE_COLOR, this.union(cases)),
       { ...this.part('Bottle shelf lights', lightHex, this.union(panels)), glowing: true }
+    ];
+  }
+
+  /**
+   * Finds a spot on top of the tall step, at the `index`th of `count` evenly
+   * spaced spots along its middle, for standing a bottle on.
+   */
+  bottleSpot(index: number, count: number): Vec3 {
+    const [x, y, z] = this.corner;
+    const backHeight = STEP_HEIGHTS[STEP_HEIGHTS.length - 1];
+    return [
+      x + ((index + 0.5) / count) * this.length,
+      y + (STEP_HEIGHTS.length - 0.5) * STEP_DEPTH,
+      z + backHeight
     ];
   }
 }

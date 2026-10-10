@@ -308,7 +308,7 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
       this.part(GarageItem.Garage, 'Track lights', PALETTE.steel, this.union(trackLights)),
       this.part(GarageItem.Garage, 'Garage door opener', PALETTE.opener, opener),
       ...this.placeAssets(GarageItem.Garage, [
-        new Furnace(this.context, [STORAGE_WALL_X - 1.2, GARAGE_DEPTH - 0.77, 0], CEILING_HEIGHT),
+        new Furnace(this.context, [STORAGE_WALL_X - 1.7, GARAGE_DEPTH - 0.77, 0], CEILING_HEIGHT),
         new FabricCanopy(this.context, CANOPY_CENTER, CANOPY_RADII, CEILING_HEIGHT)
       ])
     ];
@@ -520,14 +520,14 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
 
   /**
    * Builds the lounge corner and the things along the garage doors: the mini
-   * fridge on the back wall, a little away from the door into the house, the
-   * couch beside it, the white table, the cube shelves, the large speaker along the garage
-   * doors, and the large speaker beside the forest backdrop.
+   * fridge and the couch side by side on the back wall, with the couch about
+   * 0.85 m (under 3 ft) short of the furnace, the white table, the cube shelves, the large speaker along the garage doors,
+   * and the large speaker beside the forest backdrop.
    */
   private buildLounge(): ScenePart<GarageItem>[] {
     return this.placeAssets(GarageItem.Lounge, [
-      new MiniFridge(this.context, [0.4, GARAGE_DEPTH - 0.52, 0]),
-      new Couch(this.context, [0.95, 6.1, 0]),
+      new MiniFridge(this.context, [1.82, GARAGE_DEPTH - 0.52, 0]),
+      new Couch(this.context, [2.35, 6.1, 0]),
       new WhiteTable(this.context, WHITE_TABLE.min, WHITE_TABLE.max),
       new CubeShelves(this.context, CUBE_SHELVES.min, CUBE_SHELVES.max),
       // One speaker faces into the room from the garage doors, and the other

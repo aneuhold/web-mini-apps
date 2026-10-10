@@ -8,8 +8,7 @@ const BURNER_COLOR = '#3a3a3c';
 const HEIGHT = 0.91;
 
 /**
- * A black stove facing +Y, with a back guard along its -Y edge, an oven
- * window, and four burners.
+ * A black stove facing +Y, with an oven window and four burners.
  */
 export default class Stove extends HalloweenHouseAsset {
   readonly parts: ModelPart[];
@@ -20,10 +19,7 @@ export default class Stove extends HalloweenHouseAsset {
   constructor(context: ManifoldContext, corner: Vec3) {
     super(context);
     const [x, y, z] = corner;
-    const stove = this.union([
-      this.box([0.76, 0.6, HEIGHT], corner),
-      this.box([0.76, 0.08, 0.12], [x, y, z + HEIGHT])
-    ]);
+    const stove = this.box([0.76, 0.6, HEIGHT], corner);
     const ovenWindow = this.box([0.5, 0.01, 0.3], [x + 0.13, y + 0.595, z + 0.3]);
     const burners = [
       [0.18, 0.22],
