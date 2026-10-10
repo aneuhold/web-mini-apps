@@ -2,8 +2,6 @@ import type { Manifold, Vec3 } from 'manifold-3d';
 import type { ManifoldContext, ModelPart } from '../../../services/BaseManifold';
 import HalloweenHouseAsset, { HOUSE_PALETTE } from '../HalloweenHouseAsset';
 
-/** The color of every other bulb on the string. The rest are purple. */
-export const PINK_BULB_COLOR = '#ff4fa3';
 const WIRE_COLOR = '#2a2a2a';
 /** How far apart the hooks holding up the wire are. */
 const LIGHT_SPAN = 0.7;
@@ -47,7 +45,7 @@ export default class StringLights extends HalloweenHouseAsset {
     });
     this.parts = [
       this.part('String light wire', WIRE_COLOR, this.union(wires)),
-      { ...this.part('Pink bulbs', PINK_BULB_COLOR, this.union(bulbs[0])), glowing: true },
+      { ...this.part('Pink bulbs', HOUSE_PALETTE.pink, this.union(bulbs[0])), glowing: true },
       {
         ...this.part('Purple bulbs', HOUSE_PALETTE.purple, this.union(bulbs[1])),
         glowing: true

@@ -1,9 +1,7 @@
 import type { Vec3 } from 'manifold-3d';
 import type { ManifoldContext, ModelPart } from '../../../services/BaseManifold';
-import HalloweenHouseAsset from '../HalloweenHouseAsset';
+import HalloweenHouseAsset, { HOUSE_PALETTE } from '../HalloweenHouseAsset';
 
-/** The color of the fire table's flame. */
-export const FLAME_COLOR = '#ff7b2a';
 const TABLE_COLOR = '#2b2724';
 
 /**
@@ -33,7 +31,7 @@ export default class FireTable extends HalloweenHouseAsset {
     ]);
     this.parts = [
       this.part('Fire table', TABLE_COLOR, table),
-      { ...this.part('Flame', FLAME_COLOR, flame), glowing: true }
+      { ...this.part('Flame', HOUSE_PALETTE.fire, flame), glowing: true }
     ];
   }
 }
