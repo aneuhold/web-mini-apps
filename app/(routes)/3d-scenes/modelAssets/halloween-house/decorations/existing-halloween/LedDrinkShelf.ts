@@ -11,9 +11,9 @@ const STEP_HEIGHTS = [0.06, 0.13];
 const PANEL_THICKNESS = 0.015;
 
 /**
- * The LED drink shelf: a two-step bottle display running along X: black cases with frosted,
- * lit panels on top of each step, the low step in front on the -Y side and
- * the tall step behind it.
+ * A two-step LED drink shelf running along X, for displaying bottles: black
+ * cases with frosted, lit panels on top of each step, the low step in front
+ * on the -Y side and the tall step behind it.
  */
 export default class LedDrinkShelf extends HalloweenHouseAsset {
   readonly parts: ModelPart[];

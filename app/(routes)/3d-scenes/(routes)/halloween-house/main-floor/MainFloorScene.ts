@@ -638,12 +638,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
   private buildBar(): HalloweenHousePart<MainFloorItem>[] {
     const edgeY = -0.41;
     const mossSpots = [1.1, 0.75, 0.4, 0.05];
-    const shelf = new LedDrinkShelf(
-      this.context,
-      [0.18, -0.34, BAR_TOP],
-      1,
-      LightColor.Purple
-    );
+    const shelf = new LedDrinkShelf(this.context, [0.18, -0.34, BAR_TOP], 1, LightColor.Purple);
     const potions: Potion[] = [
       { color: PotionColor.Red, round: false },
       { color: PotionColor.Green, round: true },
