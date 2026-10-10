@@ -2,7 +2,9 @@ import type { Box, Manifold, ManifoldToplevel, Vec2, Vec3 } from 'manifold-3d';
 import Couch from '../../../modelAssets/halloween-house/furniture/Couch';
 import CubeShelves from '../../../modelAssets/halloween-house/furniture/CubeShelves';
 import MetalShelf from '../../../modelAssets/halloween-house/furniture/MetalShelf';
-import RolledRug, { RolledRugColor } from '../../../modelAssets/halloween-house/furniture/RolledRug';
+import RolledRug, {
+  RolledRugColor
+} from '../../../modelAssets/halloween-house/furniture/RolledRug';
 import WhiteTable from '../../../modelAssets/halloween-house/furniture/WhiteTable';
 import MiniFridge from '../../../modelAssets/halloween-house/appliances/MiniFridge';
 import Speaker from '../../../modelAssets/halloween-house/electronics/Speaker';

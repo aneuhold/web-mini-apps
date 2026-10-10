@@ -34,10 +34,11 @@ export default class Speaker extends HalloweenHouseAsset {
     const cabinet = this.box([depth, width, height], [-depth, -width / 2, 0]);
     const cones = this.union(
       coneHeights.map((z) =>
-        this.place(
-          this.track(this.wasm.Manifold.cylinder(0.02, 0.1, 0.1, 24)).rotate([0, 90, 0]),
-          [-0.01, 0, z]
-        )
+        this.place(this.track(this.wasm.Manifold.cylinder(0.02, 0.1, 0.1, 24)).rotate([0, 90, 0]), [
+          -0.01,
+          0,
+          z
+        ])
       )
     );
     this.parts = [

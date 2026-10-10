@@ -1,6 +1,31 @@
-import type { Manifold, ManifoldToplevel, Vec2, Vec3 } from 'manifold-3d';
+import type { ManifoldToplevel, Vec2, Vec3 } from 'manifold-3d';
+import AirPurifier from '../../../modelAssets/halloween-house/appliances/AirPurifier';
+import MiniSplit from '../../../modelAssets/halloween-house/appliances/MiniSplit';
+import BlackCurtain from '../../../modelAssets/halloween-house/decorations/BlackCurtain';
+import CreepyCloth from '../../../modelAssets/halloween-house/decorations/CreepyCloth';
+import FakeLeaves from '../../../modelAssets/halloween-house/decorations/FakeLeaves';
+import Fog, { FogBlob } from '../../../modelAssets/halloween-house/decorations/Fog';
+import FogMachine from '../../../modelAssets/halloween-house/decorations/FogMachine';
+import FramedArt from '../../../modelAssets/halloween-house/decorations/FramedArt';
+import FramedDiploma from '../../../modelAssets/halloween-house/decorations/FramedDiploma';
+import Garland from '../../../modelAssets/halloween-house/decorations/Garland';
+import LeafPrintCurtains from '../../../modelAssets/halloween-house/decorations/LeafPrintCurtains';
+import Wendigo from '../../../modelAssets/halloween-house/decorations/Wendigo';
+import Monitor from '../../../modelAssets/halloween-house/electronics/Monitor';
+import PcTower from '../../../modelAssets/halloween-house/electronics/PcTower';
+import Bookshelf from '../../../modelAssets/halloween-house/furniture/Bookshelf';
+import ComputerDesk from '../../../modelAssets/halloween-house/furniture/ComputerDesk';
+import GamingChair from '../../../modelAssets/halloween-house/furniture/GamingChair';
+import ReclinerLoveseat from '../../../modelAssets/halloween-house/furniture/ReclinerLoveseat';
+import SideTable from '../../../modelAssets/halloween-house/furniture/SideTable';
+import TowerStand from '../../../modelAssets/halloween-house/furniture/TowerStand';
+import WoodChair from '../../../modelAssets/halloween-house/furniture/WoodChair';
+import { HOUSE_PALETTE } from '../../../modelAssets/halloween-house/HalloweenHouseAsset';
+import FloorLamp from '../../../modelAssets/halloween-house/lighting/FloorLamp';
+import HexagonLightPanels from '../../../modelAssets/halloween-house/lighting/HexagonLightPanels';
+import Uplight from '../../../modelAssets/halloween-house/lighting/Uplight';
 import type { GlowPoint, ScenePart } from '../../../services/ManifoldScene';
-import HalloweenHouseScene, { FogBlob, HOUSE_PALETTE } from '../HalloweenHouseScene';
+import HalloweenHouseScene from '../HalloweenHouseScene';
 
 /**
  * A selectable object in the upstairs room. One item is made of one or more
@@ -51,11 +76,12 @@ const RAIL_Y = 0.07;
 /** The desks' back edge, 1.22 m (4 ft) out from the back wall. */
 const DESK_BACK_Y = ROOM_DEPTH - 1.22;
 const DESK_DEPTH = 0.6;
+/** The height of the desktops, where the monitors stand. */
+const DESK_TOP_HEIGHT = 0.74;
 
 /** Where the wendigo stands, centered on the back wall between the desks. */
 const WENDIGO_X = 2.75;
 const WENDIGO_Y = 9.2;
-const EYE_HEIGHT = 1.92;
 
 const FOG_MACHINE_POSITION: Vec3 = [2.82, 1.48, 0];
 const UPLIGHT_POSITION: Vec3 = [5.15, 0.55, -STAIR_DROP];
@@ -66,26 +92,9 @@ const PALETTE = {
   wall: '#f1f1ee',
   concrete: '#bab5ab',
   oak: '#b8834f',
-  darkWood: '#7a4a2a',
-  deskTop: '#c9a46e',
-  screen: '#1b1d22',
-  pcTower: '#2a2c30',
-  bone: '#e6dcc5',
-  rack: '#3a3a3d',
   dimGreen: '#1f9a4a',
-  frame: '#3a2a20',
-  diploma: '#efe7d2',
   glass: '#a9d4ef',
-  leafCurtain: '#cfd5dc',
-  leafPrint: '#3f5568',
-  blackCurtain: '#141418',
-  art: '#5f8fb4',
-  appliance: '#f5f5f3',
-  loveseat: '#c8b38c',
-  gamingChair: '#1f1f22',
-  lampShade: '#f3efe6',
-  metal: '#8b8e93',
-  garland: '#1b1b1b'
+  metal: '#8b8e93'
 };
 
 /**
@@ -112,18 +121,32 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
     this.parts = [
       ...this.buildRoom(),
       ...this.buildDesks(),
-      ...this.buildPanels(),
-      ...this.buildWendigo(),
+      // The hexagon LED panels hang above the right desk, glowing dim green,
+      // with the diploma above them.
+      ...this.placeAssets(UpstairsItem.Panels, [
+        new HexagonLightPanels(this.context, [3.65, ROOM_DEPTH, 1.45], PALETTE.dimGreen),
+        new FramedDiploma(this.context, [3.9, ROOM_DEPTH - 0.025, 1.88])
+      ]),
+      ...this.placeAssets(UpstairsItem.Wendigo, [
+        new Wendigo(this.context, [WENDIGO_X, WENDIGO_Y, 0])
+      ]),
       ...this.buildStairs(),
       ...this.buildGarland(),
-      ...this.fogMachine(UpstairsItem.Fog, FOG_MACHINE_POSITION, 180),
-      this.fog(UpstairsItem.Fog, this.stairFog()),
-      ...this.uplight(UpstairsItem.Uplight, UPLIGHT_POSITION, HOUSE_PALETTE.green),
-      this.buildLeaves(),
+      ...this.placeAssets(UpstairsItem.Fog, [
+        new FogMachine(this.context, FOG_MACHINE_POSITION, 180),
+        new Fog(this.context, this.stairFog())
+      ]),
+      ...this.placeAssets(UpstairsItem.Uplight, [
+        new Uplight(this.context, UPLIGHT_POSITION, HOUSE_PALETTE.green)
+      ]),
+      ...this.buildLeaves(),
       ...this.buildFurniture()
     ];
     this.glowPoints = [
-      { position: [WENDIGO_X, WENDIGO_Y - 0.2, EYE_HEIGHT], color: HOUSE_PALETTE.red },
+      {
+        position: [WENDIGO_X, WENDIGO_Y - 0.2, Wendigo.EYE_HEIGHT],
+        color: HOUSE_PALETTE.red
+      },
       { position: [4.15, 9.3, 1.55], color: PALETTE.dimGreen },
       { position: [2.3, 1.48, 0.3], color: HOUSE_PALETTE.green },
       {
@@ -135,8 +158,8 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
 
   /**
    * Builds the floor (with the stairwell cut out of it), the walls, the
-   * window, curtains, art, the mini-split, and the ceiling lights, which stay
-   * off for the party.
+   * window, curtains, art, the mini-split (with its fan turned down for the
+   * party), and the ceiling lights, which stay off for the party.
    */
   private buildRoom(): ScenePart<UpstairsItem>[] {
     const stairwellHole = this.box(
@@ -160,34 +183,6 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
     ]);
     const windowGlass = this.box([0.01, 0.9, 1.15], [-0.06, 2.05, 0.9]);
 
-    // Leaf-print curtains hang on each side of the window.
-    const curtainRod = this.capsule([0.09, 1.62, 2.25], [0.09, 3.38, 2.25], 0.012);
-    const curtainPanels = [1.68, 2.96].map((y) => this.box([0.05, 0.36, 1.6], [0.04, y, 0.62]));
-    const nextRandom = this.random(7);
-    const leaves = [1.68, 2.96].flatMap((y) =>
-      Array.from({ length: 10 }, () =>
-        this.ellipsoid(
-          [0.006, 0.05, 0.025],
-          [0.09, y + 0.06 + nextRandom() * 0.24, 0.75 + nextRandom() * 1.35],
-          8
-        )
-      )
-    );
-
-    const artFrame = this.box([0.03, 0.7, 0.85], [0, 3.6, 1.2]);
-    const artCanvas = this.box([0.012, 0.6, 0.75], [0.03, 3.65, 1.25]);
-
-    // The black curtain is a row of panels set at alternating depths so it
-    // reads as folded fabric.
-    const blackCurtain = this.union([
-      this.capsule([0.1, 5.9, 2.32], [0.1, 8.0, 2.32], 0.012),
-      ...Array.from({ length: 8 }, (_, index) =>
-        this.box([0.05, 0.25, 2.28], [index % 2 === 0 ? 0.03 : 0.07, 6.0 + index * 0.24, 0.02])
-      )
-    ]);
-
-    const miniSplit = this.roundedBox([0.24, 0.9, 0.3], [ROOM_WIDTH - 0.24, 2.3, 2.0], 0.04);
-
     const recessedLights = [
       [1.4, 3],
       [4.1, 3],
@@ -210,17 +205,13 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
         ...this.part(UpstairsItem.Room, 'Window glass', PALETTE.glass, windowGlass),
         transparent: true
       },
-      this.part(
-        UpstairsItem.Room,
-        'Leaf-print curtains',
-        PALETTE.leafCurtain,
-        this.union([curtainRod, ...curtainPanels])
-      ),
-      this.part(UpstairsItem.Room, 'Curtain leaf print', PALETTE.leafPrint, this.union(leaves)),
-      this.part(UpstairsItem.Room, 'Art frame', PALETTE.frame, artFrame),
-      this.part(UpstairsItem.Room, 'Art', PALETTE.art, artCanvas),
-      this.part(UpstairsItem.Room, 'Black curtain', PALETTE.blackCurtain, blackCurtain),
-      this.part(UpstairsItem.Room, 'Mini-split (fan turned down)', PALETTE.appliance, miniSplit),
+      // The leaf-print curtains hang on each side of the window.
+      ...this.placeAssets(UpstairsItem.Room, [
+        new LeafPrintCurtains(this.context, [0.09, 1.62, 2.25]),
+        new FramedArt(this.context, [0, 3.6, 1.2]),
+        new BlackCurtain(this.context, [0.1, 5.9, 2.32]),
+        new MiniSplit(this.context, [ROOM_WIDTH - 0.24, 2.3, 2.0])
+      ]),
       this.part(
         UpstairsItem.Room,
         'Ceiling lights (off)',
@@ -233,220 +224,24 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
   /**
    * Builds the two computer desks with their monitors and PC towers, about
    * 4 ft out from the back wall where they normally sit, each desk and its
-   * tower covered by large black creepy cloth.
+   * tower covered by large black creepy cloth. The monitors stand near the
+   * room side of the desks, facing the back wall.
    */
   private buildDesks(): ScenePart<UpstairsItem>[] {
     const front = DESK_BACK_Y - DESK_DEPTH;
-    const sideTable = this.union([
-      this.box([0.45, 0.45, 0.03], [0.42, front + 0.1, 0.52]),
-      ...[
-        [0.43, front + 0.11],
-        [0.83, front + 0.11],
-        [0.43, front + 0.51],
-        [0.83, front + 0.51]
-      ].map(([x, y]) => this.box([0.03, 0.03, 0.52], [x, y, 0]))
-    ]);
-    const towerStand = this.box([0.5, 0.55, 0.25], [4.9, front + 0.05, 0]);
-    const towers = this.union([
-      this.box([0.2, 0.42, 0.45], [0.55, front + 0.13, 0.55]),
-      this.box([0.24, 0.5, 0.48], [5.03, front + 0.07, 0.25])
-    ]);
-
-    const cloth = this.union([
-      this.drape([0.4, front - 0.03, 0.03], [2.17, DESK_BACK_Y + 0.02, 1.3]),
-      this.drape([3.43, front - 0.03, 0.03], [5.42, DESK_BACK_Y + 0.02, 1.3])
-    ]);
-
-    return [
-      this.part(
-        UpstairsItem.Desks,
-        'Desks',
-        PALETTE.deskTop,
-        this.union([this.desk(0.95, 1.2), this.desk(3.45, 1.4)])
+    return this.placeAssets(UpstairsItem.Desks, [
+      new ComputerDesk(this.context, [0.95, front, 0], 1.2, DESK_DEPTH),
+      new ComputerDesk(this.context, [3.45, front, 0], 1.4, DESK_DEPTH),
+      new SideTable(this.context, [0.42, front + 0.1, 0]),
+      new TowerStand(this.context, [4.9, front + 0.05, 0]),
+      ...[1.27, 1.83, 3.6, 4.15, 4.7].map(
+        (x) => new Monitor(this.context, [x, front + 0.15, DESK_TOP_HEIGHT])
       ),
-      this.part(
-        UpstairsItem.Desks,
-        'Side table and tower stand',
-        PALETTE.darkWood,
-        this.union([sideTable, towerStand])
-      ),
-      this.part(
-        UpstairsItem.Desks,
-        'Monitors',
-        PALETTE.screen,
-        this.union([this.monitors([1.27, 1.83]), this.monitors([3.6, 4.15, 4.7])])
-      ),
-      this.part(UpstairsItem.Desks, 'PC towers', PALETTE.pcTower, towers),
-      this.part(UpstairsItem.Desks, 'Large black creepy cloth', HOUSE_PALETTE.blackCloth, cloth)
-    ];
-  }
-
-  /**
-   * Creates a desk with a top, two side panels, and a modesty panel on its
-   * room side. Whoever sits at it faces the room, with the back wall behind
-   * them.
-   *
-   * @param x The desk's left edge.
-   */
-  private desk(x: number, width: number): Manifold {
-    const y = DESK_BACK_Y - DESK_DEPTH;
-    return this.union([
-      this.box([width, DESK_DEPTH, 0.03], [x, y, 0.71]),
-      this.box([0.03, DESK_DEPTH - 0.02, 0.71], [x, y + 0.01, 0]),
-      this.box([0.03, DESK_DEPTH - 0.02, 0.71], [x + width - 0.03, y + 0.01, 0]),
-      this.box([width, 0.02, 0.4], [x, y + 0.01, 0.3])
+      new PcTower(this.context, [0.55, front + 0.13, 0.55], [0.2, 0.42, 0.45]),
+      new PcTower(this.context, [5.03, front + 0.07, 0.25], [0.24, 0.5, 0.48]),
+      new CreepyCloth(this.context, [0.4, front - 0.03, 0.03], [2.17, DESK_BACK_Y + 0.02, 1.3]),
+      new CreepyCloth(this.context, [3.43, front - 0.03, 0.03], [5.42, DESK_BACK_Y + 0.02, 1.3])
     ]);
-  }
-
-  /**
-   * Creates a row of monitors on stands near the room side of a desk, facing
-   * the back wall, one centered on each X in `centers`.
-   */
-  private monitors(centers: number[]): Manifold {
-    const screenY = DESK_BACK_Y - DESK_DEPTH + 0.15;
-    return this.union(
-      centers.flatMap((x) => [
-        this.box([0.55, 0.03, 0.33], [x - 0.275, screenY, 0.95]),
-        this.box([0.04, 0.04, 0.22], [x - 0.02, screenY - 0.04, 0.74]),
-        this.box([0.2, 0.15, 0.01], [x - 0.1, screenY - 0.08, 0.74])
-      ])
-    );
-  }
-
-  /**
-   * Builds the hexagon LED wall panels above the right desk, glowing dim
-   * green, and the framed diploma above them.
-   */
-  private buildPanels(): ScenePart<UpstairsItem>[] {
-    const radius = 0.085;
-    const columnSpacing = 1.5 * radius * 1.06;
-    const rowSpacing = Math.sqrt(3) * radius * 1.06;
-    const centers = Array.from({ length: 8 }, (_, column) => {
-      const x = 3.65 + column * columnSpacing;
-      const z = 1.45 + (column % 2) * (rowSpacing / 2);
-      return [{ x, z }, ...([2, 3, 5].includes(column) ? [{ x, z: z + rowSpacing }] : [])];
-    }).flat();
-
-    // A six-sided cylinder turned to stand flat against the wall is a hexagon
-    // tile with flat top and bottom edges.
-    const hexagons = centers.map(({ x, z }) =>
-      this.place(
-        this.track(this.wasm.Manifold.cylinder(0.02, radius, radius, 6)).rotate([90, 0, 0]),
-        [x, ROOM_DEPTH, z]
-      )
-    );
-    const diplomaFrame = this.box([0.5, 0.025, 0.36], [3.9, ROOM_DEPTH - 0.025, 1.88]);
-    const diploma = this.box([0.42, 0.01, 0.28], [3.94, ROOM_DEPTH - 0.035, 1.92]);
-
-    return [
-      {
-        ...this.part(
-          UpstairsItem.Panels,
-          'Hexagon wall panels',
-          PALETTE.dimGreen,
-          this.union(hexagons)
-        ),
-        glowing: true
-      },
-      this.part(UpstairsItem.Panels, 'Diploma frame', PALETTE.frame, diplomaFrame),
-      this.part(UpstairsItem.Panels, 'Diploma', PALETTE.diploma, diploma)
-    ];
-  }
-
-  /**
-   * Builds the DIY wendigo: a coat rack draped in small black creepy cloth so
-   * it reads as a tall, thin body with long arms, topped with a buck skull
-   * whose eye sockets hold red LED eyes. The antler tips stay under the
-   * ceiling.
-   */
-  private buildWendigo(): ScenePart<UpstairsItem>[] {
-    const x = WENDIGO_X;
-    const y = WENDIGO_Y;
-
-    const feet = [90, 210, 330].map((degrees) => {
-      const angle = (degrees * Math.PI) / 180;
-      return this.capsule(
-        [x, y, 0.3],
-        [x + 0.28 * Math.cos(angle), y + 0.28 * Math.sin(angle), 0.015],
-        0.015
-      );
-    });
-    const coatRack = this.union([
-      ...feet,
-      this.cylinder(1.8, 0.018, 0.018, [x, y, 0], 16),
-      this.capsule([x - 0.27, y, 1.76], [x + 0.27, y, 1.76], 0.012)
-    ]);
-
-    // The skull faces into the room (-Y): a cranium with a tapered snout
-    // hulled onto it, and two eye sockets cut in.
-    const head = this.union([
-      this.ellipsoid([0.075, 0.09, 0.065], [x, y, 1.9]),
-      this.hull([
-        this.ellipsoid([0.05, 0.06, 0.045], [x, y - 0.08, 1.88]),
-        this.sphere(0.03, [x, y - 0.22, 1.83])
-      ])
-    ]);
-    const eyePositions: Vec3[] = [-1, 1].map((side) => [x + side * 0.052, y - 0.07, EYE_HEIGHT]);
-    const skull = this.subtract(
-      head,
-      this.union(eyePositions.map((eye) => this.sphere(0.024, eye)))
-    );
-    const eyes = this.union(
-      eyePositions.map(([eyeX, eyeY, eyeZ]) => this.sphere(0.013, [eyeX, eyeY + 0.005, eyeZ]))
-    );
-
-    const body = this.drape([x - 0.2, y - 0.13, 0.15], [x + 0.2, y + 0.13, 1.8]);
-    const arms = [-1, 1].map((side) =>
-      this.clothPanel([x + side * 0.27, y - 0.08, 1.76], [x + side * 0.27, y + 0.08, 1.76], 1.2)
-    );
-
-    return [
-      this.part(UpstairsItem.Wendigo, 'Coat rack', PALETTE.rack, coatRack),
-      this.part(UpstairsItem.Wendigo, 'Buck skull', PALETTE.bone, skull),
-      this.part(
-        UpstairsItem.Wendigo,
-        'Antlers',
-        PALETTE.bone,
-        this.union([this.antler(-1), this.antler(1)])
-      ),
-      this.part(
-        UpstairsItem.Wendigo,
-        'Small black creepy cloth body',
-        HOUSE_PALETTE.blackCloth,
-        this.union([body, ...arms])
-      ),
-      { ...this.part(UpstairsItem.Wendigo, 'Red LED eyes', HOUSE_PALETTE.red, eyes), glowing: true }
-    ];
-  }
-
-  /**
-   * Creates one antler: a main beam curving out, up, and forward from the
-   * skull, with a brow tine and three tines rising off it, for five points a
-   * side. The highest tip sits about 2.37 m up, under the 2.44 m ceiling.
-   *
-   * @param side -1 for the antler on the -X side, 1 for the +X side.
-   */
-  private antler(side: number): Manifold {
-    const x = WENDIGO_X;
-    const y = WENDIGO_Y;
-    const beam: Vec3[] = [
-      [x + side * 0.06, y, 1.95],
-      [x + side * 0.16, y + 0.03, 2.02],
-      [x + side * 0.25, y, 2.12],
-      [x + side * 0.275, y - 0.07, 2.24],
-      [x + side * 0.22, y - 0.13, 2.33]
-    ];
-    const beamSegments = beam
-      .slice(1)
-      .map((point, index) => this.capsule(beam[index], point, 0.013));
-    const tines = beam
-      .slice(1, 4)
-      .map(([tineX, tineY, tineZ]) =>
-        this.capsule([tineX, tineY, tineZ], [tineX - side * 0.03, tineY - 0.02, tineZ + 0.13], 0.01)
-      );
-    const [browX, browY, browZ] = beam[1];
-    const browTine = this.capsule(beam[1], [browX, browY - 0.09, browZ + 0.06], 0.01);
-    return this.union([...beamSegments, ...tines, browTine]);
   }
 
   /**
@@ -564,33 +359,10 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
       ];
     });
 
-    return [
-      this.part(
-        UpstairsItem.Garland,
-        'Black garland',
-        PALETTE.garland,
-        this.union([this.garland(halfWall), this.garland(newel), this.garland(handrail)])
-      )
-    ];
-  }
-
-  /**
-   * Creates a garland along a path: a thin rope through every point with
-   * leafy lumps along it. Both are coarse, since there are hundreds of them.
-   */
-  private garland(points: Vec3[]): Manifold {
-    const rope = points
-      .slice(1)
-      .map((point, index) =>
-        this.hull([
-          this.ellipsoid([0.016, 0.016, 0.016], points[index], 8),
-          this.ellipsoid([0.016, 0.016, 0.016], point, 8)
-        ])
-      );
-    const lumps = points
-      .filter((_, index) => index % 2 === 0)
-      .map((point) => this.ellipsoid([0.035, 0.035, 0.035], point, 8));
-    return this.union([...rope, ...lumps]);
+    return this.placeAssets(
+      UpstairsItem.Garland,
+      [halfWall, newel, handrail].map((points) => new Garland(this.context, points))
+    );
   }
 
   /**
@@ -619,7 +391,7 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
    * top of the stairs through the gate to the gap between the desks in front
    * of the wendigo, and in a ring around the wendigo's base.
    */
-  private buildLeaves(): ScenePart<UpstairsItem> {
+  private buildLeaves(): ScenePart<UpstairsItem>[] {
     const path: Vec2[] = [
       [1.0, 0.5],
       [1.0, 1.6],
@@ -634,11 +406,10 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
       [2.35, 9.32],
       [2.35, 8.75]
     ];
-    const leaves = this.union([
-      this.leavesAlong(path, 140, 0.9, 11),
-      this.leavesAlong(aroundWendigo, 40, 0.25, 12)
+    return this.placeAssets(UpstairsItem.Leaves, [
+      new FakeLeaves(this.context, path, 140, 0.9, 11),
+      new FakeLeaves(this.context, aroundWendigo, 40, 0.25, 12)
     ]);
-    return this.part(UpstairsItem.Leaves, 'Fake black leaves', HOUSE_PALETTE.leaf, leaves);
   }
 
   /**
@@ -648,90 +419,13 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
    * back corner behind the right desk.
    */
   private buildFurniture(): ScenePart<UpstairsItem>[] {
-    const loveseat = this.union([
-      this.roundedBox([0.85, 1.6, 0.42], [0.08, 3.5, 0.02], 0.06),
-      this.roundedBox([0.3, 1.6, 0.95], [0.05, 3.5, 0.02], 0.08),
-      this.roundedBox([0.85, 0.22, 0.65], [0.08, 3.5, 0.02], 0.08),
-      this.roundedBox([0.85, 0.22, 0.65], [0.08, 4.88, 0.02], 0.08),
-      this.roundedBox([0.6, 0.6, 0.15], [0.33, 3.74, 0.4], 0.05),
-      this.roundedBox([0.6, 0.6, 0.15], [0.33, 4.3, 0.4], 0.05)
-    ]);
-
-    const bookshelf = this.subtract(
-      this.box([0.32, 0.8, 1.8], [ROOM_WIDTH - 0.32, 1.35, 0]),
-      this.union(
-        [0.05, 0.47, 0.89, 1.31].map((z) =>
-          this.box([0.3, 0.74, 0.38], [ROOM_WIDTH - 0.33, 1.38, z])
-        )
-      )
-    );
-    const lampCenter: Vec3 = [ROOM_WIDTH - 0.2, 2.35, 0];
-    const lampStand = this.union([
-      this.cylinder(0.02, 0.13, 0.13, lampCenter, 24),
-      this.cylinder(1.6, 0.012, 0.012, lampCenter, 12)
-    ]);
-    const lampShade = this.cylinder(0.28, 0.17, 0.14, [lampCenter[0], lampCenter[1], 1.55], 24);
-
-    const airPurifier = this.roundedBox([0.3, 0.3, 0.55], [5.1, 9.1, 0], 0.02);
-
-    return [
-      this.part(UpstairsItem.Furniture, 'Recliner loveseat', PALETTE.loveseat, loveseat),
-      this.part(
-        UpstairsItem.Furniture,
-        'Gaming chair',
-        PALETTE.gamingChair,
-        this.gamingChair(5.0, 3.9)
-      ),
-      this.part(UpstairsItem.Furniture, 'Wood chair', PALETTE.oak, this.woodChair(5.0, 3.1)),
-      this.part(UpstairsItem.Furniture, 'Bookshelf', PALETTE.darkWood, bookshelf),
-      this.part(UpstairsItem.Furniture, 'Floor lamp', PALETTE.metal, lampStand),
-      this.part(UpstairsItem.Furniture, 'Floor lamp shade', PALETTE.lampShade, lampShade),
-      this.part(UpstairsItem.Furniture, 'Air purifier (moved)', PALETTE.appliance, airPurifier)
-    ];
-  }
-
-  /**
-   * Creates a gaming chair on a five-star base, centered on (x, y) and facing
-   * -X, with its tall back toward the left wall.
-   */
-  private gamingChair(x: number, y: number): Manifold {
-    const legs = Array.from({ length: 5 }, (_, index) => {
-      const angle = (index / 5) * 2 * Math.PI;
-      return this.capsule(
-        [x, y, 0.08],
-        [x + 0.3 * Math.cos(angle), y + 0.3 * Math.sin(angle), 0.04],
-        0.02
-      );
-    });
-    return this.union([
-      ...legs,
-      this.cylinder(0.36, 0.03, 0.03, [x, y, 0.08], 16),
-      this.roundedBox([0.5, 0.52, 0.1], [x - 0.25, y - 0.26, 0.43], 0.03),
-      this.roundedBox([0.1, 0.52, 0.85], [x + 0.2, y - 0.26, 0.5], 0.04),
-      ...[-1, 1].map((side) =>
-        this.box([0.3, 0.05, 0.04], [x - 0.15, y + side * 0.25 - 0.025, 0.65])
-      )
-    ]);
-  }
-
-  /**
-   * Creates a wooden chair centered on (x, y) and facing -X.
-   */
-  private woodChair(x: number, y: number): Manifold {
-    const legs = [
-      [x - 0.2, y - 0.2],
-      [x + 0.165, y - 0.2],
-      [x - 0.2, y + 0.165],
-      [x + 0.165, y + 0.165]
-    ].map(([legX, legY]) => this.box([0.035, 0.035, 0.44], [legX, legY, 0]));
-    const backPosts = [y - 0.2, y + 0.165].map((postY) =>
-      this.box([0.035, 0.035, 0.45], [x + 0.165, postY, 0.44])
-    );
-    return this.union([
-      ...legs,
-      ...backPosts,
-      this.box([0.42, 0.42, 0.04], [x - 0.21, y - 0.21, 0.44]),
-      this.box([0.035, 0.4, 0.12], [x + 0.165, y - 0.2, 0.75])
+    return this.placeAssets(UpstairsItem.Furniture, [
+      new ReclinerLoveseat(this.context, [0.05, 3.5, 0]),
+      new GamingChair(this.context, [5.0, 3.9, 0]),
+      new WoodChair(this.context, [5.0, 3.1, 0]),
+      new Bookshelf(this.context, [ROOM_WIDTH - 0.32, 1.35, 0]),
+      new FloorLamp(this.context, [ROOM_WIDTH - 0.2, 2.35, 0]),
+      new AirPurifier(this.context, [5.1, 9.1, 0])
     ]);
   }
 }

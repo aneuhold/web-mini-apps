@@ -38,11 +38,7 @@ export default class ForestBackdrop extends HalloweenHouseAsset {
           Math.max(y + trunkWidth / 2 + reach, start + 0.02),
           start + width - 0.02
         );
-        return this.capsule(
-          [x + 0.018, y + trunkWidth / 2, z],
-          [x + 0.018, endY, z + 0.25],
-          0.008
-        );
+        return this.capsule([x + 0.018, y + trunkWidth / 2, z], [x + 0.018, endY, z + 0.25], 0.008);
       });
       return this.union([trunk, ...branches]);
     });
