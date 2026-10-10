@@ -21,7 +21,7 @@ export const scenesData = {
     path: 'halloween-house/garage',
     title: 'Haunted House: Garage Walkthrough',
     description:
-      'The 3-bay garage turned into a forest path: a forest backdrop at the house door, lighted trees, hanging moss, green uplights, and creepy cloth over the gym equipment.'
+      'The garage turned into a forest path: a forest backdrop at the house door, lighted trees, hanging moss, green uplights, and creepy cloth over the gym equipment.'
   },
   halloweenMainFloor: {
     path: 'halloween-house/main-floor',

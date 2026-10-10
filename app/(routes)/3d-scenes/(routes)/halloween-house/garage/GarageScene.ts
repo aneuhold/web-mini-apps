@@ -2,10 +2,8 @@ import type { Box, Manifold, ManifoldToplevel, Vec2, Vec3 } from 'manifold-3d';
 import Couch from '../../../modelAssets/halloween-house/furniture/Couch';
 import CubeShelves from '../../../modelAssets/halloween-house/furniture/CubeShelves';
 import MetalShelf from '../../../modelAssets/halloween-house/furniture/MetalShelf';
-import RolledRug, {
-  RolledRugColor
-} from '../../../modelAssets/halloween-house/furniture/RolledRug';
 import WhiteTable from '../../../modelAssets/halloween-house/furniture/WhiteTable';
+import Furnace from '../../../modelAssets/halloween-house/appliances/Furnace';
 import MiniFridge from '../../../modelAssets/halloween-house/appliances/MiniFridge';
 import Speaker from '../../../modelAssets/halloween-house/electronics/Speaker';
 import CreepyCloth from '../../../modelAssets/halloween-house/decorations/CreepyCloth';
@@ -42,13 +40,13 @@ enum GarageItem {
   Storage = 'Storage'
 }
 
-const GARAGE_LENGTH = 9.3;
+const GARAGE_LENGTH = 10.1;
 /** The depth of the two main bays. The storage bay is shallower. */
 const GARAGE_DEPTH = 7;
 const CEILING_HEIGHT = 2.7;
 
 /** X position of the wall between the storage bay and the two main bays. */
-const STORAGE_WALL_X = 6.2;
+const STORAGE_WALL_X = 7;
 /**
  * The depth of the storage bay. Its back wall, with the window, meets the
  * furnace wall at the main bays' side.
@@ -59,6 +57,15 @@ const STORAGE_DEPTH = 5;
  * wall, which leads from the main bays into the back of the storage bay.
  */
 const STORAGE_OPENING: Vec2 = [3.4, STORAGE_DEPTH];
+
+/**
+ * The garage doors along the front: a double door across the main bays and a
+ * single door into the storage bay. Each is its start X and width.
+ */
+const GARAGE_DOORS: Vec2[] = [
+  [(STORAGE_WALL_X - 4.88) / 2, 4.88],
+  [(STORAGE_WALL_X + GARAGE_LENGTH - 2.44) / 2, 2.44]
+];
 
 /** The door into the house is near the back corner, beside the mini fridge. */
 const DOOR_WIDTH = 0.9;
@@ -103,7 +110,7 @@ const SQUAT_RACK: Box = {
   min: [STORAGE_WALL_X - 0.75, 1.5, 0.015],
   max: [STORAGE_WALL_X - 0.05, 2.7, 2.2]
 };
-const DUMBBELL_RACK: Box = { min: [3.5, 0.25, 0], max: [4.8, 0.85, 0.8] };
+const DUMBBELL_RACK: Box = { min: [4.3, 0.25, 0], max: [5.6, 0.85, 0.8] };
 const CUBE_SHELVES: Box = { min: [2.15, 0.08, 0], max: [2.95, 0.48, 1.1] };
 const WHITE_TABLE: Box = { min: [0.55, 0.05, 0], max: [2.05, 0.75, 0.75] };
 /**
@@ -125,7 +132,8 @@ const PALETTE = {
   wall: '#f0efeb',
   door: '#ece7dc',
   glass: '#a9d4ef',
-  furnace: '#8f9398',
+  electricalPanel: '#9a9c9e',
+  networkPanel: '#2a2a2a',
   trim: '#8a5a33',
   brass: '#c9a54a',
   stairs: '#b08a5e',
@@ -134,7 +142,7 @@ const PALETTE = {
 };
 
 /**
- * The 3-bay garage set up as the haunted forest walkthrough for the 2026
+ * The garage set up as the haunted forest walkthrough for the 2026
  * Halloween party. Guests come down the enclosed stairway, step out of its
  * small door at the back corner of the storage bay, walk along the storage
  * bay's back wall and through the opening into the main bays, then cross to
@@ -144,8 +152,10 @@ const PALETTE = {
  * with the door near the back corner. The storage bay is at the right end,
  * shallower than the main bays, with the stairway just past it. Its wall to
  * the main bays stops short of its back wall, and past that corner the
- * furnace wall closes off the main bays. The garage doors run along the front
- * (Y = 0), so the gym equipment along them sits off the path. Sizes are
+ * furnace wall closes off the main bays. The furnace stands against the back
+ * wall a little short of the furnace wall. The double garage door into the main bays and the single garage
+ * door into the storage bay run along the front (Y = 0), so the gym
+ * equipment along them sits off the path. Sizes are
  * estimated from photos, the party plan, and the owners' descriptions.
  */
 export default class GarageScene extends HalloweenHouseScene<GarageItem> {
@@ -159,7 +169,7 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
     const squatRackLight: Vec3 = [SQUAT_RACK.min[0] - 0.4, 3.25, 0.015];
     // The orange tree stands at the end of the storage aisle, beside the path
     // out of the stair door.
-    const orangeTree: Vec3 = [7.8, 3.55, 0];
+    const orangeTree: Vec3 = [STORAGE_WALL_X + 1.6, 3.55, 0];
     const purpleTree: Vec3 = [0.75, 1.5, 0];
 
     this.parts = [
@@ -192,8 +202,9 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
   }
 
   /**
-   * Builds the floor, walls, storage bay wall, the storage bay's back wall
-   * with its window, the furnace, the door into the house, ceiling track
+   * Builds the floor, walls with the garage door openings, storage bay wall,
+   * the storage bay's back wall with its window, the furnace with the network
+   * and electrical panels beside it, the door into the house, ceiling track
    * lights (turned off), and the garage door opener with the purple fabric
    * hung around it.
    */
@@ -244,18 +255,24 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
       [STORAGE_WALL_X + 1, STORAGE_DEPTH + 0.05, 1.15]
     );
 
-    // The furnace stands in the main bays' back corner, against the furnace
-    // wall, with its duct running up to the ceiling.
-    const furnace = this.union([
-      this.box([0.7, 0.75, 1.75], [STORAGE_WALL_X - 0.75, GARAGE_DEPTH - 0.8, 0]),
-      this.box(
-        [0.45, 0.45, CEILING_HEIGHT - 1.75],
-        [STORAGE_WALL_X - 0.62, GARAGE_DEPTH - 0.65, 1.75]
-      )
-    ]);
+    const garageDoorways = GARAGE_DOORS.map(([start, width]) =>
+      this.box([width, 0.3, HalloweenHouseScene.CUTAWAY_HEIGHT + 0.1], [start, -0.2, -0.01])
+    );
+
+    // The network panel hangs on the furnace wall near its corner with the
+    // storage bay's back wall, across an open gap from the furnace. The
+    // electrical panel is around that corner, on the storage bay's back wall.
+    const networkPanel = this.box(
+      [0.06, 0.4, 0.3],
+      [STORAGE_WALL_X - 0.06, STORAGE_DEPTH + 0.1, 1.5]
+    );
+    const electricalPanel = this.box(
+      [0.4, 0.03, 0.75],
+      [STORAGE_WALL_X + 0.25, STORAGE_DEPTH - 0.03, 1.2]
+    );
 
     // Each track light is a bar on the ceiling with three heads hanging off it.
-    const trackLights = [1.4, 4.8].flatMap((x) => [
+    const trackLights = [1.6, 5.4].flatMap((x) => [
       this.box([0.7, 0.04, 0.03], [x - 0.35, 3.38, CEILING_HEIGHT - 0.04]),
       ...[-0.25, 0, 0.25].map((offset) =>
         this.cylinder(0.1, 0.035, 0.035, [x + offset, 3.4, CEILING_HEIGHT - 0.15], 16)
@@ -273,7 +290,7 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
         size: [GARAGE_LENGTH, GARAGE_DEPTH, CEILING_HEIGHT],
         floorColor: PALETTE.concrete,
         wallColor: PALETTE.wall,
-        openings: [outsideCorner, this.stairDoorway()],
+        openings: [outsideCorner, this.stairDoorway(), ...garageDoorways],
         floorOpenings: [outsideCorner]
       }),
       this.part(GarageItem.Garage, 'Storage bay wall', PALETTE.wall, storageWall),
@@ -283,13 +300,15 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
         ...this.part(GarageItem.Garage, 'Window glass', PALETTE.glass, windowGlass),
         transparent: true
       },
-      this.part(GarageItem.Garage, 'Furnace', PALETTE.furnace, furnace),
+      this.part(GarageItem.Garage, 'Network panel', PALETTE.networkPanel, networkPanel),
+      this.part(GarageItem.Garage, 'Electrical panel', PALETTE.electricalPanel, electricalPanel),
       this.part(GarageItem.Garage, 'Door into the house', PALETTE.door, door),
       this.part(GarageItem.Garage, 'Door trim', PALETTE.trim, trim),
       this.part(GarageItem.Garage, 'Door knob', PALETTE.brass, knob),
       this.part(GarageItem.Garage, 'Track lights', PALETTE.steel, this.union(trackLights)),
       this.part(GarageItem.Garage, 'Garage door opener', PALETTE.opener, opener),
       ...this.placeAssets(GarageItem.Garage, [
+        new Furnace(this.context, [STORAGE_WALL_X - 1.2, GARAGE_DEPTH - 0.77, 0], CEILING_HEIGHT),
         new FabricCanopy(this.context, CANOPY_CENTER, CANOPY_RADII, CEILING_HEIGHT)
       ])
     ];
@@ -442,11 +461,9 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
       const [endX, endY] = PATH[index];
       return startY + ((x - startX) / (endX - startX)) * (endY - startY);
     };
-    const alongPath: Vec3[] = [8.7, 7.9, 7.1, 6.5, 5.3, 4.4, 3.5, 2.6, 1.7, 0.9].map((x, index) => [
-      x,
-      pathYAt(x) + (index % 2 === 0 ? -0.4 : 0.4),
-      CEILING_HEIGHT
-    ]);
+    const alongPath: Vec3[] = [9.5, 8.7, 7.9, 7.3, 6.1, 5.2, 4.3, 3.4, 2.5, 1.6, 0.8].map(
+      (x, index) => [x, pathYAt(x) + (index % 2 === 0 ? -0.4 : 0.4), CEILING_HEIGHT]
+    );
     const [canopyX, canopyY] = CANOPY_CENTER;
     const aroundCanopy: Vec3[] = Array.from({ length: 7 }, (_, index) => {
       const angle = (index / 7) * 2 * Math.PI + 0.3;
@@ -492,33 +509,30 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
    */
   private buildGym(): ScenePart<GarageItem>[] {
     return this.placeAssets(GarageItem.GymEquipment, [
-      new RubberFloorMats(this.context, [2.85, 2.5], [3.3, 1.0, 0]),
+      new RubberFloorMats(this.context, [2.85, 2.5], [4.1, 1.0, 0]),
       new SquatRack(this.context, SQUAT_RACK.min, SQUAT_RACK.max),
       new DumbbellRack(this.context, DUMBBELL_RACK.min, DUMBBELL_RACK.max),
-      new WeightBench(this.context, [3.6, 1.45, 0.015], 1.2),
-      new WeightBench(this.context, [3.6, 2.25, 0.015], 1.3),
+      new WeightBench(this.context, [4.4, 1.45, 0.015], 1.2),
+      new WeightBench(this.context, [4.4, 2.25, 0.015], 1.3),
       new WallPullUpBar(this.context, [STORAGE_WALL_X, STORAGE_DEPTH, 0])
     ]);
   }
 
   /**
-   * Builds the lounge corner and the things along the garage doors: the
-   * couch along the back wall, the mini fridge between it and the door into
-   * the house, the rolled-up rugs moved out of the path along the back wall,
-   * the white table, the cube shelves, the large speaker along the garage
+   * Builds the lounge corner and the things along the garage doors: the mini
+   * fridge on the back wall, a little away from the door into the house, the
+   * couch beside it, the white table, the cube shelves, the large speaker along the garage
    * doors, and the large speaker beside the forest backdrop.
    */
   private buildLounge(): ScenePart<GarageItem>[] {
     return this.placeAssets(GarageItem.Lounge, [
-      new Couch(this.context, [0.75, 6.1, 0]),
-      new MiniFridge(this.context, [0.12, GARAGE_DEPTH - 0.52, 0]),
-      new RolledRug(this.context, [3.15, 6.82, 0.11], 2, 0.11, RolledRugColor.Beige),
-      new RolledRug(this.context, [3.35, 6.58, 0.09], 1.6, 0.09, RolledRugColor.Black),
+      new MiniFridge(this.context, [0.4, GARAGE_DEPTH - 0.52, 0]),
+      new Couch(this.context, [0.95, 6.1, 0]),
       new WhiteTable(this.context, WHITE_TABLE.min, WHITE_TABLE.max),
       new CubeShelves(this.context, CUBE_SHELVES.min, CUBE_SHELVES.max),
       // One speaker faces into the room from the garage doors, and the other
       // from the end wall beside the backdrop.
-      new Speaker(this.context, [5.11, 0.48, 0], 90, [0.38, 0.42, 0.62], [0.18, 0.43]),
+      new Speaker(this.context, [5.91, 0.48, 0], 90, [0.38, 0.42, 0.62], [0.18, 0.43]),
       new Speaker(this.context, [0.45, 0.345, 0], 0, [0.4, 0.45, 0.75], [0.2, 0.52])
     ]);
   }
