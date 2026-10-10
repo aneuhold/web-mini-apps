@@ -73,7 +73,7 @@ export default class ModelScene<TItem extends string> {
   private readonly resizeObserver: ResizeObserver;
   private readonly ground: Mesh<PlaneGeometry, ShadowMaterial>;
   private readonly meshes: ModelMesh[];
-  private readonly meshItems = new Map<Object3D, TItem>();
+  private readonly meshParts = new Map<Object3D, ModelPart<TItem>>();
   private readonly homePose: CameraPose;
   private pointerDownAt = new Vector2();
 
@@ -131,9 +131,13 @@ export default class ModelScene<TItem extends string> {
    */
   select(item: TItem | null) {
     this.meshes.forEach((mesh) => {
-      const selected = item !== null && this.meshItems.get(mesh) === item;
-      mesh.material.emissive.set(selected ? HIGHLIGHT_COLOR : NO_HIGHLIGHT_COLOR);
-      mesh.material.emissiveIntensity = 0.25;
+      const part = this.meshParts.get(mesh);
+      if (part?.item === item) {
+        mesh.material.emissive.set(HIGHLIGHT_COLOR);
+        mesh.material.emissiveIntensity = 0.25;
+      } else {
+        ModelScene.applyGlow(mesh.material, part?.glowing ? part.color : null);
+      }
     });
     this.onSelect(item);
 
@@ -177,6 +181,14 @@ export default class ModelScene<TItem extends string> {
       mesh.material.dispose();
     });
     this.renderer.dispose();
+  }
+
+  /**
+   * Makes a material glow with `color`, or stop glowing when `color` is null.
+   */
+  private static applyGlow(material: MeshStandardMaterial, color: string | null) {
+    material.emissive.set(color ?? NO_HIGHLIGHT_COLOR);
+    material.emissiveIntensity = color ? 1 : 0;
   }
 
   /**
@@ -227,12 +239,12 @@ export default class ModelScene<TItem extends string> {
     );
     this.raycaster.setFromCamera(normalizedPointer, this.camera);
     const hit = this.raycaster.intersectObjects(this.meshes, false).at(0);
-    this.select(hit ? (this.meshItems.get(hit.object) ?? null) : null);
+    this.select(hit ? (this.meshParts.get(hit.object)?.item ?? null) : null);
   };
 
   /**
    * Adds soft fill light, a sun whose shadows cover the whole model, and a
-   * warm light at each of the model's glow points.
+   * colored light at each of the model's glow points.
    */
   private addLights(center: Vector3, radius: number) {
     this.scene.add(new AmbientLight(0xffffff, 1.3));
@@ -251,8 +263,8 @@ export default class ModelScene<TItem extends string> {
     sun.shadow.bias = -0.0005;
     this.scene.add(sun, sun.target);
 
-    this.model.glowPoints.forEach((position) => {
-      const glow = new PointLight(0xffc77a, 1.5, 3);
+    this.model.glowPoints.forEach(({ position, color }) => {
+      const glow = new PointLight(color, 1.5, 3);
       glow.position.set(...position);
       this.scene.add(glow);
     });
@@ -286,11 +298,12 @@ export default class ModelScene<TItem extends string> {
       transparent: part.transparent ?? false,
       opacity: part.transparent ? 0.35 : 1
     });
+    ModelScene.applyGlow(material, part.glowing ? part.color : null);
     const mesh = new Mesh(ModelScene.toGeometry(part.manifold), material);
     mesh.name = part.name;
     mesh.castShadow = !part.transparent;
     mesh.receiveShadow = true;
-    this.meshItems.set(mesh, part.item);
+    this.meshParts.set(mesh, part);
     this.scene.add(mesh);
     return mesh;
   }

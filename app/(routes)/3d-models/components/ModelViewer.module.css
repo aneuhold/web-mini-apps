@@ -2,6 +2,10 @@
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+
+  @media (width < 640px) {
+    padding: 1rem 0.5rem;
+  }
 }
 
 .controls {
@@ -13,7 +17,10 @@
 
 .viewport {
   position: relative;
-  aspect-ratio: 16 / 10;
+  /* Fills most of the screen on any device, leaving a strip outside the
+     canvas that still scrolls the page. */
+  height: 80svh;
+  min-height: 20rem;
   background: linear-gradient(var(--secondary-light), var(--main-background));
   border: 2px solid var(--primary);
 
