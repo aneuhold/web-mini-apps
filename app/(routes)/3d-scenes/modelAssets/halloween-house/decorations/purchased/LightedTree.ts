@@ -1,6 +1,6 @@
 import type { Manifold, Vec3 } from 'manifold-3d';
-import type { ManifoldContext, ModelPart } from '../../../baseClasses/BaseManifold';
-import HalloweenHouseAsset, { LightColor } from '../HalloweenHouseAsset';
+import type { ManifoldContext, ModelPart } from '../../../../baseClasses/BaseManifold';
+import HalloweenHouseAsset, { LightColor } from '../../HalloweenHouseAsset';
 
 const HEIGHT = 1.83;
 const BRANCH_COLOR = '#141414';

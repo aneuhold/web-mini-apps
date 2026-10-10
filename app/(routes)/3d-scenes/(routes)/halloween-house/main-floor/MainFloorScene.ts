@@ -3,22 +3,22 @@ import Fridge from '../../../modelAssets/halloween-house/appliances/Fridge';
 import Dishwasher from '../../../modelAssets/halloween-house/appliances/Dishwasher';
 import RangeHood from '../../../modelAssets/halloween-house/appliances/RangeHood';
 import Stove from '../../../modelAssets/halloween-house/appliances/Stove';
-import Cobweb from '../../../modelAssets/halloween-house/decorations/Cobweb';
-import CreepyCloth from '../../../modelAssets/halloween-house/decorations/CreepyCloth';
-import CreepyClothPanel from '../../../modelAssets/halloween-house/decorations/CreepyClothPanel';
+import Cobweb from '../../../modelAssets/halloween-house/decorations/purchased/Cobweb';
+import CreepyCloth from '../../../modelAssets/halloween-house/decorations/purchased/CreepyCloth';
+import CreepyClothPanel from '../../../modelAssets/halloween-house/decorations/purchased/CreepyClothPanel';
 import Crow from '../../../modelAssets/halloween-house/decorations/Crow';
-import DrapedMoss from '../../../modelAssets/halloween-house/decorations/DrapedMoss';
-import Fog, { FogBlob } from '../../../modelAssets/halloween-house/decorations/Fog';
-import FogMachine from '../../../modelAssets/halloween-house/decorations/FogMachine';
-import HangingSpider from '../../../modelAssets/halloween-house/decorations/HangingSpider';
-import LabelCard from '../../../modelAssets/halloween-house/decorations/LabelCard';
-import LightedBottleShelf from '../../../modelAssets/halloween-house/decorations/LightedBottleShelf';
+import DrapedMoss from '../../../modelAssets/halloween-house/decorations/purchased/DrapedMoss';
+import Fog, { FogBlob } from '../../../modelAssets/halloween-house/decorations/purchased/Fog';
+import FogMachine from '../../../modelAssets/halloween-house/decorations/purchased/FogMachine';
+import HangingSpider from '../../../modelAssets/halloween-house/decorations/purchased/HangingSpider';
+import LabelCard from '../../../modelAssets/halloween-house/food/LabelCard';
+import LedDrinkShelf from '../../../modelAssets/halloween-house/decorations/existing-halloween/LedDrinkShelf';
 import PotionBottle, {
   PotionColor
-} from '../../../modelAssets/halloween-house/decorations/PotionBottle';
+} from '../../../modelAssets/halloween-house/decorations/existing-halloween/PotionBottle';
 import PottedPlant from '../../../modelAssets/halloween-house/decorations/PottedPlant';
-import StretchyCobweb from '../../../modelAssets/halloween-house/decorations/StretchyCobweb';
-import Tablecloth from '../../../modelAssets/halloween-house/decorations/Tablecloth';
+import StretchyCobweb from '../../../modelAssets/halloween-house/decorations/purchased/StretchyCobweb';
+import Tablecloth from '../../../modelAssets/halloween-house/decorations/existing-halloween/Tablecloth';
 import Tv from '../../../modelAssets/halloween-house/electronics/Tv';
 import BreadBowlDip from '../../../modelAssets/halloween-house/food/BreadBowlDip';
 import CapreseBites from '../../../modelAssets/halloween-house/food/CapreseBites';
@@ -46,15 +46,17 @@ import {
 import Chandelier from '../../../modelAssets/halloween-house/lighting/Chandelier';
 import LightBar from '../../../modelAssets/halloween-house/lighting/LightBar';
 import ShelfLamp from '../../../modelAssets/halloween-house/lighting/ShelfLamp';
-import TeaLight from '../../../modelAssets/halloween-house/lighting/TeaLight';
+import TeaLight from '../../../modelAssets/halloween-house/decorations/purchased/TeaLight';
 import Torchiere from '../../../modelAssets/halloween-house/lighting/Torchiere';
-import Uplight from '../../../modelAssets/halloween-house/lighting/Uplight';
-import type { ScenePart } from '../../../baseClasses/ManifoldScene';
-import HalloweenHouseScene from '../HalloweenHouseScene';
+import Uplight from '../../../modelAssets/halloween-house/decorations/purchased/Uplight';
+import HalloweenHouseScene, {
+  HalloweenDecoration,
+  HalloweenHousePart
+} from '../HalloweenHouseScene';
 
 /**
- * A selectable object on the main floor. One item is made of one or more
- * parts.
+ * A selectable object on the main floor other than a decoration. One item is
+ * made of one or more parts.
  */
 enum MainFloorItem {
   Rooms = 'Rooms',
@@ -67,8 +69,7 @@ enum MainFloorItem {
   DessertTable = 'Dessert table',
   Kitchen = 'Kitchen',
   HotFood = 'Hot food',
-  Bar = 'Bar',
-  FogMachine = 'Fog machine'
+  Bar = 'Bar'
 }
 
 /**
@@ -171,8 +172,7 @@ const KITCHEN_CANDLE: Vec2 = [1.88, 1.65];
  * camera can look in from the north east. Sizes are estimates.
  */
 export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
-  readonly items = Object.values(MainFloorItem);
-  readonly parts: ScenePart<MainFloorItem>[];
+  readonly parts: HalloweenHousePart<MainFloorItem>[];
   override readonly north: Vec2 = [1, 0];
 
   constructor(wasm: ManifoldToplevel) {
@@ -201,7 +201,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * on the dining side of the wall beside the doorway into the kitchen,
    * climbing toward the doorway.
    */
-  private buildRooms(): ScenePart<MainFloorItem>[] {
+  private buildRooms(): HalloweenHousePart<MainFloorItem>[] {
     const livingFloor = this.slab([
       [DIVIDER_X, 0],
       [LIVING_NORTH_X, 0],
@@ -299,7 +299,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * Builds the gray curtains around the bay at the west end and the small
    * black creepy cloth hanging from the curtain rods in front of them.
    */
-  private buildCurtainWall(): ScenePart<MainFloorItem>[] {
+  private buildCurtainWall(): HalloweenHousePart<MainFloorItem>[] {
     const segments: [Vec2, Vec2][] = [
       [
         [DIVIDER_X, BAY_START_Y],
@@ -351,7 +351,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
     return [
       this.part(item, 'Curtains', PALETTE.curtain, this.union(curtains)),
       this.part(item, 'Curtain rods', PALETTE.rod, this.union(rods)),
-      ...this.placeAssets(item, creepyCloth)
+      ...this.placeAssets(HalloweenDecoration.SmallBlackCreepyCloth, creepyCloth)
     ];
   }
 
@@ -360,7 +360,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * its purple LED lighting, the crow on top wrapped in cobwebs, and tea
    * lights on the open shelves.
    */
-  private buildTvCabinet(): ScenePart<MainFloorItem>[] {
+  private buildTvCabinet(): HalloweenHousePart<MainFloorItem>[] {
     // The TV wall's furniture is laid out facing +Y from TV_ORIGIN, then turned
     // to face north.
     const at = (point: Vec3) => this.turnPoint(point, TV_ORIGIN, TV_ANGLE);
@@ -371,14 +371,21 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       [1.38, 0.3, 1.2],
       [0.9, 0.3, 0.55]
     ];
-    return this.placeAssets(MainFloorItem.TvCabinet, [
-      new TvCabinet(this.context, at([0.2, 0, 0]), TV_ANGLE),
-      new Tv(this.context, at([0.9, 0.08, 1]), TV_ANGLE),
-      new Crow(this.context, at([0.5, 0.25, 2.012]), TV_ANGLE),
-      new StretchyCobweb(this.context, at([1.6, 0, 1.85]), at([0.2, 0.5, 2])),
-      new Cobweb(this.context, at([1.35, 0.5, 2.22]), 0.2, [0, -1, 0], [0, 0, 1]),
-      ...shelfTops.map((point) => new TeaLight(this.context, at(point)))
-    ]);
+    return [
+      ...this.placeAssets(MainFloorItem.TvCabinet, [
+        new TvCabinet(this.context, at([0.2, 0, 0]), TV_ANGLE),
+        new Tv(this.context, at([0.9, 0.08, 1]), TV_ANGLE),
+        new Crow(this.context, at([0.5, 0.25, 2.012]), TV_ANGLE)
+      ]),
+      ...this.placeAssets(HalloweenDecoration.Cobwebs, [
+        new StretchyCobweb(this.context, at([1.6, 0, 1.85]), at([0.2, 0.5, 2])),
+        new Cobweb(this.context, at([1.35, 0.5, 2.22]), 0.2, [0, -1, 0], [0, 0, 1])
+      ]),
+      ...this.placeAssets(
+        HalloweenDecoration.TeaLights,
+        shelfTops.map((point) => new TeaLight(this.context, at(point)))
+      )
+    ];
   }
 
   /**
@@ -386,7 +393,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * table in front of it, and the large round dog bed in front of the TV
    * cabinet.
    */
-  private buildLounge(): ScenePart<MainFloorItem>[] {
+  private buildLounge(): HalloweenHousePart<MainFloorItem>[] {
     return this.placeAssets(MainFloorItem.Lounge, [
       new ReclinerSofa(this.context, [5.2, 4.7, 0]),
       new CoffeeTable(this.context, [4.2, 5.1, 0]),
@@ -400,22 +407,26 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * the food) and a three-head torchiere in the west north corner (set to
    * green). Their cobwebs stay below the shades, away from the bulbs.
    */
-  private buildLamps(): ScenePart<MainFloorItem>[] {
+  private buildLamps(): HalloweenHousePart<MainFloorItem>[] {
     const [lampX, lampY] = [5.8, 4.25];
     const [torchX, torchY] = TORCHIERE_POSITION;
-    return this.placeAssets(MainFloorItem.Lamps, [
-      new ShelfLamp(this.context, [lampX, lampY, 0], LightColor.WarmWhite),
-      new Torchiere(this.context, TORCHIERE_POSITION, LightColor.Green),
-      new StretchyCobweb(this.context, [lampX, lampY, 0.6], [lampX + 0.3, lampY + 0.3, 1.25]),
-      new Cobweb(this.context, [torchX - 0.1, torchY, 1.0], 0.15, [1, 0, 0], [0, 0, 1])
-    ]);
+    return [
+      ...this.placeAssets(MainFloorItem.Lamps, [
+        new ShelfLamp(this.context, [lampX, lampY, 0], LightColor.WarmWhite),
+        new Torchiere(this.context, TORCHIERE_POSITION, LightColor.Green)
+      ]),
+      ...this.placeAssets(HalloweenDecoration.Cobwebs, [
+        new StretchyCobweb(this.context, [lampX, lampY, 0.6], [lampX + 0.3, lampY + 0.3, 1.25]),
+        new Cobweb(this.context, [torchX - 0.1, torchY, 1.0], 0.15, [1, 0, 0], [0, 0, 1])
+      ])
+    ];
   }
 
   /**
    * Builds the crystal chandelier over the dining area, hung with short
    * cobwebs and a few spiders that stay well above anything on the table.
    */
-  private buildChandelier(): ScenePart<MainFloorItem>[] {
+  private buildChandelier(): HalloweenHousePart<MainFloorItem>[] {
     const [x, y] = [4.2, 1.6];
     const chandelier = new Chandelier(this.context, [x, y, CEILING_HEIGHT]);
     // Spiders hang on short threads from the ring, no lower than about 1.6 m.
@@ -424,14 +435,17 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       [5, 0.3],
       [9, 0.25]
     ];
-    return this.placeAssets(MainFloorItem.Chandelier, [
-      chandelier,
-      new Cobweb(this.context, [x, y, 2.15], 0.2, [1, 0, 0], [0, 0, 1]),
-      new Cobweb(this.context, [x, y, 2.15], 0.2, [0, 1, 0], [0, 0, 1]),
-      ...spiderDrops.map(
-        ([index, drop]) => new HangingSpider(this.context, chandelier.ringPoint(index, 12, 0), drop)
-      )
-    ]);
+    return [
+      ...this.placeAssets(MainFloorItem.Chandelier, [chandelier]),
+      ...this.placeAssets(HalloweenDecoration.Cobwebs, [
+        new Cobweb(this.context, [x, y, 2.15], 0.2, [1, 0, 0], [0, 0, 1]),
+        new Cobweb(this.context, [x, y, 2.15], 0.2, [0, 1, 0], [0, 0, 1]),
+        ...spiderDrops.map(
+          ([index, drop]) =>
+            new HangingSpider(this.context, chandelier.ringPoint(index, 12, 0), drop)
+        )
+      ])
+    ];
   }
 
   /**
@@ -439,16 +453,19 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * the purple LED light bar beside the window. The window's gray curtains
    * are left out, since the wall they hang on is cut down.
    */
-  private buildDiningWindow(): ScenePart<MainFloorItem>[] {
+  private buildDiningWindow(): HalloweenHousePart<MainFloorItem>[] {
     const sill = this.box([1.6, 0.22, 0.03], [3.4, -0.08, SILL_HEIGHT]);
     const sillTop = SILL_HEIGHT + 0.03;
     const item = MainFloorItem.DiningWindow;
     return [
       this.part(item, 'Window sill', PALETTE.trim, sill),
       ...this.placeAssets(item, [
-        new LightBar(this.context, LIGHT_BAR_POSITION, LightColor.Purple),
-        ...[3.8, 4.2, 4.6].map((x) => new TeaLight(this.context, [x, 0.05, sillTop]))
-      ])
+        new LightBar(this.context, LIGHT_BAR_POSITION, LightColor.Purple)
+      ]),
+      ...this.placeAssets(
+        HalloweenDecoration.TeaLights,
+        [3.8, 4.2, 4.6].map((x) => new TeaLight(this.context, [x, 0.05, sillTop]))
+      )
     ];
   }
 
@@ -458,26 +475,32 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * black creepy cloth hanging off its front (south) edge under the
    * tablecloth.
    */
-  private buildDessertTable(): ScenePart<MainFloorItem>[] {
+  private buildDessertTable(): HalloweenHousePart<MainFloorItem>[] {
     const [x, y] = [5.4, 0.5];
     const [depth, width] = [0.7, 1.4];
-    return this.placeAssets(MainFloorItem.DessertTable, [
-      new WhiteDesk(this.context, [x, y, 0], [depth, width, DESK_HEIGHT]),
-      new Tablecloth(this.context, [x, y, DESK_HEIGHT], [depth, width]),
-      new CreepyClothPanel(
-        this.context,
-        [x - 0.028, y + 0.02, DESK_HEIGHT],
-        [x - 0.028, y + width - 0.02, DESK_HEIGHT],
-        0.6
-      )
-    ]);
+    return [
+      ...this.placeAssets(MainFloorItem.DessertTable, [
+        new WhiteDesk(this.context, [x, y, 0], [depth, width, DESK_HEIGHT])
+      ]),
+      ...this.placeAssets(HalloweenDecoration.BlackTablecloth, [
+        new Tablecloth(this.context, [x, y, DESK_HEIGHT], [depth, width])
+      ]),
+      ...this.placeAssets(HalloweenDecoration.SmallBlackCreepyCloth, [
+        new CreepyClothPanel(
+          this.context,
+          [x - 0.028, y + 0.02, DESK_HEIGHT],
+          [x - 0.028, y + width - 0.02, DESK_HEIGHT],
+          0.6
+        )
+      ])
+    ];
   }
 
   /**
    * Builds the cold food and desserts on the dessert table in two rows of
    * three, each with a label card and a tea light beside it.
    */
-  private buildDesserts(): ScenePart<MainFloorItem>[] {
+  private buildDesserts(): HalloweenHousePart<MainFloorItem>[] {
     const z = TABLE_TOP;
     const rows = [1.6, 1.2, 0.8];
     const [backColumn, frontColumn] = [5.88, 5.6];
@@ -486,19 +509,22 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
     );
     const [board, logCake, pretzelJar, caprese, dirtCups, cupcakes] = dishes;
 
-    return this.placeAssets(MainFloorItem.DessertTable, [
-      new ForestFloorBoard(this.context, board),
-      new FallenLogCake(this.context, logCake),
-      new PretzelRods(this.context, pretzelJar),
-      new CapreseBites(this.context, caprese),
-      new DirtCups(this.context, dirtCups),
-      new MossCupcakes(this.context, cupcakes),
-      // The cards and tea lights sit toward the front (south) of each dish.
-      ...dishes.flatMap(([x, y]) => [
-        new LabelCard(this.context, [x - 0.12, y - 0.16, z]),
-        new TeaLight(this.context, [x - 0.06, y - 0.16, z])
-      ])
-    ]);
+    // The cards and tea lights sit toward the front (south) of each dish.
+    return [
+      ...this.placeAssets(MainFloorItem.DessertTable, [
+        new ForestFloorBoard(this.context, board),
+        new FallenLogCake(this.context, logCake),
+        new PretzelRods(this.context, pretzelJar),
+        new CapreseBites(this.context, caprese),
+        new DirtCups(this.context, dirtCups),
+        new MossCupcakes(this.context, cupcakes),
+        ...dishes.map(([x, y]) => new LabelCard(this.context, [x - 0.12, y - 0.16, z]))
+      ]),
+      ...this.placeAssets(
+        HalloweenDecoration.TeaLights,
+        dishes.map(([x, y]) => new TeaLight(this.context, [x - 0.06, y - 0.16, z]))
+      )
+    ];
   }
 
   /**
@@ -508,7 +534,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * plants on the peninsula behind the stove, and tea lights on the
    * counters.
    */
-  private buildKitchen(): ScenePart<MainFloorItem>[] {
+  private buildKitchen(): HalloweenHousePart<MainFloorItem>[] {
     const inner = KITCHEN_INNER_X;
     const southDepth = SOUTH_RUN_FRONT_X - inner;
     const peninsulaLength = PENINSULA_NORTH_X - inner;
@@ -563,7 +589,9 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       this.part(item, 'Countertops', PALETTE.counter, tops),
       ...this.placeAssets(item, [
         new PottedPlant(this.context, [-0.4, 0.2, COUNTER_TOP]),
-        new PottedPlant(this.context, [0.0, 0.2, COUNTER_TOP]),
+        new PottedPlant(this.context, [0.0, 0.2, COUNTER_TOP])
+      ]),
+      ...this.placeAssets(HalloweenDecoration.TeaLights, [
         new TeaLight(this.context, [...KITCHEN_CANDLE, COUNTER_TOP], true),
         ...teaLightSpots.map((spot) => new TeaLight(this.context, spot))
       ])
@@ -576,7 +604,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * with its back toward the bar, the range hood above it,
    * and the dishwasher.
    */
-  private buildAppliances(): ScenePart<MainFloorItem>[] {
+  private buildAppliances(): HalloweenHousePart<MainFloorItem>[] {
     return this.placeAssets(MainFloorItem.Kitchen, [
       new Fridge(this.context, [KITCHEN_INNER_X, 3.25, 0]),
       new Stove(this.context, [STOVE_SOUTH_X, 0, 0]),
@@ -591,7 +619,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * meatballs with toothpicks, the dip in its bread bowl, and the pot of
    * mulled cider on the stove's back burner.
    */
-  private buildHotFood(): ScenePart<MainFloorItem>[] {
+  private buildHotFood(): HalloweenHousePart<MainFloorItem>[] {
     return this.placeAssets(MainFloorItem.HotFood, [
       new ChiliStation(this.context, [1.88, 2.95, COUNTER_TOP]),
       new SliderStation(this.context, [1.88, 2.05, COUNTER_TOP]),
@@ -604,13 +632,13 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
   /**
    * Builds the bar on the east face of the peninsula: the moss green creepy
    * cloth along its top, hanging longer over the edge in front of the fog
-   * machine, Spanish moss along its edge, and the lighted bottle shelf at its
+   * machine, Spanish moss along its edge, and the LED drink shelf at its
    * north end with the handmade potion bottles in a row on its top step.
    */
-  private buildBar(): ScenePart<MainFloorItem>[] {
+  private buildBar(): HalloweenHousePart<MainFloorItem>[] {
     const edgeY = -0.41;
     const mossSpots = [1.1, 0.75, 0.4, 0.05];
-    const shelf = new LightedBottleShelf(
+    const shelf = new LedDrinkShelf(
       this.context,
       [0.18, -0.34, BAR_TOP],
       1,
@@ -625,41 +653,49 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       { color: PotionColor.Purple, round: true },
       { color: PotionColor.Green, round: false }
     ];
-    return this.placeAssets(MainFloorItem.Bar, [
-      shelf,
-      ...potions.map(
-        ({ color, round }, index) =>
-          new PotionBottle(this.context, shelf.bottleSpot(index, potions.length), color, round)
+    return [
+      ...this.placeAssets(HalloweenDecoration.LedDrinkShelf, [shelf]),
+      ...this.placeAssets(
+        HalloweenDecoration.PotionBottles,
+        potions.map(
+          ({ color, round }, index) =>
+            new PotionBottle(this.context, shelf.bottleSpot(index, potions.length), color, round)
+        )
       ),
-      new CreepyCloth(
-        this.context,
-        [KITCHEN_INNER_X - 0.01, edgeY, 0.6],
-        [PENINSULA_NORTH_X + 0.01, -0.08, COUNTER_TOP],
-        CreepyClothColor.MossGreen
-      ),
-      new CreepyClothPanel(
-        this.context,
-        [KITCHEN_INNER_X, edgeY - 0.025, COUNTER_TOP],
-        [0.55, edgeY - 0.025, COUNTER_TOP],
-        0.75,
-        CreepyClothColor.MossGreen
-      ),
-      ...mossSpots.map(
-        (x, index) =>
-          new DrapedMoss(
-            this.context,
-            [x, edgeY, BAR_TOP],
-            [0.7 - index * 0.04, 0.6 + index * 0.03]
-          )
+      ...this.placeAssets(HalloweenDecoration.MossGreenCreepyCloth, [
+        new CreepyCloth(
+          this.context,
+          [KITCHEN_INNER_X - 0.01, edgeY, 0.6],
+          [PENINSULA_NORTH_X + 0.01, -0.08, COUNTER_TOP],
+          CreepyClothColor.MossGreen
+        ),
+        new CreepyClothPanel(
+          this.context,
+          [KITCHEN_INNER_X, edgeY - 0.025, COUNTER_TOP],
+          [0.55, edgeY - 0.025, COUNTER_TOP],
+          0.75,
+          CreepyClothColor.MossGreen
+        )
+      ]),
+      ...this.placeAssets(
+        HalloweenDecoration.Moss,
+        mossSpots.map(
+          (x, index) =>
+            new DrapedMoss(
+              this.context,
+              [x, edgeY, BAR_TOP],
+              [0.7 - index * 0.04, 0.6 + index * 0.03]
+            )
+        )
       )
-    ]);
+    ];
   }
 
   /**
    * Builds the punch dispenser and glasses at the south end of the bar, away
    * from the fog machine's vent.
    */
-  private buildDrinks(): ScenePart<MainFloorItem>[] {
+  private buildDrinks(): HalloweenHousePart<MainFloorItem>[] {
     return this.placeAssets(MainFloorItem.Bar, [
       new PunchDispenser(this.context, [-0.28, -0.25, BAR_TOP]),
       ...[-0.05, 0.05].flatMap((glassX) =>
@@ -674,7 +710,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * door, the fog spreading toward the door and along the floor behind the
    * bar, and the green uplight.
    */
-  private buildFogMachine(): ScenePart<MainFloorItem>[] {
+  private buildFogMachine(): HalloweenHousePart<MainFloorItem>[] {
     const blobs: FogBlob[] = [
       { center: [0.95, -1.9, 0.12], radii: [0.3, 0.25, 0.12] },
       { center: [1.5, -1.75, 0.1], radii: [0.5, 0.38, 0.1] },
@@ -682,11 +718,15 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       { center: [0.7, -1.15, 0.08], radii: [0.65, 0.45, 0.08] },
       { center: [0.4, -0.65, 0.07], radii: [0.85, 0.25, 0.07] }
     ];
-    return this.placeAssets(MainFloorItem.FogMachine, [
-      new FogMachine(this.context, FOG_MACHINE_POSITION, 0),
-      new Fog(this.context, blobs),
-      new Uplight(this.context, UPLIGHT_POSITION, LightColor.Green)
-    ]);
+    return [
+      ...this.placeAssets(HalloweenDecoration.FogMachines, [
+        new FogMachine(this.context, FOG_MACHINE_POSITION, 0),
+        new Fog(this.context, blobs)
+      ]),
+      ...this.placeAssets(HalloweenDecoration.Uplights, [
+        new Uplight(this.context, UPLIGHT_POSITION, LightColor.Green)
+      ])
+    ];
   }
 
   /**

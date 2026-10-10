@@ -4,11 +4,11 @@ import PatioSideTable from '../../../modelAssets/halloween-house/furniture/Patio
 import SlingChair from '../../../modelAssets/halloween-house/furniture/SlingChair';
 import DomeCeilingLight from '../../../modelAssets/halloween-house/lighting/DomeCeilingLight';
 import StringLights from '../../../modelAssets/halloween-house/lighting/StringLights';
-import { ScenePart } from '../../../baseClasses/ManifoldScene';
-import HalloweenHouseScene from '../HalloweenHouseScene';
+import HalloweenHouseScene, { HalloweenHousePart } from '../HalloweenHouseScene';
 
 /**
- * A selectable object on the patio. One item is made of one or more parts.
+ * A selectable object on the patio other than a decoration. One item is made
+ * of one or more parts.
  */
 enum PatioItem {
   Patio = 'Patio',
@@ -45,8 +45,7 @@ const PALETTE = {
  * table, so the string lights are the only decoration.
  */
 export default class PatioScene extends HalloweenHouseScene<PatioItem> {
-  readonly items = Object.values(PatioItem);
-  readonly parts: ScenePart<PatioItem>[];
+  readonly parts: HalloweenHousePart<PatioItem>[];
   override readonly north: Vec2 = [1, 0];
 
   constructor(wasm: ManifoldToplevel) {
@@ -86,7 +85,7 @@ export default class PatioScene extends HalloweenHouseScene<PatioItem> {
    * Builds the slab, the two siding walls with their openings, the roof's
    * edge beams, and the corner post with its plant hook.
    */
-  private buildStructure(): ScenePart<PatioItem>[] {
+  private buildStructure(): HalloweenHousePart<PatioItem>[] {
     const size = PATIO_SIZE;
     const t = SIDING_THICKNESS;
     const slab = this.box([size + t, size + t, 0.1], [-t, 0, -0.1]);
@@ -132,7 +131,7 @@ export default class PatioScene extends HalloweenHouseScene<PatioItem> {
    * Builds the sliding glass door into the kitchen and the window into the
    * dining area, each with white trim.
    */
-  private buildDoorAndWindow(): ScenePart<PatioItem>[] {
+  private buildDoorAndWindow(): HalloweenHousePart<PatioItem>[] {
     const size = PATIO_SIZE;
     const doorFrame = this.union([
       this.subtract(

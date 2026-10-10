@@ -1,6 +1,6 @@
 import type { Vec3 } from 'manifold-3d';
-import type { GlowPoint, ManifoldContext, ModelPart } from '../../../baseClasses/BaseManifold';
-import HalloweenHouseAsset, { LightColor } from '../HalloweenHouseAsset';
+import type { GlowPoint, ManifoldContext, ModelPart } from '../../../../baseClasses/BaseManifold';
+import HalloweenHouseAsset, { LightColor } from '../../HalloweenHouseAsset';
 
 const CASE_COLOR = '#151518';
 
@@ -11,11 +11,11 @@ const STEP_HEIGHTS = [0.06, 0.13];
 const PANEL_THICKNESS = 0.015;
 
 /**
- * A two-step LED bottle display running along X: black cases with frosted,
+ * The LED drink shelf: a two-step bottle display running along X: black cases with frosted,
  * lit panels on top of each step, the low step in front on the -Y side and
  * the tall step behind it.
  */
-export default class LightedBottleShelf extends HalloweenHouseAsset {
+export default class LedDrinkShelf extends HalloweenHouseAsset {
   readonly parts: ModelPart[];
 
   /**
@@ -51,8 +51,8 @@ export default class LightedBottleShelf extends HalloweenHouseAsset {
       )
     );
     this.parts = [
-      this.part('Bottle shelf case', CASE_COLOR, this.union(cases)),
-      { ...this.part('Bottle shelf lights', lightHex, this.union(panels)), glowing: true }
+      this.part('Drink shelf case', CASE_COLOR, this.union(cases)),
+      { ...this.part('Drink shelf lights', lightHex, this.union(panels)), glowing: true }
     ];
   }
 

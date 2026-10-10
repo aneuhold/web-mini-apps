@@ -1,6 +1,6 @@
 import type { Manifold, Vec3 } from 'manifold-3d';
-import type { ManifoldContext, ModelPart } from '../../../baseClasses/BaseManifold';
-import HalloweenHouseAsset from '../HalloweenHouseAsset';
+import type { ManifoldContext, ModelPart } from '../../../../baseClasses/BaseManifold';
+import HalloweenHouseAsset from '../../HalloweenHouseAsset';
 
 const DECAL_BLACK = '#121214';
 /** Half the decal's thickness, out from the wall. */

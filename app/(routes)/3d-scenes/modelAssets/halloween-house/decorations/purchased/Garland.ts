@@ -1,6 +1,6 @@
 import type { Vec3 } from 'manifold-3d';
-import type { ManifoldContext, ModelPart } from '../../../baseClasses/BaseManifold';
-import HalloweenHouseAsset from '../HalloweenHouseAsset';
+import type { ManifoldContext, ModelPart } from '../../../../baseClasses/BaseManifold';
+import HalloweenHouseAsset from '../../HalloweenHouseAsset';
 
 const COLOR = '#1b1b1b';
 

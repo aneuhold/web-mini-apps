@@ -6,35 +6,32 @@ import WhiteTable from '../../../modelAssets/halloween-house/furniture/WhiteTabl
 import Furnace from '../../../modelAssets/halloween-house/appliances/Furnace';
 import MiniFridge from '../../../modelAssets/halloween-house/appliances/MiniFridge';
 import Speaker from '../../../modelAssets/halloween-house/electronics/Speaker';
-import CreepyCloth from '../../../modelAssets/halloween-house/decorations/CreepyCloth';
+import CreepyCloth from '../../../modelAssets/halloween-house/decorations/purchased/CreepyCloth';
 import FabricCanopy from '../../../modelAssets/halloween-house/decorations/FabricCanopy';
-import FakeLeaves from '../../../modelAssets/halloween-house/decorations/FakeLeaves';
-import Fog, { FogBlob } from '../../../modelAssets/halloween-house/decorations/Fog';
-import ForestBackdrop from '../../../modelAssets/halloween-house/decorations/ForestBackdrop';
-import LightedTree from '../../../modelAssets/halloween-house/decorations/LightedTree';
-import MossClump from '../../../modelAssets/halloween-house/decorations/MossClump';
+import FakeLeaves from '../../../modelAssets/halloween-house/decorations/purchased/FakeLeaves';
+import Fog, { FogBlob } from '../../../modelAssets/halloween-house/decorations/purchased/Fog';
+import ForestBackdrop from '../../../modelAssets/halloween-house/decorations/purchased/ForestBackdrop';
+import LightedTree from '../../../modelAssets/halloween-house/decorations/purchased/LightedTree';
+import MossClump from '../../../modelAssets/halloween-house/decorations/purchased/MossClump';
 import DumbbellRack from '../../../modelAssets/halloween-house/gym/DumbbellRack';
 import RubberFloorMats from '../../../modelAssets/halloween-house/gym/RubberFloorMats';
 import SquatRack from '../../../modelAssets/halloween-house/gym/SquatRack';
 import WallPullUpBar from '../../../modelAssets/halloween-house/gym/WallPullUpBar';
 import WeightBench from '../../../modelAssets/halloween-house/gym/WeightBench';
 import { LightColor } from '../../../modelAssets/halloween-house/HalloweenHouseAsset';
-import Uplight from '../../../modelAssets/halloween-house/lighting/Uplight';
-import { ScenePart } from '../../../baseClasses/ManifoldScene';
-import HalloweenHouseScene from '../HalloweenHouseScene';
+import Uplight from '../../../modelAssets/halloween-house/decorations/purchased/Uplight';
+import HalloweenHouseScene, {
+  HalloweenDecoration,
+  HalloweenHousePart
+} from '../HalloweenHouseScene';
 
 /**
- * A selectable object in the garage. One item is made of one or more parts.
+ * A selectable object in the garage other than a decoration. One item is
+ * made of one or more parts.
  */
 enum GarageItem {
   Garage = 'Garage',
   Stairs = 'Stairs',
-  Backdrop = 'Backdrop',
-  Uplights = 'Uplights',
-  Trees = 'Trees',
-  Moss = 'Moss',
-  Leaves = 'Leaves',
-  CreepyCloth = 'Creepy cloth',
   GymEquipment = 'Gym equipment',
   Lounge = 'Lounge',
   Storage = 'Storage'
@@ -159,8 +156,7 @@ const PALETTE = {
  * estimated from photos, the party plan, and the owners' descriptions.
  */
 export default class GarageScene extends HalloweenHouseScene<GarageItem> {
-  readonly items = Object.values(GarageItem);
-  readonly parts: ScenePart<GarageItem>[];
+  readonly parts: HalloweenHousePart<GarageItem>[];
   override readonly north: Vec2 = [-1, 0];
 
   constructor(wasm: ManifoldToplevel) {
@@ -175,23 +171,25 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
     this.parts = [
       ...this.buildRoom(),
       ...this.buildStairs(),
-      ...this.placeAssets(GarageItem.Backdrop, [
+      ...this.placeAssets(HalloweenDecoration.SpookyForestBackdrop, [
         new ForestBackdrop(this.context, [0, BACKDROP_START, 0.12], BACKDROP_WIDTH)
       ]),
-      ...this.placeAssets(GarageItem.Uplights, [
+      ...this.placeAssets(HalloweenDecoration.Uplights, [
         new Uplight(this.context, backdropLight, LightColor.Green),
         new Uplight(this.context, squatRackLight, LightColor.Green)
       ]),
       // Each tree is placed on its own, since their lights are different colors.
-      ...this.placeAssets(GarageItem.Trees, [
+      ...this.placeAssets(HalloweenDecoration.LightedTrees, [
         new LightedTree(this.context, orangeTree, LightColor.Orange, 3)
       ]),
-      ...this.placeAssets(GarageItem.Trees, [
+      ...this.placeAssets(HalloweenDecoration.LightedTrees, [
         new LightedTree(this.context, purpleTree, LightColor.Purple, 11)
       ]),
-      ...this.placeAssets(GarageItem.Moss, this.hangMoss()),
-      ...this.placeAssets(GarageItem.Leaves, [new FakeLeaves(this.context, PATH, 260, 1.1, 42)]),
-      ...this.placeAssets(GarageItem.CreepyCloth, this.drapeCreepyCloth()),
+      ...this.placeAssets(HalloweenDecoration.Moss, this.hangMoss()),
+      ...this.placeAssets(HalloweenDecoration.Leaves, [
+        new FakeLeaves(this.context, PATH, 260, 1.1, 42)
+      ]),
+      ...this.placeAssets(HalloweenDecoration.LargeBlackCreepyCloth, this.drapeCreepyCloth()),
       ...this.buildGym(),
       ...this.buildLounge(),
       ...this.placeAssets(
@@ -208,7 +206,7 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
    * lights (turned off), and the garage door opener with the purple fabric
    * hung around it.
    */
-  private buildRoom(): ScenePart<GarageItem>[] {
+  private buildRoom(): HalloweenHousePart<GarageItem>[] {
     // The storage bay is shallower than the main bays, so the corner behind
     // its back wall is outside.
     const outsideCorner = this.box(
@@ -325,7 +323,7 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
    * The stairway's outer and front walls face the camera, so they are cut
    * down like the garage's.
    */
-  private buildStairs(): ScenePart<GarageItem>[] {
+  private buildStairs(): HalloweenHousePart<GarageItem>[] {
     const stairwayStart = STAIRS_TOP_Y - 0.2;
     const outerX = STAIRS_X + STAIRS_WIDTH;
     const stairwayLength = STORAGE_DEPTH - stairwayStart;
@@ -429,7 +427,7 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
       this.part(GarageItem.Stairs, 'Stairway door knob', PALETTE.brass, sideDoorKnob),
       this.part(GarageItem.Stairs, 'Stairs', PALETTE.stairs, this.union([...steps, threshold])),
       this.part(GarageItem.Stairs, 'Stair railing', PALETTE.trim, railing),
-      ...this.placeAssets(GarageItem.Stairs, [new Fog(this.context, fogBlobs)])
+      ...this.placeAssets(HalloweenDecoration.FogMachines, [new Fog(this.context, fogBlobs)])
     ];
   }
 
@@ -507,7 +505,7 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
    * benches moved off the path onto the mats, and the wall-mounted pull-up
    * bar on the storage bay's back wall beside the window.
    */
-  private buildGym(): ScenePart<GarageItem>[] {
+  private buildGym(): HalloweenHousePart<GarageItem>[] {
     return this.placeAssets(GarageItem.GymEquipment, [
       new RubberFloorMats(this.context, [2.85, 2.5], [4.1, 1.0, 0]),
       new SquatRack(this.context, SQUAT_RACK.min, SQUAT_RACK.max),
@@ -524,7 +522,7 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
    * 0.85 m (under 3 ft) short of the furnace, the white table, the cube shelves, the large speaker along the garage doors,
    * and the large speaker beside the forest backdrop.
    */
-  private buildLounge(): ScenePart<GarageItem>[] {
+  private buildLounge(): HalloweenHousePart<GarageItem>[] {
     return this.placeAssets(GarageItem.Lounge, [
       new MiniFridge(this.context, [1.82, GARAGE_DEPTH - 0.52, 0]),
       new Couch(this.context, [2.35, 6.1, 0]),

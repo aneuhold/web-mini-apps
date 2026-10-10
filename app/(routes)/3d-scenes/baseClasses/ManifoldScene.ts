@@ -23,7 +23,10 @@ export type ScenePart<TItem extends string> = ModelPart & {
  * assets placed with `placeAssets`.
  */
 export default abstract class ManifoldScene<TItem extends string> extends BaseManifold {
-  /** The selectable items, in the order they are listed. */
+  /**
+   * The items listed as buttons, in order. Clicking a part in the view
+   * selects its item, whether or not the item is listed.
+   */
   abstract readonly items: TItem[];
   abstract readonly parts: ScenePart<TItem>[];
   /** Points that cast colored light, gathered from the placed assets. */

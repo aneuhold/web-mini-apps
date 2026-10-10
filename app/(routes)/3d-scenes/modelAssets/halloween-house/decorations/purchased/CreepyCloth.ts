@@ -1,6 +1,6 @@
 import type { Vec3 } from 'manifold-3d';
-import type { ManifoldContext, ModelPart } from '../../../baseClasses/BaseManifold';
-import HalloweenHouseAsset, { CreepyClothColor } from '../HalloweenHouseAsset';
+import type { ManifoldContext, ModelPart } from '../../../../baseClasses/BaseManifold';
+import HalloweenHouseAsset, { CreepyClothColor } from '../../HalloweenHouseAsset';
 
 /**
  * Creepy cloth draped over a box from `min` to `max`, such as a piece of

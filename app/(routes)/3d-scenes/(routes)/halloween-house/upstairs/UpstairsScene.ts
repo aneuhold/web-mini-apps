@@ -2,15 +2,15 @@ import type { ManifoldToplevel, Vec2, Vec3 } from 'manifold-3d';
 import AirPurifier from '../../../modelAssets/halloween-house/appliances/AirPurifier';
 import MiniSplit from '../../../modelAssets/halloween-house/appliances/MiniSplit';
 import BlackCurtain from '../../../modelAssets/halloween-house/decorations/BlackCurtain';
-import CreepyCloth from '../../../modelAssets/halloween-house/decorations/CreepyCloth';
-import FakeLeaves from '../../../modelAssets/halloween-house/decorations/FakeLeaves';
-import Fog, { FogBlob } from '../../../modelAssets/halloween-house/decorations/Fog';
-import FogMachine from '../../../modelAssets/halloween-house/decorations/FogMachine';
+import CreepyCloth from '../../../modelAssets/halloween-house/decorations/purchased/CreepyCloth';
+import FakeLeaves from '../../../modelAssets/halloween-house/decorations/purchased/FakeLeaves';
+import Fog, { FogBlob } from '../../../modelAssets/halloween-house/decorations/purchased/Fog';
+import FogMachine from '../../../modelAssets/halloween-house/decorations/purchased/FogMachine';
 import FramedArt from '../../../modelAssets/halloween-house/decorations/FramedArt';
 import FramedDiploma from '../../../modelAssets/halloween-house/decorations/FramedDiploma';
-import Garland from '../../../modelAssets/halloween-house/decorations/Garland';
+import Garland from '../../../modelAssets/halloween-house/decorations/purchased/Garland';
 import LeafPrintCurtains from '../../../modelAssets/halloween-house/decorations/LeafPrintCurtains';
-import Wendigo from '../../../modelAssets/halloween-house/decorations/Wendigo';
+import Wendigo from '../../../modelAssets/halloween-house/decorations/purchased/Wendigo';
 import Monitor from '../../../modelAssets/halloween-house/electronics/Monitor';
 import PcTower from '../../../modelAssets/halloween-house/electronics/PcTower';
 import Bookshelf from '../../../modelAssets/halloween-house/furniture/Bookshelf';
@@ -23,24 +23,21 @@ import WoodChair from '../../../modelAssets/halloween-house/furniture/WoodChair'
 import { LightColor } from '../../../modelAssets/halloween-house/HalloweenHouseAsset';
 import FloorLamp from '../../../modelAssets/halloween-house/lighting/FloorLamp';
 import HexagonLightPanels from '../../../modelAssets/halloween-house/lighting/HexagonLightPanels';
-import Uplight from '../../../modelAssets/halloween-house/lighting/Uplight';
-import type { ScenePart } from '../../../baseClasses/ManifoldScene';
-import HalloweenHouseScene from '../HalloweenHouseScene';
+import Uplight from '../../../modelAssets/halloween-house/decorations/purchased/Uplight';
+import HalloweenHouseScene, {
+  HalloweenDecoration,
+  HalloweenHousePart
+} from '../HalloweenHouseScene';
 
 /**
- * A selectable object in the upstairs room. One item is made of one or more
- * parts.
+ * A selectable object in the upstairs room other than a decoration. One item
+ * is made of one or more parts.
  */
 enum UpstairsItem {
   Room = 'Room',
-  Wendigo = 'Wendigo',
   Desks = 'Desks',
   Panels = 'Panels',
   Stairs = 'Stairs',
-  Fog = 'Fog',
-  Garland = 'Garland',
-  Uplight = 'Uplight',
-  Leaves = 'Leaves',
   Furniture = 'Furniture'
 }
 
@@ -110,8 +107,7 @@ const PALETTE = {
  * front of the camera.
  */
 export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
-  readonly items = Object.values(UpstairsItem);
-  readonly parts: ScenePart<UpstairsItem>[];
+  readonly parts: HalloweenHousePart<UpstairsItem>[];
   override readonly north: Vec2 = [0, 1];
 
   constructor(wasm: ManifoldToplevel) {
@@ -125,16 +121,16 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
         new HexagonLightPanels(this.context, [3.65, ROOM_DEPTH, 1.45]),
         new FramedDiploma(this.context, [3.9, ROOM_DEPTH - 0.025, 1.88])
       ]),
-      ...this.placeAssets(UpstairsItem.Wendigo, [
+      ...this.placeAssets(HalloweenDecoration.Wendigo, [
         new Wendigo(this.context, [WENDIGO_X, WENDIGO_Y, 0])
       ]),
       ...this.buildStairs(),
       ...this.buildGarland(),
-      ...this.placeAssets(UpstairsItem.Fog, [
+      ...this.placeAssets(HalloweenDecoration.FogMachines, [
         new FogMachine(this.context, FOG_MACHINE_POSITION, 180),
         new Fog(this.context, this.stairFog())
       ]),
-      ...this.placeAssets(UpstairsItem.Uplight, [
+      ...this.placeAssets(HalloweenDecoration.Uplights, [
         new Uplight(this.context, UPLIGHT_POSITION, LightColor.Green)
       ]),
       ...this.buildLeaves(),
@@ -147,7 +143,7 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
    * window, curtains, art, the mini-split (with its fan turned down for the
    * party), and the ceiling lights, which stay off for the party.
    */
-  private buildRoom(): ScenePart<UpstairsItem>[] {
+  private buildRoom(): HalloweenHousePart<UpstairsItem>[] {
     const stairwellHole = this.box(
       [ROOM_WIDTH - STAIR_TOP_X + 0.3, STAIRWELL_DEPTH + 0.2, 1],
       [STAIR_TOP_X, -0.2, -0.5]
@@ -213,21 +209,25 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
    * tower covered by large black creepy cloth. The monitors stand near the
    * room side of the desks, facing the back wall.
    */
-  private buildDesks(): ScenePart<UpstairsItem>[] {
+  private buildDesks(): HalloweenHousePart<UpstairsItem>[] {
     const front = DESK_BACK_Y - DESK_DEPTH;
-    return this.placeAssets(UpstairsItem.Desks, [
-      new ComputerDesk(this.context, [0.95, front, 0], 1.2, DESK_DEPTH),
-      new ComputerDesk(this.context, [3.45, front, 0], 1.4, DESK_DEPTH),
-      new SideTable(this.context, [0.42, front + 0.1, 0]),
-      new TowerStand(this.context, [4.9, front + 0.05, 0]),
-      ...[1.27, 1.83, 3.6, 4.15, 4.7].map(
-        (x) => new Monitor(this.context, [x, front + 0.15, DESK_TOP_HEIGHT])
-      ),
-      new PcTower(this.context, [0.55, front + 0.13, 0.55], [0.2, 0.42, 0.45]),
-      new PcTower(this.context, [5.03, front + 0.07, 0.25], [0.24, 0.5, 0.48]),
-      new CreepyCloth(this.context, [0.4, front - 0.03, 0.03], [2.17, DESK_BACK_Y + 0.02, 1.3]),
-      new CreepyCloth(this.context, [3.43, front - 0.03, 0.03], [5.42, DESK_BACK_Y + 0.02, 1.3])
-    ]);
+    return [
+      ...this.placeAssets(UpstairsItem.Desks, [
+        new ComputerDesk(this.context, [0.95, front, 0], 1.2, DESK_DEPTH),
+        new ComputerDesk(this.context, [3.45, front, 0], 1.4, DESK_DEPTH),
+        new SideTable(this.context, [0.42, front + 0.1, 0]),
+        new TowerStand(this.context, [4.9, front + 0.05, 0]),
+        ...[1.27, 1.83, 3.6, 4.15, 4.7].map(
+          (x) => new Monitor(this.context, [x, front + 0.15, DESK_TOP_HEIGHT])
+        ),
+        new PcTower(this.context, [0.55, front + 0.13, 0.55], [0.2, 0.42, 0.45]),
+        new PcTower(this.context, [5.03, front + 0.07, 0.25], [0.24, 0.5, 0.48])
+      ]),
+      ...this.placeAssets(HalloweenDecoration.LargeBlackCreepyCloth, [
+        new CreepyCloth(this.context, [0.4, front - 0.03, 0.03], [2.17, DESK_BACK_Y + 0.02, 1.3]),
+        new CreepyCloth(this.context, [3.43, front - 0.03, 0.03], [5.42, DESK_BACK_Y + 0.02, 1.3])
+      ])
+    ];
   }
 
   /**
@@ -236,7 +236,7 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
    * side of the stairs, and the wooden gate at the top of the stairs, swung
    * open against the half wall behind the fog machine.
    */
-  private buildStairs(): ScenePart<UpstairsItem>[] {
+  private buildStairs(): HalloweenHousePart<UpstairsItem>[] {
     const bottom = -STAIR_DROP - 0.1;
     const treads = Array.from({ length: STAIR_RISERS - 1 }, (_, step) => {
       const top = -(step + 1) * STAIR_RISE;
@@ -311,7 +311,7 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
    * Builds the black garland: swags along the top of the half wall, a spiral
    * around the newel post, and a spiral down the stair handrail.
    */
-  private buildGarland(): ScenePart<UpstairsItem>[] {
+  private buildGarland(): HalloweenHousePart<UpstairsItem>[] {
     const swagLength = 0.8;
     const halfWallStart = NEWEL_X + 0.1;
     const halfWall = Array.from({ length: 41 }, (_, index): Vec3 => {
@@ -346,7 +346,7 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
     });
 
     return this.placeAssets(
-      UpstairsItem.Garland,
+      HalloweenDecoration.RailingGarland,
       [halfWall, newel, handrail].map((points) => new Garland(this.context, points))
     );
   }
@@ -377,7 +377,7 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
    * top of the stairs through the gate to the gap between the desks in front
    * of the wendigo, and in a ring around the wendigo's base.
    */
-  private buildLeaves(): ScenePart<UpstairsItem>[] {
+  private buildLeaves(): HalloweenHousePart<UpstairsItem>[] {
     const path: Vec2[] = [
       [1.0, 0.5],
       [1.0, 1.6],
@@ -392,7 +392,7 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
       [2.35, 9.32],
       [2.35, 8.75]
     ];
-    return this.placeAssets(UpstairsItem.Leaves, [
+    return this.placeAssets(HalloweenDecoration.Leaves, [
       new FakeLeaves(this.context, path, 140, 0.9, 11),
       new FakeLeaves(this.context, aroundWendigo, 40, 0.25, 12)
     ]);
@@ -404,7 +404,7 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
    * left wall; and the air purifier, moved out of the wendigo's spot into the
    * back corner behind the right desk.
    */
-  private buildFurniture(): ScenePart<UpstairsItem>[] {
+  private buildFurniture(): HalloweenHousePart<UpstairsItem>[] {
     return this.placeAssets(UpstairsItem.Furniture, [
       new ReclinerLoveseat(this.context, [0.05, 3.5, 0]),
       new GamingChair(this.context, [5.0, 3.9, 0]),
