@@ -1,5 +1,5 @@
 import type { Manifold, Vec3 } from 'manifold-3d';
-import ManifoldScene, { ScenePart } from '../../services/ManifoldScene';
+import ManifoldScene, { ScenePart } from '../../baseClasses/ManifoldScene';
 
 /**
  * The size and finishes of one room's floor and walls.

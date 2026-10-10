@@ -4,7 +4,7 @@ import PatioSideTable from '../../../modelAssets/halloween-house/furniture/Patio
 import SlingChair from '../../../modelAssets/halloween-house/furniture/SlingChair';
 import DomeCeilingLight from '../../../modelAssets/halloween-house/lighting/DomeCeilingLight';
 import StringLights from '../../../modelAssets/halloween-house/lighting/StringLights';
-import { ScenePart } from '../../../services/ManifoldScene';
+import { ScenePart } from '../../../baseClasses/ManifoldScene';
 import HalloweenHouseScene from '../HalloweenHouseScene';
 
 /**

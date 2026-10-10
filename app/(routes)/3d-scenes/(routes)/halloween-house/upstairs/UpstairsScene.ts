@@ -24,7 +24,7 @@ import { LightColor } from '../../../modelAssets/halloween-house/HalloweenHouseA
 import FloorLamp from '../../../modelAssets/halloween-house/lighting/FloorLamp';
 import HexagonLightPanels from '../../../modelAssets/halloween-house/lighting/HexagonLightPanels';
 import Uplight from '../../../modelAssets/halloween-house/lighting/Uplight';
-import type { ScenePart } from '../../../services/ManifoldScene';
+import type { ScenePart } from '../../../baseClasses/ManifoldScene';
 import HalloweenHouseScene from '../HalloweenHouseScene';
 
 /**

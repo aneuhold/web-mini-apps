@@ -1,7 +1,7 @@
 import type { ManifoldToplevel } from 'manifold-3d';
 import Cat from '../../modelAssets/cat/Cat';
 import FoldingChair from '../../modelAssets/cat/FoldingChair';
-import ManifoldScene, { ScenePart } from '../../services/ManifoldScene';
+import ManifoldScene, { ScenePart } from '../../baseClasses/ManifoldScene';
 
 /**
  * A selectable object in the cat scene. One item is made of one or more parts.

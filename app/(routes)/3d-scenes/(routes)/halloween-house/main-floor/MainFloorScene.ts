@@ -48,7 +48,7 @@ import ShelfLamp from '../../../modelAssets/halloween-house/lighting/ShelfLamp';
 import TeaLight from '../../../modelAssets/halloween-house/lighting/TeaLight';
 import Torchiere from '../../../modelAssets/halloween-house/lighting/Torchiere';
 import Uplight from '../../../modelAssets/halloween-house/lighting/Uplight';
-import type { ScenePart } from '../../../services/ManifoldScene';
+import type { ScenePart } from '../../../baseClasses/ManifoldScene';
 import HalloweenHouseScene from '../HalloweenHouseScene';
 
 /**

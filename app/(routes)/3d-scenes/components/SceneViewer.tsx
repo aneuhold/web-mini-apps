@@ -3,9 +3,9 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import type { SceneInfo } from '../scenesData';
-import ManifoldScene, { ManifoldSceneClass } from '../services/ManifoldScene';
+import ManifoldScene, { ManifoldSceneClass } from '../baseClasses/ManifoldScene';
 import manifoldService from '../services/ManifoldService';
-import SceneRenderer from '../services/SceneRenderer';
+import SceneRenderService from '../services/SceneRenderService';
 import styles from './SceneViewer.module.css';
 
 type SceneViewerProps<TItem extends string> = {
@@ -25,7 +25,7 @@ export default function SceneViewer<TItem extends string>({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const labelLayerRef = useRef<HTMLDivElement>(null);
   const compassRef = useRef<HTMLElement>(null);
-  const rendererRef = useRef<SceneRenderer<TItem> | null>(null);
+  const renderServiceRef = useRef<SceneRenderService<TItem> | null>(null);
   const [status, setStatus] = useState<string>('Loading Manifold…');
   const [items, setItems] = useState<TItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<TItem | null>(null);
@@ -44,7 +44,7 @@ export default function SceneViewer<TItem extends string>({
         const wasm = await manifoldService.load();
         if (cancelled) return;
         scene = new sceneClass(wasm);
-        rendererRef.current = new SceneRenderer(scene, {
+        renderServiceRef.current = new SceneRenderService(scene, {
           canvas,
           labelLayer,
           labelClassName: styles.dimensionLabel,
@@ -62,8 +62,8 @@ export default function SceneViewer<TItem extends string>({
 
     return () => {
       cancelled = true;
-      rendererRef.current?.dispose();
-      rendererRef.current = null;
+      renderServiceRef.current?.dispose();
+      renderServiceRef.current = null;
       scene?.dispose();
     };
   }, [sceneClass]);
@@ -87,7 +87,7 @@ export default function SceneViewer<TItem extends string>({
             type="button"
             className={`btn-small ${item === selectedItem ? 'btn-secondary' : ''}`}
             onClick={() => {
-              rendererRef.current?.select(item);
+              renderServiceRef.current?.select(item);
             }}
           >
             {item}
@@ -97,7 +97,7 @@ export default function SceneViewer<TItem extends string>({
           type="button"
           className="btn-small"
           onClick={() => {
-            rendererRef.current?.resetView();
+            renderServiceRef.current?.resetView();
           }}
         >
           Reset view

@@ -1,5 +1,5 @@
 import type { Vec3 } from 'manifold-3d';
-import type { ManifoldContext, ModelPart } from '../../services/BaseManifold';
+import type { ManifoldContext, ModelPart } from '../../baseClasses/BaseManifold';
 import BedroomAsset from './BedroomAsset';
 
 const SHADE_COLOR = '#f4dfb0';

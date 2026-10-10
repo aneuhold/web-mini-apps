@@ -4,7 +4,7 @@ import Dresser from '../../modelAssets/bedroom/Dresser';
 import Lamp from '../../modelAssets/bedroom/Lamp';
 import Nightstand from '../../modelAssets/bedroom/Nightstand';
 import Rug from '../../modelAssets/bedroom/Rug';
-import ManifoldScene, { ScenePart } from '../../services/ManifoldScene';
+import ManifoldScene, { ScenePart } from '../../baseClasses/ManifoldScene';
 
 /**
  * A selectable object in the bedroom. One item is made of one or more parts.

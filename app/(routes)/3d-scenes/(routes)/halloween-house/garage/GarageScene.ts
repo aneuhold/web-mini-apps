@@ -22,7 +22,7 @@ import WallPullUpBar from '../../../modelAssets/halloween-house/gym/WallPullUpBa
 import WeightBench from '../../../modelAssets/halloween-house/gym/WeightBench';
 import { LightColor } from '../../../modelAssets/halloween-house/HalloweenHouseAsset';
 import Uplight from '../../../modelAssets/halloween-house/lighting/Uplight';
-import { ScenePart } from '../../../services/ManifoldScene';
+import { ScenePart } from '../../../baseClasses/ManifoldScene';
 import HalloweenHouseScene from '../HalloweenHouseScene';
 
 /**

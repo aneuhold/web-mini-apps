@@ -1,5 +1,5 @@
 import type { Manifold } from 'manifold-3d';
-import BaseManifold, { GlowPoint, ModelPart } from '../services/BaseManifold';
+import BaseManifold, { GlowPoint, ModelPart } from '../baseClasses/BaseManifold';
 
 /**
  * Base class for a reusable model, such as a piece of furniture or a

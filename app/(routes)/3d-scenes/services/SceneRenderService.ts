@@ -25,12 +25,12 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import CameraMover, { CameraPose } from './CameraMover';
 import DimensionOverlay from './DimensionOverlay';
-import ManifoldScene, { ScenePart } from './ManifoldScene';
+import ManifoldScene, { ScenePart } from '../baseClasses/ManifoldScene';
 
 /**
- * The page elements and callbacks a SceneRenderer draws into and reports to.
+ * The page elements and callbacks a SceneRenderService draws into and reports to.
  */
-type SceneRendererOptions<TItem extends string> = {
+type SceneRenderServiceOptions<TItem extends string> = {
   canvas: HTMLCanvasElement;
   /** An element covering the canvas that holds the HTML measurement labels. */
   labelLayer: HTMLElement;
@@ -64,7 +64,7 @@ const CLICK_TOLERANCE = 4;
  * Manifold uses a Z-up coordinate system, so the camera's up vector is set to
  * +Z instead of converting every mesh.
  */
-export default class SceneRenderer<TItem extends string> {
+export default class SceneRenderService<TItem extends string> {
   private readonly canvas: HTMLCanvasElement;
   private readonly compass: HTMLElement;
   private readonly onSelect: (item: TItem | null) => void;
@@ -89,7 +89,7 @@ export default class SceneRenderer<TItem extends string> {
    */
   constructor(
     private readonly manifoldScene: ManifoldScene<TItem>,
-    { canvas, labelLayer, labelClassName, compass, onSelect }: SceneRendererOptions<TItem>
+    { canvas, labelLayer, labelClassName, compass, onSelect }: SceneRenderServiceOptions<TItem>
   ) {
     this.canvas = canvas;
     this.compass = compass;
@@ -105,7 +105,7 @@ export default class SceneRenderer<TItem extends string> {
     this.cameraMover = new CameraMover(this.camera, this.controls);
     this.dimensions = new DimensionOverlay(this.scene, labelClassName);
 
-    const bounds = SceneRenderer.toBox3(manifoldScene.getBounds());
+    const bounds = SceneRenderService.toBox3(manifoldScene.getBounds());
     const center = bounds.getCenter(new Vector3());
     const radius = bounds.getSize(new Vector3()).length() / 2;
     this.addLights(center, radius);
@@ -144,7 +144,7 @@ export default class SceneRenderer<TItem extends string> {
         mesh.material.emissive.set(HIGHLIGHT_COLOR);
         mesh.material.emissiveIntensity = 0.25;
       } else {
-        SceneRenderer.applyGlow(mesh.material, part?.glowing ? part.color : null);
+        SceneRenderService.applyGlow(mesh.material, part?.glowing ? part.color : null);
       }
     });
     this.onSelect(item);
@@ -153,7 +153,7 @@ export default class SceneRenderer<TItem extends string> {
       this.dimensions.clear();
       return;
     }
-    const bounds = SceneRenderer.toBox3(this.manifoldScene.getItemBounds(item));
+    const bounds = SceneRenderService.toBox3(this.manifoldScene.getItemBounds(item));
     const pose = this.cameraMover.framePose(
       bounds.getCenter(new Vector3()),
       bounds.getSize(new Vector3()).length() / 2
@@ -322,8 +322,8 @@ export default class SceneRenderer<TItem extends string> {
       transparent: part.transparent ?? false,
       opacity: part.transparent ? 0.35 : 1
     });
-    SceneRenderer.applyGlow(material, part.glowing ? part.color : null);
-    const mesh = new Mesh(SceneRenderer.toGeometry(part.manifold), material);
+    SceneRenderService.applyGlow(material, part.glowing ? part.color : null);
+    const mesh = new Mesh(SceneRenderService.toGeometry(part.manifold), material);
     mesh.name = part.name;
     mesh.castShadow = !part.transparent;
     mesh.receiveShadow = true;
