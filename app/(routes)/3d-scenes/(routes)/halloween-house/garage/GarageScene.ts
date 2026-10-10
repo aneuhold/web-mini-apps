@@ -20,15 +20,15 @@ import RubberFloorMats from '../../../modelAssets/halloween-house/gym/RubberFloo
 import SquatRack from '../../../modelAssets/halloween-house/gym/SquatRack';
 import WallPullUpBar from '../../../modelAssets/halloween-house/gym/WallPullUpBar';
 import WeightBench from '../../../modelAssets/halloween-house/gym/WeightBench';
-import { HOUSE_PALETTE } from '../../../modelAssets/halloween-house/HalloweenHouseAsset';
+import { LightColor } from '../../../modelAssets/halloween-house/HalloweenHouseAsset';
 import Uplight from '../../../modelAssets/halloween-house/lighting/Uplight';
-import { GlowPoint, ScenePart } from '../../../services/ManifoldScene';
-import HalloweenHouseScene, { CUTAWAY_HEIGHT } from '../HalloweenHouseScene';
+import { ScenePart } from '../../../services/ManifoldScene';
+import HalloweenHouseScene from '../HalloweenHouseScene';
 
 /**
  * A selectable object in the garage. One item is made of one or more parts.
  */
-export enum GarageItem {
+enum GarageItem {
   Garage = 'Garage',
   Stairs = 'Stairs',
   Backdrop = 'Backdrop',
@@ -130,7 +130,6 @@ const PALETTE = {
   brass: '#c9a54a',
   stairs: '#b08a5e',
   steel: '#bdbdbd',
-  orange: '#ff8a1f',
   opener: '#3a3a3a'
 };
 
@@ -152,7 +151,6 @@ const PALETTE = {
 export default class GarageScene extends HalloweenHouseScene<GarageItem> {
   readonly items = Object.values(GarageItem);
   readonly parts: ScenePart<GarageItem>[];
-  override readonly glowPoints: GlowPoint[];
   override readonly north: Vec2 = [-1, 0];
 
   constructor(wasm: ManifoldToplevel) {
@@ -171,15 +169,15 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
         new ForestBackdrop(this.context, [0, BACKDROP_START, 0.12], BACKDROP_WIDTH)
       ]),
       ...this.placeAssets(GarageItem.Uplights, [
-        new Uplight(this.context, backdropLight, HOUSE_PALETTE.green),
-        new Uplight(this.context, squatRackLight, HOUSE_PALETTE.green)
+        new Uplight(this.context, backdropLight, LightColor.Green),
+        new Uplight(this.context, squatRackLight, LightColor.Green)
       ]),
       // Each tree is placed on its own, since their lights are different colors.
       ...this.placeAssets(GarageItem.Trees, [
-        new LightedTree(this.context, orangeTree, PALETTE.orange, 3)
+        new LightedTree(this.context, orangeTree, LightColor.Orange, 3)
       ]),
       ...this.placeAssets(GarageItem.Trees, [
-        new LightedTree(this.context, purpleTree, HOUSE_PALETTE.purple, 11)
+        new LightedTree(this.context, purpleTree, LightColor.Purple, 11)
       ]),
       ...this.placeAssets(GarageItem.Moss, this.hangMoss()),
       ...this.placeAssets(GarageItem.Leaves, [new FakeLeaves(this.context, PATH, 260, 1.1, 42)]),
@@ -190,12 +188,6 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
         GarageItem.Storage,
         STORAGE_SHELVES.map(({ min, max }) => new MetalShelf(this.context, min, max))
       )
-    ];
-    this.glowPoints = [
-      { position: [backdropLight[0], backdropLight[1], 0.3], color: HOUSE_PALETTE.green },
-      { position: [squatRackLight[0], squatRackLight[1], 0.3], color: HOUSE_PALETTE.green },
-      { position: [orangeTree[0], orangeTree[1], 1.2], color: PALETTE.orange },
-      { position: [purpleTree[0], purpleTree[1], 1.2], color: HOUSE_PALETTE.purple }
     ];
   }
 
@@ -221,8 +213,11 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
     // The storage bay wall and the furnace wall past the opening face the
     // camera, so they are cut down like the outer walls.
     const storageWall = this.union([
-      this.box([0.1, openingStart, CUTAWAY_HEIGHT], [STORAGE_WALL_X, 0, 0]),
-      this.box([0.1, GARAGE_DEPTH - openingEnd, CUTAWAY_HEIGHT], [STORAGE_WALL_X, openingEnd, 0])
+      this.box([0.1, openingStart, HalloweenHouseScene.CUTAWAY_HEIGHT], [STORAGE_WALL_X, 0, 0]),
+      this.box(
+        [0.1, GARAGE_DEPTH - openingEnd, HalloweenHouseScene.CUTAWAY_HEIGHT],
+        [STORAGE_WALL_X, openingEnd, 0]
+      )
     ]);
 
     const door = this.box([0.035, DOOR_WIDTH, 2.05], [0, DOOR_Y, 0]);
@@ -336,10 +331,13 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
           [GARAGE_LENGTH, STORAGE_DEPTH, 0]
         ),
         this.box(
-          [outerX + 0.1 - GARAGE_LENGTH, 0.1, CUTAWAY_HEIGHT],
+          [outerX + 0.1 - GARAGE_LENGTH, 0.1, HalloweenHouseScene.CUTAWAY_HEIGHT],
           [GARAGE_LENGTH, stairwayStart - 0.1, 0]
         ),
-        this.box([0.1, stairwayLength, CUTAWAY_HEIGHT], [outerX, stairwayStart, 0])
+        this.box(
+          [0.1, stairwayLength, HalloweenHouseScene.CUTAWAY_HEIGHT],
+          [outerX, stairwayStart, 0]
+        )
       ]),
       this.union([this.stairDoorway(), sideDoorway])
     );

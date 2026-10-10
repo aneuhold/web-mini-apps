@@ -2,16 +2,15 @@ import type { Vec2, ManifoldToplevel, Vec3 } from 'manifold-3d';
 import FireTable from '../../../modelAssets/halloween-house/furniture/FireTable';
 import PatioSideTable from '../../../modelAssets/halloween-house/furniture/PatioSideTable';
 import SlingChair from '../../../modelAssets/halloween-house/furniture/SlingChair';
-import { HOUSE_PALETTE } from '../../../modelAssets/halloween-house/HalloweenHouseAsset';
 import DomeCeilingLight from '../../../modelAssets/halloween-house/lighting/DomeCeilingLight';
 import StringLights from '../../../modelAssets/halloween-house/lighting/StringLights';
-import { GlowPoint, ScenePart } from '../../../services/ManifoldScene';
+import { ScenePart } from '../../../services/ManifoldScene';
 import HalloweenHouseScene from '../HalloweenHouseScene';
 
 /**
  * A selectable object on the patio. One item is made of one or more parts.
  */
-export enum PatioItem {
+enum PatioItem {
   Patio = 'Patio',
   Door = 'Door',
   Window = 'Window',
@@ -48,14 +47,6 @@ const PALETTE = {
 export default class PatioScene extends HalloweenHouseScene<PatioItem> {
   readonly items = Object.values(PatioItem);
   readonly parts: ScenePart<PatioItem>[];
-  override readonly glowPoints: GlowPoint[] = [
-    { position: [FIRE_TABLE_POSITION[0], FIRE_TABLE_POSITION[1], 0.8], color: HOUSE_PALETTE.fire },
-    { position: [1.37, 1.37, 2.1], color: HOUSE_PALETTE.warmWhite },
-    { position: [0.6, 0.15, 2.1], color: HOUSE_PALETTE.pink },
-    { position: [2.0, 0.15, 2.1], color: HOUSE_PALETTE.purple },
-    { position: [2.55, 1.8, 2.1], color: HOUSE_PALETTE.pink },
-    { position: [1.0, 2.55, 2.15], color: HOUSE_PALETTE.purple }
-  ];
   override readonly north: Vec2 = [1, 0];
 
   constructor(wasm: ManifoldToplevel) {

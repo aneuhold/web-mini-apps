@@ -1,6 +1,6 @@
 import type { Vec3 } from 'manifold-3d';
 import type { ManifoldContext, ModelPart } from '../../../services/BaseManifold';
-import HalloweenHouseAsset, { HOUSE_PALETTE } from '../HalloweenHouseAsset';
+import HalloweenHouseAsset from '../HalloweenHouseAsset';
 
 /**
  * Stretchy fake cobweb pulled over a box from `min` to `max`, such as the
@@ -13,7 +13,7 @@ export default class StretchyCobweb extends HalloweenHouseAsset {
     super(context);
     this.parts = [
       {
-        ...this.part('Cobwebs', HOUSE_PALETTE.cobweb, this.drape(min, max)),
+        ...this.part('Cobwebs', HalloweenHouseAsset.COBWEB_COLOR, this.drape(min, max)),
         transparent: true
       }
     ];

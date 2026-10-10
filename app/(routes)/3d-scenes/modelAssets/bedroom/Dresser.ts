@@ -1,12 +1,11 @@
 import type { Vec3 } from 'manifold-3d';
 import type { ManifoldContext, ModelPart } from '../../services/BaseManifold';
-import ModelAsset from '../ModelAsset';
-import { BEDROOM_PALETTE } from './bedroomPalette';
+import BedroomAsset from './BedroomAsset';
 
 /**
  * A dresser on two feet with three drawers cut into its +X face.
  */
-export default class Dresser extends ModelAsset {
+export default class Dresser extends BedroomAsset {
   readonly parts: ModelPart[];
 
   /**
@@ -32,8 +31,8 @@ export default class Dresser extends ModelAsset {
     const feet = [y, y + width - 0.06].map((footY) => this.box([depth, 0.06, 0.06], [x, footY, z]));
 
     this.parts = [
-      this.part('Dresser', BEDROOM_PALETTE.wood, this.union([dresser, ...feet])),
-      this.part('Dresser pulls', BEDROOM_PALETTE.brass, this.union(pulls))
+      this.part('Dresser', BedroomAsset.WOOD_COLOR, this.union([dresser, ...feet])),
+      this.part('Dresser pulls', BedroomAsset.BRASS_COLOR, this.union(pulls))
     ];
   }
 }

@@ -1,16 +1,17 @@
 import type { Vec3 } from 'manifold-3d';
 import type { ManifoldContext, ModelPart } from '../../../services/BaseManifold';
-import HalloweenHouseAsset, { HOUSE_PALETTE } from '../HalloweenHouseAsset';
+import HalloweenHouseAsset, { LightColor } from '../HalloweenHouseAsset';
+
+const BODY_COLOR = '#18181a';
 
 /**
- * A par-can uplight standing on the floor, shining straight up. Pair it with
- * a glow point about 0.3 m above where it stands so it lights its
- * surroundings.
+ * A par-can uplight standing on the floor, shining straight up and lighting
+ * its surroundings.
  */
 export default class Uplight extends HalloweenHouseAsset {
   readonly parts: ModelPart[];
 
-  constructor(context: ManifoldContext, position: Vec3, color: string) {
+  constructor(context: ManifoldContext, position: Vec3, color: LightColor) {
     super(context);
     const [x, y, z] = position;
     const body = this.union([
@@ -18,9 +19,11 @@ export default class Uplight extends HalloweenHouseAsset {
       this.cylinder(0.14, 0.09, 0.09, [x, y, z + 0.02], 24)
     ]);
     const lens = this.cylinder(0.01, 0.075, 0.075, [x, y, z + 0.16], 24);
+    const lightHex = HalloweenHouseAsset.LIGHT_COLORS[color];
+    this.glowPoints.push({ position: [x, y, z + 0.3], color: lightHex });
     this.parts = [
-      this.part('Uplight', HOUSE_PALETTE.uplightBody, body),
-      { ...this.part('Uplight lens', color, lens), glowing: true }
+      this.part('Uplight', BODY_COLOR, body),
+      { ...this.part('Uplight lens', lightHex, lens), glowing: true }
     ];
   }
 }

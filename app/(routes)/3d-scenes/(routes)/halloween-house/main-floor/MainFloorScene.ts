@@ -1,17 +1,61 @@
 import type { Manifold, ManifoldToplevel, Vec2, Vec3 } from 'manifold-3d';
-import type { GlowPoint, ScenePart } from '../../../services/ManifoldScene';
-import HalloweenHouseScene, {
-  CUTAWAY_HEIGHT,
-  FogBlob,
-  HOUSE_PALETTE,
-  WALL_THICKNESS
-} from '../HalloweenHouseScene';
+import Fridge from '../../../modelAssets/halloween-house/appliances/Fridge';
+import Dishwasher from '../../../modelAssets/halloween-house/appliances/Dishwasher';
+import RangeHood from '../../../modelAssets/halloween-house/appliances/RangeHood';
+import Stove from '../../../modelAssets/halloween-house/appliances/Stove';
+import Cobweb from '../../../modelAssets/halloween-house/decorations/Cobweb';
+import CreepyCloth from '../../../modelAssets/halloween-house/decorations/CreepyCloth';
+import CreepyClothPanel from '../../../modelAssets/halloween-house/decorations/CreepyClothPanel';
+import Crow from '../../../modelAssets/halloween-house/decorations/Crow';
+import DrapedMoss from '../../../modelAssets/halloween-house/decorations/DrapedMoss';
+import Fog, { FogBlob } from '../../../modelAssets/halloween-house/decorations/Fog';
+import FogMachine from '../../../modelAssets/halloween-house/decorations/FogMachine';
+import HangingSpider from '../../../modelAssets/halloween-house/decorations/HangingSpider';
+import LabelCard from '../../../modelAssets/halloween-house/decorations/LabelCard';
+import PotionBottle, {
+  PotionColor
+} from '../../../modelAssets/halloween-house/decorations/PotionBottle';
+import PottedPlant from '../../../modelAssets/halloween-house/decorations/PottedPlant';
+import StretchyCobweb from '../../../modelAssets/halloween-house/decorations/StretchyCobweb';
+import Tablecloth from '../../../modelAssets/halloween-house/decorations/Tablecloth';
+import Tv from '../../../modelAssets/halloween-house/electronics/Tv';
+import BreadBowlDip from '../../../modelAssets/halloween-house/food/BreadBowlDip';
+import CapreseBites from '../../../modelAssets/halloween-house/food/CapreseBites';
+import ChiliStation from '../../../modelAssets/halloween-house/food/ChiliStation';
+import DirtCups from '../../../modelAssets/halloween-house/food/DirtCups';
+import DrinkGlass from '../../../modelAssets/halloween-house/food/DrinkGlass';
+import FallenLogCake from '../../../modelAssets/halloween-house/food/FallenLogCake';
+import ForestFloorBoard from '../../../modelAssets/halloween-house/food/ForestFloorBoard';
+import MeatballDish from '../../../modelAssets/halloween-house/food/MeatballDish';
+import MossCupcakes from '../../../modelAssets/halloween-house/food/MossCupcakes';
+import MulledCiderPot from '../../../modelAssets/halloween-house/food/MulledCiderPot';
+import PretzelRods from '../../../modelAssets/halloween-house/food/PretzelRods';
+import PunchDispenser from '../../../modelAssets/halloween-house/food/PunchDispenser';
+import SliderStation from '../../../modelAssets/halloween-house/food/SliderStation';
+import CatClimbingPost from '../../../modelAssets/halloween-house/furniture/CatClimbingPost';
+import CoffeeTable from '../../../modelAssets/halloween-house/furniture/CoffeeTable';
+import DogBed from '../../../modelAssets/halloween-house/furniture/DogBed';
+import ReclinerSofa from '../../../modelAssets/halloween-house/furniture/ReclinerSofa';
+import TvCabinet from '../../../modelAssets/halloween-house/furniture/TvCabinet';
+import WhiteDesk from '../../../modelAssets/halloween-house/furniture/WhiteDesk';
+import {
+  CreepyClothColor,
+  LightColor
+} from '../../../modelAssets/halloween-house/HalloweenHouseAsset';
+import Chandelier from '../../../modelAssets/halloween-house/lighting/Chandelier';
+import LightBar from '../../../modelAssets/halloween-house/lighting/LightBar';
+import ShelfLamp from '../../../modelAssets/halloween-house/lighting/ShelfLamp';
+import TeaLight from '../../../modelAssets/halloween-house/lighting/TeaLight';
+import Torchiere from '../../../modelAssets/halloween-house/lighting/Torchiere';
+import Uplight from '../../../modelAssets/halloween-house/lighting/Uplight';
+import type { ScenePart } from '../../../services/ManifoldScene';
+import HalloweenHouseScene from '../HalloweenHouseScene';
 
 /**
  * A selectable object on the main floor. One item is made of one or more
  * parts.
  */
-export enum MainFloorItem {
+enum MainFloorItem {
   Rooms = 'Rooms',
   Curtains = 'Curtains',
   TvCabinet = 'TV cabinet',
@@ -31,13 +75,14 @@ export enum MainFloorItem {
  */
 type Potion = {
   base: Vec3;
-  color: string;
+  color: PotionColor;
   /** A round-bottomed flask instead of a tall bottle. */
   round: boolean;
 };
 
 const CEILING_HEIGHT = 2.45;
 /** X of the wall between the kitchen and entry (south) and the living room (north). */
+const WALL_THICKNESS = 0.1;
 const DIVIDER_X = 2.2;
 const LIVING_NORTH_X = 6.2;
 /** Y where the living room's straight walls end and the bay begins. */
@@ -73,12 +118,18 @@ const COUNTER_TOP = 0.91;
 const BAR_TOP = COUNTER_TOP + 0.012;
 /** The top of the raised ledge along the middle of the peninsula. */
 const LEDGE_TOP = 1.05;
+/** The top surface of the white desk. */
+const DESK_HEIGHT = 0.75;
 /** The top of the black tablecloth on the white desk. */
 const TABLE_TOP = 0.77;
 const SILL_HEIGHT = 0.8;
 
-/** The TV cabinet is built facing +Y from the origin, then turned to face north and moved here. */
+/**
+ * The TV cabinet and everything on it are laid out facing +Y from this
+ * point, then turned by `TV_ANGLE` to face north.
+ */
 const TV_ORIGIN: Vec3 = [DIVIDER_X + WALL_THICKNESS / 2, 8, 0];
+const TV_ANGLE = -90;
 const UPLIGHT_POSITION: Vec3 = [1.85, -1.5, 0];
 const FOG_MACHINE_POSITION: Vec3 = [KITCHEN_INNER_X + 0.05, -1.95, 0];
 
@@ -90,73 +141,18 @@ const PALETTE = {
   trim: '#b98a4e',
   door: '#8a5a2b',
   brass: '#c9a54a',
-  sisal: '#d8c7a3',
   curtain: '#5d6672',
   rod: '#2f2f33',
-  cabinet: '#c08a45',
-  screen: '#111114',
-  crow: '#121214',
-  sofa: '#c7b393',
-  dogBed: '#d8cfc2',
-  coffeeTable: '#9a6a3c',
-  lampFrame: '#1f1f22',
-  crystal: '#dfeef7',
-  desk: '#f4f4f2',
-  tablecloth: '#151518',
-  board: '#9a6a3c',
-  plate: '#f7f5ef',
-  cheese: '#f0c75a',
-  curedMeat: '#9b3a3a',
-  blackberry: '#2b1b33',
-  pretzel: '#b07a3e',
-  herb: '#4f7a3a',
-  mozzarella: '#f6f1e4',
-  tomato: '#d8352a',
-  chocolate: '#3b2418',
-  gummyWorm: '#ff7a2a',
-  clearPlastic: '#e6f2f8',
-  wrapper: '#e2cfa8',
-  matcha: '#86a33f',
-  labelCard: '#fbfbf7',
   oak: '#c48b3f',
   darkOak: '#8a5a2b',
   counter: '#eeebe3',
-  appliance: '#1c1c1e',
-  burner: '#3a3a3c',
-  steel: '#a9adb2',
-  glass: '#a9d4ef',
-  plant: '#3f7a3a',
-  pot: '#b0643a',
-  moss: '#8e9a6c',
-  cork: '#c8a26a',
-  crockPot: '#2a2a2a',
-  crockLid: '#5a5a5c',
-  cup: '#d8d2c4',
-  sourCream: '#f7f5ee',
-  onion: '#7fae4f',
-  pork: '#7b4a2e',
-  bun: '#c98a4b',
-  meatball: '#5e3a24',
-  toothpick: '#e2c9a0',
-  bread: '#b07a3e',
-  dip: '#7c9a45',
-  punch: '#c8782e',
-  cider: '#8c3b1f',
-  potionGreen: '#4fd16a',
-  potionPurple: '#9b59d0',
-  potionRed: '#d0473b',
-  potionTeal: '#3fb5c9'
+  steel: '#a9adb2'
 };
 
-/** Where the light from each smart bulb, LED, and uplight comes from. */
-const LIGHTS = {
-  tvCabinet: [3.01, 7.1, 1.5],
-  lightBar: [5.3, 0.25, 1],
-  shelfLamp: [5.95, 4.4, 1.48],
-  torchiere: [5.7, 7.7, 1.65],
-  uplight: [UPLIGHT_POSITION[0], UPLIGHT_POSITION[1], 0.35],
-  kitchenCandle: [1.88, 1.65, 1.05]
-} satisfies Record<string, Vec3>;
+const LIGHT_BAR_POSITION: Vec3 = [5.3, 0.25, 0];
+const TORCHIERE_POSITION: Vec3 = [5.7, 7.7, 0];
+/** The tea light on the kitchen counter that lights the kitchen. */
+const KITCHEN_CANDLE: Vec2 = [1.88, 1.65];
 
 /**
  * The main floor decorated for the haunted forest party: the entry, the
@@ -180,7 +176,6 @@ const LIGHTS = {
 export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
   readonly items = Object.values(MainFloorItem);
   readonly parts: ScenePart<MainFloorItem>[];
-  override readonly glowPoints: GlowPoint[];
   override readonly north: Vec2 = [1, 0];
 
   constructor(wasm: ManifoldToplevel) {
@@ -203,21 +198,6 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       ...this.buildDrinks(),
       ...this.buildFogMachine()
     ];
-    this.glowPoints = [
-      { position: LIGHTS.tvCabinet, color: HOUSE_PALETTE.purple },
-      { position: LIGHTS.lightBar, color: HOUSE_PALETTE.purple },
-      { position: LIGHTS.shelfLamp, color: HOUSE_PALETTE.warmWhite },
-      { position: LIGHTS.torchiere, color: HOUSE_PALETTE.green },
-      { position: LIGHTS.uplight, color: HOUSE_PALETTE.green },
-      { position: LIGHTS.kitchenCandle, color: HOUSE_PALETTE.flame }
-    ];
-  }
-
-  /**
-   * Finds where a point built facing +Y at the origin ends up after `atTv`.
-   */
-  private static atTvPoint([x, y, z]: Vec3): Vec3 {
-    return [TV_ORIGIN[0] + y, TV_ORIGIN[1] - x, z];
   }
 
   /**
@@ -268,12 +248,28 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
     );
     // The patio sliding door leaves a gap in the small area's north wall.
     const lowWalls = this.union([
-      this.wall([LIVING_NORTH_X, 0], [LIVING_NORTH_X, BAY_START_Y], CUTAWAY_HEIGHT),
-      this.wall([DIVIDER_X, DINING_DOORWAY_END_Y], [DIVIDER_X, ENTRY_EAST_Y], CUTAWAY_HEIGHT),
-      this.wall([HALLWAY_SOUTH_X, ENTRY_EAST_Y], [0, ENTRY_EAST_Y], CUTAWAY_HEIGHT),
-      this.wall([KITCHEN_SOUTH_X, BACK_AREA_EAST_Y], [DIVIDER_X, BACK_AREA_EAST_Y], CUTAWAY_HEIGHT),
-      this.wall([DIVIDER_X, BACK_AREA_EAST_Y], [DIVIDER_X, -2], CUTAWAY_HEIGHT),
-      this.wall([DIVIDER_X, -0.6], [DIVIDER_X, 0], CUTAWAY_HEIGHT),
+      this.wall(
+        [LIVING_NORTH_X, 0],
+        [LIVING_NORTH_X, BAY_START_Y],
+        HalloweenHouseScene.CUTAWAY_HEIGHT
+      ),
+      this.wall(
+        [DIVIDER_X, DINING_DOORWAY_END_Y],
+        [DIVIDER_X, ENTRY_EAST_Y],
+        HalloweenHouseScene.CUTAWAY_HEIGHT
+      ),
+      this.wall(
+        [HALLWAY_SOUTH_X, ENTRY_EAST_Y],
+        [0, ENTRY_EAST_Y],
+        HalloweenHouseScene.CUTAWAY_HEIGHT
+      ),
+      this.wall(
+        [KITCHEN_SOUTH_X, BACK_AREA_EAST_Y],
+        [DIVIDER_X, BACK_AREA_EAST_Y],
+        HalloweenHouseScene.CUTAWAY_HEIGHT
+      ),
+      this.wall([DIVIDER_X, BACK_AREA_EAST_Y], [DIVIDER_X, -2], HalloweenHouseScene.CUTAWAY_HEIGHT),
+      this.wall([DIVIDER_X, -0.6], [DIVIDER_X, 0], HalloweenHouseScene.CUTAWAY_HEIGHT),
       // The dining end wall is cut down only to the window sill.
       this.wall([DIVIDER_X, 0], [LIVING_NORTH_X, 0], SILL_HEIGHT)
     ]);
@@ -281,12 +277,6 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
 
     const frontDoor = this.box([0.9, 0.04, 2.05], [0.65, ENTRY_WEST_Y - 0.02, 0]);
     const doorKnob = this.sphere(0.03, [1.45, ENTRY_WEST_Y - 0.07, 1]);
-    // A sisal post standing by the doorway, with a perch on top.
-    const catPost = this.union([
-      this.box([0.35, 0.35, 0.04], [2.35, 1.05, 0]),
-      this.capsule([2.52, 1.22, 0.05], [2.52, 1.22, 1.7], 0.05),
-      this.box([0.3, 0.3, 0.025], [2.37, 1.07, 1.72])
-    ]);
 
     const item = MainFloorItem.Rooms;
     return [
@@ -297,7 +287,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       this.part(item, 'Patio door track', PALETTE.steel, sliderTrack),
       this.part(item, 'Front door', PALETTE.door, frontDoor),
       this.part(item, 'Front door knob', PALETTE.brass, doorKnob),
-      this.part(item, 'Cat climbing post', PALETTE.sisal, catPost)
+      ...this.placeAssets(item, [new CatClimbingPost(this.context, [2.35, 1.05, 0])])
     ];
   }
 
@@ -345,14 +335,19 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
         from[1] + (to[1] - from[1]) * fraction,
         2.35
       ];
-      return this.clothPanel(pointAt(along), pointAt(Math.min(along + 0.76 / length, 1)), drop);
+      return new CreepyClothPanel(
+        this.context,
+        pointAt(along),
+        pointAt(Math.min(along + 0.76 / length, 1)),
+        drop
+      );
     });
 
     const item = MainFloorItem.Curtains;
     return [
       this.part(item, 'Curtains', PALETTE.curtain, this.union(curtains)),
       this.part(item, 'Curtain rods', PALETTE.rod, this.union(rods)),
-      this.part(item, 'Creepy cloth', HOUSE_PALETTE.blackCloth, this.union(creepyCloth))
+      ...this.placeAssets(item, creepyCloth)
     ];
   }
 
@@ -362,34 +357,9 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * lights on the open shelves.
    */
   private buildTvCabinet(): ScenePart<MainFloorItem>[] {
-    // Built facing +Y with every cubby opening toward the room, then turned.
-    const cubby = (x: number, width: number, z: number, height: number) =>
-      this.box([width, 0.45, height], [x, 0.06, z]);
-    const sideCubbies = [0.28, 1.24].flatMap((x) =>
-      [0.1, 0.65, 1.2].map((z) => cubby(x, 0.28, z, 0.5))
-    );
-    const cabinet = this.subtract(
-      this.box([1.4, 0.5, 2], [0.2, 0, 0]),
-      this.union([
-        cubby(0.62, 0.56, 1, 0.75),
-        cubby(0.62, 0.56, 0.55, 0.4),
-        cubby(0.62, 0.56, 0.1, 0.4),
-        ...sideCubbies
-      ])
-    );
-    const tv = this.union([
-      this.box([0.5, 0.04, 0.32], [0.65, 0.12, 1.1]),
-      this.box([0.04, 0.04, 0.1], [0.88, 0.13, 1]),
-      this.box([0.2, 0.15, 0.015], [0.8, 0.08, 1])
-    ]);
-    const ledStrips = this.union([
-      this.box([0.54, 0.02, 0.015], [0.63, 0.47, 1.73]),
-      ...[0.625, 1.16].map((x) => this.box([0.015, 0.02, 0.74], [x, 0.47, 1]))
-    ]);
-    const cobwebs = this.union([
-      this.drape([0.2, 0, 1.85], [1.6, 0.5, 2]),
-      this.cobweb([1.35, 0.5, 2.22], 0.2, [1, 0, 0], [0, 0, 1])
-    ]);
+    // The TV wall's furniture is laid out facing +Y from TV_ORIGIN, then turned
+    // to face north.
+    const at = (point: Vec3) => this.turnPoint(point, TV_ORIGIN, TV_ANGLE);
     const shelfTops: Vec3[] = [
       [0.42, 0.3, 0.65],
       [1.38, 0.3, 0.65],
@@ -397,25 +367,14 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       [1.38, 0.3, 1.2],
       [0.9, 0.3, 0.55]
     ];
-
-    const item = MainFloorItem.TvCabinet;
-    return [
-      this.part(item, 'TV cabinet', PALETTE.cabinet, this.atTv(cabinet)),
-      this.part(item, 'TV', PALETTE.screen, this.atTv(tv)),
-      {
-        ...this.part(item, 'Purple LED lights', HOUSE_PALETTE.purple, this.atTv(ledStrips)),
-        glowing: true
-      },
-      this.part(item, 'Crow', PALETTE.crow, this.atTv(this.crow([0.5, 0.25, 2.012]))),
-      {
-        ...this.part(item, 'Cobwebs', HOUSE_PALETTE.cobweb, this.atTv(cobwebs)),
-        transparent: true
-      },
-      ...this.teaLights(
-        item,
-        shelfTops.map((point) => MainFloorScene.atTvPoint(point))
-      )
-    ];
+    return this.placeAssets(MainFloorItem.TvCabinet, [
+      new TvCabinet(this.context, at([0.2, 0, 0]), TV_ANGLE),
+      new Tv(this.context, at([0.9, 0.08, 1]), TV_ANGLE),
+      new Crow(this.context, at([0.5, 0.25, 2.012]), TV_ANGLE),
+      new StretchyCobweb(this.context, at([1.6, 0, 1.85]), at([0.2, 0.5, 2])),
+      new Cobweb(this.context, at([1.35, 0.5, 2.22]), 0.2, [0, -1, 0], [0, 0, 1]),
+      ...shelfTops.map((point) => new TeaLight(this.context, at(point)))
+    ]);
   }
 
   /**
@@ -424,48 +383,11 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * cabinet.
    */
   private buildLounge(): ScenePart<MainFloorItem>[] {
-    const front = 5.2;
-    const y = 4.7;
-    const length = 2;
-    const depth = 0.95;
-    const back = front + depth;
-
-    const base = this.roundedBox([depth, length, 0.42], [front, y, 0.02], 0.06);
-    const backrest = this.roundedBox([0.3, length, 0.6], [back - 0.3, y, 0.35], 0.1);
-    const arms = [y, y + length - 0.25].map((armY) =>
-      this.roundedBox([depth, 0.25, 0.3], [front, armY, 0.35], 0.08)
-    );
-    const cushions = [0, 1, 2].map((index) =>
-      this.roundedBox([0.62, 0.48, 0.14], [front + 0.03, y + 0.26 + index * 0.5, 0.42], 0.05)
-    );
-
-    // A wood coffee table with a lower shelf, long side along the sofa.
-    const coffeeTable = this.union([
-      this.box([0.6, 1.2, 0.05], [4.2, 5.1, 0.4]),
-      this.box([0.5, 1.1, 0.03], [4.25, 5.15, 0.12]),
-      ...[4.22, 4.74].flatMap((x) =>
-        [5.12, 6.24].map((legY) => this.box([0.04, 0.04, 0.4], [x, legY, 0]))
-      )
+    return this.placeAssets(MainFloorItem.Lounge, [
+      new ReclinerSofa(this.context, [5.2, 4.7, 0]),
+      new CoffeeTable(this.context, [4.2, 5.1, 0]),
+      new DogBed(this.context, [3.4, 7.1, 0])
     ]);
-
-    // The dog bed is a raised rim around a soft cushion.
-    const [bedX, bedY] = [3.4, 7.1];
-    const rim = this.intersect(
-      this.subtract(
-        this.ellipsoid([0.6, 0.6, 0.18], [bedX, bedY, 0.1]),
-        this.ellipsoid([0.43, 0.43, 0.2], [bedX, bedY, 0.22])
-      ),
-      this.box([1.4, 1.4, 0.3], [bedX - 0.7, bedY - 0.7, 0])
-    );
-    const bedCushion = this.ellipsoid([0.46, 0.46, 0.07], [bedX, bedY, 0.07]);
-
-    const item = MainFloorItem.Lounge;
-    return [
-      this.part(item, 'Sofa', PALETTE.sofa, this.union([base, backrest, ...arms])),
-      this.part(item, 'Sofa cushions', PALETTE.sofa, this.union(cushions)),
-      this.part(item, 'Coffee table', PALETTE.coffeeTable, coffeeTable),
-      this.part(item, 'Dog bed', PALETTE.dogBed, this.union([rim, bedCushion]))
-    ];
   }
 
   /**
@@ -476,52 +398,13 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    */
   private buildLamps(): ScenePart<MainFloorItem>[] {
     const [lampX, lampY] = [5.8, 4.25];
-    const posts = [lampX, lampX + 0.27].flatMap((postX) =>
-      [lampY, lampY + 0.27].map((postY) => this.box([0.03, 0.03, 1.3], [postX, postY, 0]))
-    );
-    const shelves = [0.02, 0.45, 0.9, 1.27].map((z) =>
-      this.box([0.3, 0.3, 0.025], [lampX, lampY, z])
-    );
-    const shelfLampShade = this.box([0.32, 0.32, 0.36], [lampX - 0.01, lampY - 0.01, 1.3]);
-
-    const [torchX, torchY] = [LIGHTS.torchiere[0], LIGHTS.torchiere[1]];
-    const torchiereFrame = this.union([
-      this.cylinder(0.03, 0.15, 0.15, [torchX, torchY, 0]),
-      this.cylinder(1.6, 0.012, 0.012, [torchX, torchY, 0], 12),
-      ...[-1, 1].map((side) =>
-        this.capsule([torchX, torchY, 1.1], [torchX + side * 0.18, torchY, 1.32], 0.008)
-      )
+    const [torchX, torchY] = TORCHIERE_POSITION;
+    return this.placeAssets(MainFloorItem.Lamps, [
+      new ShelfLamp(this.context, [lampX, lampY, 0], LightColor.WarmWhite),
+      new Torchiere(this.context, TORCHIERE_POSITION, LightColor.Green),
+      new StretchyCobweb(this.context, [lampX, lampY, 0.6], [lampX + 0.3, lampY + 0.3, 1.25]),
+      new Cobweb(this.context, [torchX - 0.1, torchY, 1.0], 0.15, [1, 0, 0], [0, 0, 1])
     ]);
-    const torchiereShades = this.union([
-      this.cylinder(0.12, 0.04, 0.13, [torchX, torchY, 1.6]),
-      ...[-1, 1].map((side) =>
-        this.cylinder(0.08, 0.025, 0.07, [torchX + side * 0.18, torchY, 1.32], 24)
-      )
-    ]);
-
-    const cobwebs = this.union([
-      this.drape([lampX, lampY, 0.6], [lampX + 0.3, lampY + 0.3, 1.25]),
-      this.cobweb([torchX - 0.1, torchY, 1.0], 0.15, [1, 0, 0], [0, 0, 1])
-    ]);
-
-    const item = MainFloorItem.Lamps;
-    return [
-      this.part(
-        item,
-        'Lamp frames',
-        PALETTE.lampFrame,
-        this.union([...posts, ...shelves, torchiereFrame])
-      ),
-      {
-        ...this.part(item, 'Shelf lamp shade', HOUSE_PALETTE.warmWhite, shelfLampShade),
-        glowing: true
-      },
-      {
-        ...this.part(item, 'Torchiere shades', HOUSE_PALETTE.green, torchiereShades),
-        glowing: true
-      },
-      { ...this.part(item, 'Lamp cobwebs', HOUSE_PALETTE.cobweb, cobwebs), transparent: true }
-    ];
   }
 
   /**
@@ -530,71 +413,21 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    */
   private buildChandelier(): ScenePart<MainFloorItem>[] {
     const [x, y] = [4.2, 1.6];
-    const ringZ = 1.95;
-    const ringRadius = 0.21;
-
-    const ring = this.subtract(
-      this.cylinder(0.03, 0.22, 0.22, [x, y, ringZ], 48),
-      this.cylinder(0.05, 0.2, 0.2, [x, y, ringZ - 0.01], 48)
-    );
-    const frame = this.union([
-      ring,
-      this.cylinder(0.03, 0.07, 0.07, [x, y, CEILING_HEIGHT - 0.03]),
-      this.capsule([x, y, CEILING_HEIGHT - 0.03], [x, y, 2.15], 0.008),
-      this.cylinder(0.25, 0.03, 0.03, [x, y, 1.9], 16),
-      ...[0, 90, 180, 270].map((degrees) => {
-        const angle = (degrees * Math.PI) / 180;
-        return this.capsule(
-          [x, y, 2.1],
-          [x + ringRadius * Math.cos(angle), y + ringRadius * Math.sin(angle), ringZ + 0.02],
-          0.008
-        );
-      })
-    ]);
-
-    const ringPoint = (index: number, count: number, z: number): Vec3 => {
-      const angle = (index / count) * 2 * Math.PI;
-      return [x + ringRadius * Math.cos(angle), y + ringRadius * Math.sin(angle), z];
-    };
-    const crystals = this.union([
-      ...Array.from({ length: 12 }, (_, index) =>
-        this.capsule(ringPoint(index, 12, ringZ), ringPoint(index, 12, ringZ - 0.14), 0.012)
-      ),
-      this.ellipsoid([0.04, 0.04, 0.07], [x, y, 1.85])
-    ]);
-
-    const cobwebs = this.union([
-      this.cobweb([x, y, 2.15], 0.2, [1, 0, 0], [0, 0, 1]),
-      this.cobweb([x, y, 2.15], 0.2, [0, 1, 0], [0, 0, 1])
-    ]);
+    const chandelier = new Chandelier(this.context, [x, y, CEILING_HEIGHT]);
     // Spiders hang on short threads from the ring, no lower than about 1.6 m.
     const spiderDrops: [number, number][] = [
       [1, 0.2],
       [5, 0.3],
       [9, 0.25]
     ];
-    const threads = spiderDrops.map(([index, drop]) =>
-      this.capsule(ringPoint(index, 12, ringZ), ringPoint(index, 12, ringZ - drop), 0.0015)
-    );
-    const spiders = spiderDrops.map(([index, drop]) =>
-      this.spider(ringPoint(index, 12, ringZ - drop - 0.015))
-    );
-
-    const item = MainFloorItem.Chandelier;
-    return [
-      this.part(item, 'Chandelier frame', PALETTE.brass, frame),
-      { ...this.part(item, 'Crystals', PALETTE.crystal, crystals), transparent: true },
-      {
-        ...this.part(
-          item,
-          'Chandelier cobwebs',
-          HOUSE_PALETTE.cobweb,
-          this.union([cobwebs, ...threads])
-        ),
-        transparent: true
-      },
-      this.part(item, 'Spiders', PALETTE.crow, this.union(spiders))
-    ];
+    return this.placeAssets(MainFloorItem.Chandelier, [
+      chandelier,
+      new Cobweb(this.context, [x, y, 2.15], 0.2, [1, 0, 0], [0, 0, 1]),
+      new Cobweb(this.context, [x, y, 2.15], 0.2, [0, 1, 0], [0, 0, 1]),
+      ...spiderDrops.map(
+        ([index, drop]) => new HangingSpider(this.context, chandelier.ringPoint(index, 12, 0), drop)
+      )
+    ]);
   }
 
   /**
@@ -604,20 +437,13 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    */
   private buildDiningWindow(): ScenePart<MainFloorItem>[] {
     const sill = this.box([1.6, 0.22, 0.03], [3.4, -0.08, SILL_HEIGHT]);
-    const [barX, barY] = [LIGHTS.lightBar[0], LIGHTS.lightBar[1]];
-    const barBase = this.cylinder(0.02, 0.1, 0.1, [barX, barY, 0], 24);
-    const bar = this.box([0.03, 0.03, 1.4], [barX - 0.015, barY - 0.015, 0.02]);
-
     const sillTop = SILL_HEIGHT + 0.03;
     const item = MainFloorItem.DiningWindow;
     return [
       this.part(item, 'Window sill', PALETTE.trim, sill),
-      this.part(item, 'Light bar stand', PALETTE.lampFrame, barBase),
-      { ...this.part(item, 'Purple light bar', HOUSE_PALETTE.purple, bar), glowing: true },
-      ...this.teaLights(item, [
-        [3.8, 0.05, sillTop],
-        [4.2, 0.05, sillTop],
-        [4.6, 0.05, sillTop]
+      ...this.placeAssets(item, [
+        new LightBar(this.context, LIGHT_BAR_POSITION, LightColor.Purple),
+        ...[3.8, 4.2, 4.6].map((x) => new TeaLight(this.context, [x, 0.05, sillTop]))
       ])
     ];
   }
@@ -631,29 +457,16 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
   private buildDessertTable(): ScenePart<MainFloorItem>[] {
     const [x, y] = [5.4, 0.5];
     const [depth, width] = [0.7, 1.4];
-
-    const top = this.box([depth, width, 0.03], [x, y, 0.72]);
-    const legs = [x + 0.05, x + depth - 0.05].flatMap((legX) =>
-      [y + 0.05, y + width - 0.05].map((legY) =>
-        this.cylinder(0.72, 0.025, 0.025, [legX, legY, 0], 16)
+    return this.placeAssets(MainFloorItem.DessertTable, [
+      new WhiteDesk(this.context, [x, y, 0], [depth, width, DESK_HEIGHT]),
+      new Tablecloth(this.context, [x, y, DESK_HEIGHT], [depth, width]),
+      new CreepyClothPanel(
+        this.context,
+        [x - 0.028, y + 0.02, DESK_HEIGHT],
+        [x - 0.028, y + width - 0.02, DESK_HEIGHT],
+        0.6
       )
-    );
-    const tablecloth = this.subtract(
-      this.box([depth + 0.04, width + 0.04, 0.17], [x - 0.02, y - 0.02, 0.6]),
-      this.box([depth, width, 0.16], [x, y, 0.59])
-    );
-    const creepyCloth = this.clothPanel(
-      [x - 0.028, y + 0.02, 0.75],
-      [x - 0.028, y + width - 0.02, 0.75],
-      0.6
-    );
-
-    const item = MainFloorItem.DessertTable;
-    return [
-      this.part(item, 'White desk', PALETTE.desk, this.union([top, ...legs])),
-      this.part(item, 'Tablecloth', PALETTE.tablecloth, tablecloth),
-      this.part(item, 'Creepy cloth', HOUSE_PALETTE.blackCloth, creepyCloth)
-    ];
+    ]);
   }
 
   /**
@@ -669,59 +482,19 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
     );
     const [board, logCake, pretzelJar, caprese, dirtCups, cupcakes] = dishes;
 
-    const forestFloor = this.forestFloorBoard(board);
-    const toadstools = this.capreseBites(caprese);
-    const cups = this.dirtCups(dirtCups);
-    const log = this.fallenLogCake(logCake);
-    const pretzelRods = this.pretzelRods(pretzelJar);
-    const moss = this.mossCupcakes(cupcakes);
-
-    // The cards and tea lights sit toward the front (south) of each dish.
-    const cards = dishes.map(([x, y]) => this.box([0.006, 0.06, 0.035], [x - 0.12, y - 0.16, z]));
-    const teaLightSpots = dishes.map(([x, y]): Vec3 => [x - 0.06, y - 0.16, z]);
-
-    const item = MainFloorItem.DessertTable;
-    return [
-      this.part(item, 'Serving board', PALETTE.board, forestFloor.board),
-      this.part(item, 'Plates', PALETTE.plate, this.union([toadstools.plate, log.plate])),
-      this.part(item, 'Cheese', PALETTE.cheese, forestFloor.cheese),
-      this.part(item, 'Cured meat', PALETTE.curedMeat, forestFloor.meat),
-      this.part(item, 'Blackberries', PALETTE.blackberry, forestFloor.berries),
-      this.part(
-        item,
-        'Pretzels, nuts, and picks',
-        PALETTE.pretzel,
-        this.union([forestFloor.pretzels, toadstools.picks, pretzelRods.rods])
-      ),
-      this.part(item, 'Rosemary', PALETTE.herb, forestFloor.rosemary),
-      this.part(
-        item,
-        'Mozzarella and meringue mushrooms',
-        PALETTE.mozzarella,
-        this.union([toadstools.mozzarella, cups.mushrooms, log.mushrooms])
-      ),
-      this.part(item, 'Tomato caps', PALETTE.tomato, toadstools.tomatoes),
-      this.part(
-        item,
-        'Chocolate',
-        PALETTE.chocolate,
-        this.union([cups.dirt, log.cake, pretzelRods.dippedTops])
-      ),
-      this.part(item, 'Gummy worms', PALETTE.gummyWorm, cups.worms),
-      {
-        ...this.part(
-          item,
-          'Clear cups and jar',
-          PALETTE.clearPlastic,
-          this.union([cups.cups, pretzelRods.jar])
-        ),
-        transparent: true
-      },
-      this.part(item, 'Cupcake wrappers', PALETTE.wrapper, moss.wrappers),
-      this.part(item, 'Matcha moss frosting', PALETTE.matcha, moss.frosting),
-      this.part(item, 'Label cards', PALETTE.labelCard, this.union(cards)),
-      ...this.teaLights(item, teaLightSpots)
-    ];
+    return this.placeAssets(MainFloorItem.DessertTable, [
+      new ForestFloorBoard(this.context, board),
+      new FallenLogCake(this.context, logCake),
+      new PretzelRods(this.context, pretzelJar),
+      new CapreseBites(this.context, caprese),
+      new DirtCups(this.context, dirtCups),
+      new MossCupcakes(this.context, cupcakes),
+      // The cards and tea lights sit toward the front (south) of each dish.
+      ...dishes.flatMap(([x, y]) => [
+        new LabelCard(this.context, [x - 0.12, y - 0.16, z]),
+        new TeaLight(this.context, [x - 0.06, y - 0.16, z])
+      ])
+    ]);
   }
 
   /**
@@ -779,15 +552,11 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       this.box([0.33, 2.65, 0.75], [inner, 0.6, 1.45]),
       this.box([peninsulaLength, 0.35, 0.75], [inner, 0.05, 1.45])
     ]);
-
-    const plantSpots: Vec3[] = [
-      [-0.4, -0.02, LEDGE_TOP],
-      [0.0, -0.02, LEDGE_TOP]
+    const teaLightSpots: Vec3[] = [
+      [1.88, 3.45, COUNTER_TOP],
+      [-0.22, 0.75, COUNTER_TOP],
+      [-0.22, 3.1, COUNTER_TOP]
     ];
-    const pots = plantSpots.map((spot) => this.cylinder(0.08, 0.04, 0.055, spot, 20));
-    const leaves = plantSpots.map(([x, y, z]) =>
-      this.ellipsoid([0.07, 0.07, 0.09], [x, y, z + 0.15])
-    );
 
     const item = MainFloorItem.Kitchen;
     return [
@@ -795,103 +564,44 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       this.part(item, 'Upper cabinets', PALETTE.oak, uppers),
       this.part(item, 'Countertops', PALETTE.counter, tops),
       this.part(item, 'Plant ledge', PALETTE.darkOak, ledge),
-      this.part(item, 'Plant pots', PALETTE.pot, this.union(pots)),
-      this.part(item, 'Plants', PALETTE.plant, this.union(leaves)),
-      ...this.teaLights(item, [
-        [LIGHTS.kitchenCandle[0], LIGHTS.kitchenCandle[1], COUNTER_TOP],
-        [1.88, 3.45, COUNTER_TOP],
-        [-0.22, 0.75, COUNTER_TOP],
-        [-0.22, 3.1, COUNTER_TOP]
+      ...this.placeAssets(item, [
+        new PottedPlant(this.context, [-0.4, -0.02, LEDGE_TOP]),
+        new PottedPlant(this.context, [0.0, -0.02, LEDGE_TOP]),
+        new TeaLight(this.context, [...KITCHEN_CANDLE, COUNTER_TOP], true),
+        ...teaLightSpots.map((spot) => new TeaLight(this.context, spot))
       ])
     ];
   }
 
   /**
-   * Builds the fridge just inside from the entry, the stove on the west face
-   * of the peninsula with the range hood above it, and the dishwasher.
+   * Builds the fridge just inside from the entry with its doors facing north
+   * into the galley, the stove facing west on the west face of the peninsula
+   * with its back guard against the raised ledge, the range hood above it,
+   * and the dishwasher.
    */
   private buildAppliances(): ScenePart<MainFloorItem>[] {
-    const inner = KITCHEN_INNER_X;
-    // The fridge doors face north, into the galley.
-    const fridge = this.subtract(
-      this.box([0.75, 0.75, 1.75], [inner, 3.25, 0]),
-      this.box([0.02, 0.77, 0.02], [inner + 0.74, 3.24, 1.15])
-    );
-    const handles = this.union([
-      this.capsule([inner + 0.78, 3.3, 0.55], [inner + 0.78, 3.3, 1.05], 0.012),
-      this.capsule([inner + 0.78, 3.3, 1.25], [inner + 0.78, 3.3, 1.6], 0.012)
+    return this.placeAssets(MainFloorItem.Kitchen, [
+      new Fridge(this.context, [KITCHEN_INNER_X, 3.25, 0]),
+      new Stove(this.context, [STOVE_SOUTH_X, 0, 0]),
+      new RangeHood(this.context, [STOVE_SOUTH_X, 0.05, 1.33]),
+      new Dishwasher(this.context, [SOUTH_RUN_FRONT_X - 0.005, 1.6, 0.06])
     ]);
-
-    // The stove faces west, with its back guard against the raised ledge.
-    const stove = this.union([
-      this.box([0.76, 0.6, COUNTER_TOP], [STOVE_SOUTH_X, 0, 0]),
-      this.box([0.76, 0.08, 0.12], [STOVE_SOUTH_X, 0, COUNTER_TOP])
-    ]);
-    const ovenWindow = this.box([0.5, 0.01, 0.3], [STOVE_SOUTH_X + 0.13, 0.595, 0.3]);
-    const burners = [
-      [0.18, 0.22],
-      [0.58, 0.22],
-      [0.18, 0.45],
-      [0.58, 0.45]
-    ].map(([dx, y]) => this.cylinder(0.008, 0.08, 0.08, [STOVE_SOUTH_X + dx, y, COUNTER_TOP], 24));
-    const hood = this.box([0.76, 0.4, 0.12], [STOVE_SOUTH_X, 0.05, 1.33]);
-    const dishwasher = this.box([0.02, 0.6, 0.8], [SOUTH_RUN_FRONT_X - 0.005, 1.6, 0.06]);
-
-    const item = MainFloorItem.Kitchen;
-    return [
-      this.part(item, 'Fridge', PALETTE.appliance, fridge),
-      this.part(item, 'Fridge handles', PALETTE.steel, handles),
-      this.part(item, 'Stove', PALETTE.appliance, stove),
-      this.part(item, 'Oven window', PALETTE.burner, ovenWindow),
-      this.part(item, 'Burners', PALETTE.burner, this.union(burners)),
-      this.part(item, 'Range hood', PALETTE.appliance, hood),
-      this.part(item, 'Dishwasher', PALETTE.appliance, dishwasher)
-    ];
   }
 
   /**
    * Builds the hot food on the counters away from the bar: the chili crock
    * pot with cups and toppings, the pulled pork and slider buns, the
    * meatballs with toothpicks, the dip in its bread bowl, and the pot of
-   * mulled cider on the stove.
+   * mulled cider on the stove's back burner.
    */
   private buildHotFood(): ScenePart<MainFloorItem>[] {
-    const chili = this.chiliStation([1.88, 2.95, COUNTER_TOP]);
-    const sliders = this.sliderStation([1.88, 2.05, COUNTER_TOP]);
-    const meatballs = this.meatballDish([-0.22, 1.25, COUNTER_TOP]);
-    const dip = this.breadBowlDip([-0.22, 1.75, COUNTER_TOP]);
-
-    const ciderCenter: Vec3 = [STOVE_SOUTH_X + 0.58, 0.45, COUNTER_TOP + 0.008];
-    const [ciderX, ciderY, ciderZ] = ciderCenter;
-    const ciderPot = this.subtract(
-      this.cylinder(0.15, 0.12, 0.12, ciderCenter),
-      this.cylinder(0.15, 0.11, 0.11, [ciderX, ciderY, ciderZ + 0.012])
-    );
-    const cider = this.cylinder(0.1, 0.11, 0.11, [ciderX, ciderY, ciderZ + 0.012]);
-
-    const item = MainFloorItem.HotFood;
-    return [
-      this.part(item, 'Chili crock pot', PALETTE.crockPot, chili.crockPot),
-      this.part(item, 'Crock pot lid', PALETTE.crockLid, chili.lid),
-      this.part(item, 'Chili cups', PALETTE.cup, chili.cups),
-      this.part(
-        item,
-        'Bowls and serving dishes',
-        PALETTE.plate,
-        this.union([chili.bowls, sliders.dishes, meatballs.dish])
-      ),
-      ...chili.toppings.map(([color, manifold]) =>
-        this.part(item, 'Chili topping', color, manifold)
-      ),
-      this.part(item, 'Pulled pork', PALETTE.pork, sliders.pork),
-      this.part(item, 'Slider buns', PALETTE.bun, sliders.buns),
-      this.part(item, 'Swedish meatballs', PALETTE.meatball, meatballs.meatballs),
-      this.part(item, 'Toothpicks', PALETTE.toothpick, meatballs.toothpicks),
-      this.part(item, 'Bread bowl', PALETTE.bread, dip.bread),
-      this.part(item, 'Swamp moss dip', PALETTE.dip, dip.dip),
-      this.part(item, 'Cider pot', PALETTE.steel, ciderPot),
-      this.part(item, 'Mulled cider', PALETTE.cider, cider)
-    ];
+    return this.placeAssets(MainFloorItem.HotFood, [
+      new ChiliStation(this.context, [1.88, 2.95, COUNTER_TOP]),
+      new SliderStation(this.context, [1.88, 2.05, COUNTER_TOP]),
+      new MeatballDish(this.context, [-0.22, 1.25, COUNTER_TOP]),
+      new BreadBowlDip(this.context, [-0.22, 1.75, COUNTER_TOP]),
+      new MulledCiderPot(this.context, [STOVE_SOUTH_X + 0.58, 0.45, COUNTER_TOP + 0.008])
+    ]);
   }
 
   /**
@@ -901,40 +611,30 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    */
   private buildBar(): ScenePart<MainFloorItem>[] {
     const edgeY = -0.41;
-    const runner = this.union([
-      this.drape(
+    const mossSpots = [1.1, 0.75, 0.4, 0.05];
+    return this.placeAssets(MainFloorItem.Bar, [
+      new CreepyCloth(
+        this.context,
         [KITCHEN_INNER_X - 0.01, edgeY, 0.6],
-        [PENINSULA_NORTH_X + 0.01, -0.08, COUNTER_TOP]
+        [PENINSULA_NORTH_X + 0.01, -0.08, COUNTER_TOP],
+        CreepyClothColor.MossGreen
       ),
-      this.clothPanel(
+      new CreepyClothPanel(
+        this.context,
         [KITCHEN_INNER_X, edgeY - 0.025, COUNTER_TOP],
         [0.55, edgeY - 0.025, COUNTER_TOP],
-        0.75
+        0.75,
+        CreepyClothColor.MossGreen
+      ),
+      ...mossSpots.map(
+        (x, index) =>
+          new DrapedMoss(
+            this.context,
+            [x, edgeY, BAR_TOP],
+            [0.7 - index * 0.04, 0.6 + index * 0.03]
+          )
       )
     ]);
-
-    const mossSpots = [1.1, 0.75, 0.4, 0.05];
-    const moss = this.union(
-      mossSpots.flatMap((x, index) => [
-        this.ellipsoid([0.09, 0.06, 0.025], [x, edgeY + 0.05, BAR_TOP], 16),
-        this.capsule(
-          [x + 0.03, edgeY - 0.03, BAR_TOP - 0.01],
-          [x + 0.02, edgeY - 0.04, 0.7 - index * 0.04],
-          0.008
-        ),
-        this.capsule(
-          [x - 0.03, edgeY - 0.03, BAR_TOP - 0.01],
-          [x - 0.05, edgeY - 0.045, 0.6 + index * 0.03],
-          0.008
-        )
-      ])
-    );
-
-    const item = MainFloorItem.Bar;
-    return [
-      this.part(item, 'Moss green creepy cloth', HOUSE_PALETTE.mossCloth, runner),
-      this.part(item, 'Spanish moss', PALETTE.moss, moss)
-    ];
   }
 
   /**
@@ -942,24 +642,18 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    */
   private buildPotions(): ScenePart<MainFloorItem>[] {
     const potions: Potion[] = [
-      { base: [1.0, -0.25, BAR_TOP], color: PALETTE.potionGreen, round: false },
-      { base: [0.82, -0.3, BAR_TOP], color: PALETTE.potionPurple, round: true },
-      { base: [0.65, -0.22, BAR_TOP], color: PALETTE.potionRed, round: false },
-      { base: [0.48, -0.3, BAR_TOP], color: PALETTE.potionTeal, round: true },
-      { base: [-0.2, -0.02, LEDGE_TOP], color: PALETTE.potionPurple, round: false },
-      { base: [0.2, -0.02, LEDGE_TOP], color: PALETTE.potionGreen, round: true },
-      { base: [1.16, -0.02, LEDGE_TOP], color: PALETTE.potionRed, round: false }
+      { base: [1.0, -0.25, BAR_TOP], color: PotionColor.Green, round: false },
+      { base: [0.82, -0.3, BAR_TOP], color: PotionColor.Purple, round: true },
+      { base: [0.65, -0.22, BAR_TOP], color: PotionColor.Red, round: false },
+      { base: [0.48, -0.3, BAR_TOP], color: PotionColor.Teal, round: true },
+      { base: [-0.2, -0.02, LEDGE_TOP], color: PotionColor.Purple, round: false },
+      { base: [0.2, -0.02, LEDGE_TOP], color: PotionColor.Green, round: true },
+      { base: [1.16, -0.02, LEDGE_TOP], color: PotionColor.Red, round: false }
     ];
-    const corks = potions.map(({ base, round }) => {
-      const neckTop = base[2] + (round ? 0.15 : 0.2);
-      return this.cylinder(0.025, 0.016, 0.016, [base[0], base[1], neckTop], 12);
-    });
-    return [
-      ...potions.map(({ base, color, round }) =>
-        this.part(MainFloorItem.Bar, 'Potion bottle', color, this.potionBottle(base, round))
-      ),
-      this.part(MainFloorItem.Bar, 'Corks', PALETTE.cork, this.union(corks))
-    ];
+    return this.placeAssets(
+      MainFloorItem.Bar,
+      potions.map(({ base, color, round }) => new PotionBottle(this.context, base, color, round))
+    );
   }
 
   /**
@@ -967,25 +661,12 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * from the fog machine's vent.
    */
   private buildDrinks(): ScenePart<MainFloorItem>[] {
-    const [x, y] = [-0.28, -0.25];
-    const stand = this.box([0.22, 0.22, 0.08], [x - 0.11, y - 0.11, BAR_TOP]);
-    const jar = this.cylinder(0.28, 0.1, 0.1, [x, y, BAR_TOP + 0.08]);
-    const punch = this.cylinder(0.2, 0.09, 0.09, [x, y, BAR_TOP + 0.09]);
-    const lidAndSpigot = this.union([
-      this.cylinder(0.02, 0.1, 0.1, [x, y, BAR_TOP + 0.36]),
-      this.box([0.025, 0.06, 0.025], [x - 0.0125, y - 0.15, BAR_TOP + 0.1])
+    return this.placeAssets(MainFloorItem.Bar, [
+      new PunchDispenser(this.context, [-0.28, -0.25, BAR_TOP]),
+      ...[-0.05, 0.05].flatMap((glassX) =>
+        [-0.32, -0.2].map((glassY) => new DrinkGlass(this.context, [glassX, glassY, BAR_TOP]))
+      )
     ]);
-    const glasses = [-0.05, 0.05].flatMap((glassX) =>
-      [-0.32, -0.2].map((glassY) => this.cylinder(0.1, 0.03, 0.035, [glassX, glassY, BAR_TOP], 16))
-    );
-
-    const item = MainFloorItem.Bar;
-    return [
-      this.part(item, 'Dispenser stand', PALETTE.appliance, this.union([stand, lidAndSpigot])),
-      { ...this.part(item, 'Dispenser jar', PALETTE.glass, jar), transparent: true },
-      this.part(item, 'Poisoned apple punch', PALETTE.punch, punch),
-      { ...this.part(item, 'Glasses', PALETTE.glass, this.union(glasses)), transparent: true }
-    ];
   }
 
   /**
@@ -1002,340 +683,10 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       { center: [0.7, -1.15, 0.08], radii: [0.65, 0.45, 0.08] },
       { center: [0.4, -0.65, 0.07], radii: [0.85, 0.25, 0.07] }
     ];
-    const item = MainFloorItem.FogMachine;
-    return [
-      ...this.fogMachine(item, FOG_MACHINE_POSITION, 0),
-      this.fog(item, blobs),
-      ...this.uplight(item, UPLIGHT_POSITION, HOUSE_PALETTE.green)
-    ];
-  }
-
-  /**
-   * Creates the chili crock pot with a stack of cups beside it and three
-   * bowls of toppings (cheese, sour cream, green onion) behind it.
-   */
-  private chiliStation([x, y, z]: Vec3) {
-    const toppingSpots: [number, string][] = [
-      [y - 0.25, PALETTE.cheese],
-      [y - 0.13, PALETTE.sourCream],
-      [y - 0.01, PALETTE.onion]
-    ];
-    const bowlX = x - 0.16;
-    return {
-      crockPot: this.union([
-        this.cylinder(0.2, 0.15, 0.15, [x + 0.05, y + 0.2, z]),
-        this.sphere(0.02, [x + 0.05, y + 0.2, z + 0.25])
-      ]),
-      lid: this.ellipsoid([0.15, 0.15, 0.04], [x + 0.05, y + 0.2, z + 0.2]),
-      cups: this.union(
-        [y - 0.2, y - 0.1].map((cupY) => this.cylinder(0.12, 0.035, 0.045, [x + 0.12, cupY, z], 16))
-      ),
-      bowls: this.union(
-        toppingSpots.map(([bowlY]) =>
-          this.subtract(
-            this.cylinder(0.045, 0.04, 0.055, [bowlX, bowlY, z], 20),
-            this.cylinder(0.04, 0.035, 0.05, [bowlX, bowlY, z + 0.01], 20)
-          )
-        )
-      ),
-      toppings: toppingSpots.map(([bowlY, color]): [string, Manifold] => [
-        color,
-        this.cylinder(0.01, 0.045, 0.045, [bowlX, bowlY, z + 0.03], 20)
-      ])
-    };
-  }
-
-  /**
-   * Creates the slider station: a covered-looking dish of pulled pork and a
-   * plate of slider buns beside it, both centered on `center` along Y.
-   */
-  private sliderStation([x, y, z]: Vec3) {
-    const porkDish = this.subtract(
-      this.box([0.22, 0.3, 0.05], [x - 0.11, y + 0.02, z]),
-      this.box([0.19, 0.27, 0.05], [x - 0.095, y + 0.035, z + 0.01])
-    );
-    const pork = this.union(
-      [y + 0.1, y + 0.18, y + 0.26].flatMap((porkY) =>
-        [x - 0.05, x + 0.05].map((porkX) =>
-          this.ellipsoid([0.05, 0.05, 0.025], [porkX, porkY, z + 0.035], 16)
-        )
-      )
-    );
-    const bunCenter: Vec3 = [x, y - 0.2, z];
-    const bunPlate = this.cylinder(0.015, 0.16, 0.16, bunCenter);
-    const buns = this.union(
-      [0, 1, 2, 3, 4, 5].map((index) => {
-        const angle = (index / 6) * 2 * Math.PI;
-        return this.ellipsoid(
-          [0.04, 0.04, 0.025],
-          [x + 0.09 * Math.cos(angle), y - 0.2 + 0.09 * Math.sin(angle), z + 0.02],
-          16
-        );
-      })
-    );
-    return { dishes: this.union([porkDish, bunPlate]), pork, buns };
-  }
-
-  /**
-   * Creates a dish of Swedish meatballs, some with toothpicks in them.
-   */
-  private meatballDish([x, y, z]: Vec3) {
-    const spots = [-0.06, 0, 0.06].flatMap((dx) => [-0.06, 0, 0.06].map((dy) => [x + dx, y + dy]));
-    return {
-      dish: this.cylinder(0.03, 0.12, 0.13, [x, y, z]),
-      meatballs: this.union(spots.map(([bx, by]) => this.sphere(0.024, [bx, by, z + 0.05]))),
-      toothpicks: this.union(
-        spots
-          .filter((_, index) => index % 2 === 0)
-          .map(([bx, by]) => this.capsule([bx, by, z + 0.05], [bx, by + 0.01, z + 0.13], 0.003))
-      )
-    };
-  }
-
-  /**
-   * Creates the swamp moss dip: a round loaf with its top sliced off and its
-   * middle scooped out, filled with dip, with breadsticks leaning beside it.
-   */
-  private breadBowlDip([x, y, z]: Vec3) {
-    const loaf = this.subtract(
-      this.subtract(
-        this.ellipsoid([0.12, 0.12, 0.09], [x, y, z + 0.08]),
-        this.box([0.3, 0.3, 0.1], [x - 0.15, y - 0.15, z + 0.13])
-      ),
-      this.ellipsoid([0.09, 0.09, 0.06], [x, y, z + 0.13])
-    );
-    const breadsticks = [
-      [0.06, -0.06],
-      [0.03, 0.06],
-      [-0.06, 0],
-      [-0.045, -0.075]
-    ].map(([dx, dy]) =>
-      this.capsule([x, y + 0.2, z + 0.01], [x + dx, y + 0.2 + dy, z + 0.24], 0.008)
-    );
-    return {
-      bread: this.union([loaf, ...breadsticks]),
-      dip: this.ellipsoid([0.09, 0.09, 0.015], [x, y, z + 0.11])
-    };
-  }
-
-  /**
-   * Creates one potion bottle with its neck, without the cork. A tall bottle
-   * is 0.2 m to the top of its neck and a round flask is 0.15 m.
-   */
-  private potionBottle(base: Vec3, round: boolean): Manifold {
-    const [x, y, z] = base;
-    if (round) {
-      return this.union([
-        this.sphere(0.05, [x, y, z + 0.05]),
-        this.cylinder(0.07, 0.014, 0.014, [x, y, z + 0.08], 12)
-      ]);
-    }
-    return this.union([
-      this.cylinder(0.14, 0.032, 0.032, [x, y, z], 20),
-      this.cylinder(0.06, 0.032, 0.013, [x, y, z + 0.14], 20)
-    ]);
-  }
-
-  /**
-   * Creates the forest floor board: cured meats, cheese, blackberries, nuts,
-   * pretzel stick twigs, and rosemary on a wood board centered on `center`.
-   */
-  private forestFloorBoard([x, y, z]: Vec3) {
-    const top = z + 0.02;
-    const at = (dx: number, dy: number, dz = 0): Vec3 => [x + dx, y + dy, top + dz];
-    return {
-      board: this.box([0.2, 0.26, 0.02], [x - 0.1, y - 0.13, z]),
-      cheese: this.union(
-        [at(0.05, -0.09), at(0.05, -0.06), at(0.02, -0.09)].map(([cx, cy, cz]) =>
-          this.box([0.024, 0.024, 0.024], [cx, cy, cz])
-        )
-      ),
-      meat: this.union(
-        [at(0.05, 0.02), at(0.04, 0.06), at(0.0, 0.04)].map((spot) =>
-          this.cylinder(0.006, 0.022, 0.022, spot, 20)
-        )
-      ),
-      berries: this.union(
-        [at(-0.05, -0.05, 0.009), at(-0.06, -0.035, 0.009), at(-0.04, -0.04, 0.009)].map((spot) =>
-          this.sphere(0.009, spot)
-        )
-      ),
-      pretzels: this.union([
-        ...[-0.07, -0.05, -0.03].map((dx) =>
-          this.capsule(at(dx, 0.0, 0.004), at(dx + 0.01, 0.1, 0.004), 0.003)
-        ),
-        ...[at(-0.07, 0.09, 0.006), at(-0.06, 0.105, 0.006)].map((spot) =>
-          this.ellipsoid([0.006, 0.008, 0.005], spot, 12)
-        )
-      ]),
-      rosemary: this.union([
-        this.capsule(at(-0.08, -0.11, 0.003), at(-0.02, -0.02, 0.003), 0.003),
-        this.capsule(at(0.08, 0.0, 0.003), at(0.07, 0.1, 0.003), 0.003)
-      ])
-    };
-  }
-
-  /**
-   * Creates the toadstool caprese bites: half a cherry tomato on a
-   * mozzarella ball on a pick, arranged on a round plate.
-   */
-  private capreseBites([x, y, z]: Vec3) {
-    const plateTop = z + 0.012;
-    const spots: [number, number][] = [
-      [x, y],
-      ...Array.from({ length: 6 }, (_, index): [number, number] => {
-        const angle = (index / 6) * 2 * Math.PI;
-        return [x + 0.065 * Math.cos(angle), y + 0.065 * Math.sin(angle)];
-      })
-    ];
-    return {
-      plate: this.cylinder(0.012, 0.11, 0.11, [x, y, z], 40),
-      mozzarella: this.union(
-        spots.map(([bx, by]) => this.sphere(0.012, [bx, by, plateTop + 0.012]))
-      ),
-      tomatoes: this.union(
-        spots.map(([bx, by]) =>
-          this.ellipsoid([0.014, 0.014, 0.008], [bx, by, plateTop + 0.028], 16)
-        )
-      ),
-      picks: this.union(
-        spots.map(([bx, by]) =>
-          this.capsule([bx, by, plateTop + 0.005], [bx, by, plateTop + 0.05], 0.0015)
-        )
-      )
-    };
-  }
-
-  /**
-   * Creates four dirt cups: chocolate pudding and cookie crumbs in clear
-   * cups, topped with gummy worms and meringue mushrooms.
-   */
-  private dirtCups([x, y, z]: Vec3) {
-    const spots = [-0.045, 0.045].flatMap((dx) =>
-      [-0.045, 0.045].map((dy): Vec3 => [x + dx, y + dy, z])
-    );
-    return {
-      cups: this.union(spots.map((spot) => this.cylinder(0.075, 0.028, 0.034, spot, 24))),
-      dirt: this.union(
-        spots.map(([cx, cy]) => this.cylinder(0.065, 0.026, 0.032, [cx, cy, z + 0.003], 24))
-      ),
-      worms: this.union(
-        spots.map(([cx, cy]) =>
-          this.capsule([cx - 0.02, cy - 0.01, z + 0.072], [cx + 0.01, cy + 0.015, z + 0.075], 0.004)
-        )
-      ),
-      mushrooms: this.union(
-        spots.map(([cx, cy]) => this.meringueMushroom([cx + 0.008, cy - 0.008, z + 0.068]))
-      )
-    };
-  }
-
-  /**
-   * Creates the fallen log cake: a chocolate roll lying on a plate, with a
-   * stub branch and meringue mushrooms.
-   */
-  private fallenLogCake([x, y, z]: Vec3) {
-    const plateTop = z + 0.012;
-    const logRadius = 0.045;
-    const log = this.place(
-      this.track(this.wasm.Manifold.cylinder(0.24, logRadius, logRadius, 32)).rotate([90, 0, 0]),
-      [x, y + 0.12, plateTop + logRadius]
-    );
-    const stub = this.cylinder(0.05, 0.02, 0.018, [x, y - 0.05, plateTop + logRadius], 20);
-    return {
-      plate: this.cylinder(0.012, 0.13, 0.13, [x, y, z], 40),
-      cake: this.union([log, stub]),
-      mushrooms: this.union([
-        this.meringueMushroom([x, y + 0.05, plateTop + 2 * logRadius - 0.004]),
-        this.meringueMushroom([x - 0.07, y + 0.09, plateTop]),
-        this.meringueMushroom([x + 0.06, y - 0.1, plateTop])
-      ])
-    };
-  }
-
-  /**
-   * Creates chocolate-dipped pretzel rods standing in a clear jar, fanned out
-   * like bare branches.
-   */
-  private pretzelRods([x, y, z]: Vec3) {
-    const tips = Array.from({ length: 7 }, (_, index) => {
-      const angle = (index / 7) * 2 * Math.PI;
-      return [Math.cos(angle), Math.sin(angle)];
-    });
-    const along = ([dx, dy]: number[], spread: number, height: number): Vec3 => [
-      x + dx * spread,
-      y + dy * spread,
-      z + height
-    ];
-    return {
-      jar: this.cylinder(0.12, 0.05, 0.05, [x, y, z]),
-      rods: this.union(
-        tips.map((tip) => this.capsule(along(tip, 0.02, 0.01), along(tip, 0.035, 0.15), 0.006))
-      ),
-      dippedTops: this.union(
-        tips.map((tip) => this.capsule(along(tip, 0.035, 0.15), along(tip, 0.05, 0.27), 0.0075))
-      )
-    };
-  }
-
-  /**
-   * Creates six matcha moss cupcakes in two rows.
-   */
-  private mossCupcakes([x, y, z]: Vec3) {
-    const spots = [-0.035, 0.035].flatMap((dx) =>
-      [-0.065, 0, 0.065].map((dy): Vec3 => [x + dx, y + dy, z])
-    );
-    return {
-      wrappers: this.union(spots.map((spot) => this.cylinder(0.035, 0.022, 0.028, spot, 24))),
-      frosting: this.union(
-        spots.map(([cx, cy]) => this.ellipsoid([0.03, 0.03, 0.022], [cx, cy, z + 0.04], 16))
-      )
-    };
-  }
-
-  /**
-   * Creates a small meringue mushroom standing on `base`.
-   */
-  private meringueMushroom(base: Vec3): Manifold {
-    const [x, y, z] = base;
-    return this.union([
-      this.cylinder(0.012, 0.005, 0.004, base, 12),
-      this.ellipsoid([0.011, 0.011, 0.007], [x, y, z + 0.014], 12)
-    ]);
-  }
-
-  /**
-   * Creates the black crow figure standing at `feet`, facing +Y.
-   */
-  private crow(feet: Vec3): Manifold {
-    const [x, y, z] = feet;
-    return this.union([
-      this.ellipsoid([0.05, 0.1, 0.055], [x, y, z + 0.06]),
-      this.sphere(0.04, [x, y + 0.11, z + 0.12]),
-      this.place(this.track(this.wasm.Manifold.cylinder(0.05, 0.014, 0, 12)).rotate([-90, 0, 0]), [
-        x,
-        y + 0.14,
-        z + 0.12
-      ]),
-      this.ellipsoid([0.035, 0.08, 0.012], [x, y - 0.13, z + 0.05])
-    ]);
-  }
-
-  /**
-   * Creates a small spider hanging head-down at `position`: a head, an
-   * abdomen, and four legs on each side.
-   */
-  private spider(position: Vec3): Manifold {
-    const [x, y, z] = position;
-    const legs = [-1, 1].flatMap((side) =>
-      [-0.012, -0.004, 0.004, 0.012].map((dz) =>
-        this.capsule([x, y, z + dz], [x + side * 0.03, y, z + dz * 1.8 - 0.006], 0.0015)
-      )
-    );
-    return this.union([
-      this.sphere(0.008, [x, y, z - 0.008]),
-      this.ellipsoid([0.012, 0.012, 0.016], [x, y, z + 0.012]),
-      ...legs
+    return this.placeAssets(MainFloorItem.FogMachine, [
+      new FogMachine(this.context, FOG_MACHINE_POSITION, 0),
+      new Fog(this.context, blobs),
+      new Uplight(this.context, UPLIGHT_POSITION, LightColor.Green)
     ]);
   }
 
@@ -1404,13 +755,5 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       [x, y, 0]
     ]);
     return this.track(this.wasm.Manifold.hull(points));
-  }
-
-  /**
-   * Turns a solid built facing +Y at the origin so it faces north, and moves
-   * it to the TV cabinet's spot against the south wall.
-   */
-  private atTv(manifold: Manifold): Manifold {
-    return this.place(manifold.rotate([0, 0, -90]), TV_ORIGIN);
   }
 }

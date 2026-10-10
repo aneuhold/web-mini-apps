@@ -11,47 +11,46 @@ export enum CreepyClothColor {
 }
 
 /**
- * Colors shared by the decorations in every room of the house.
+ * The colors the smart bulbs and LEDs in the house are set to.
  */
-export const HOUSE_PALETTE = {
-  blackCloth: '#1d1c21',
-  mossCloth: '#5d7438',
-  whiteCloth: '#eeede6',
-  cobweb: '#e4e4e4',
-  leaf: '#1b1817',
-  fog: '#e9eef2',
-  fogMachine: '#2b2b2e',
-  cooler: '#f4f4f1',
-  ventTube: '#b9b9b9',
-  uplightBody: '#18181a',
-  candle: '#141414',
-  flame: '#ffb347',
-  green: '#3dff6e',
-  purple: '#a64dff',
-  red: '#ff2a1a',
-  warmWhite: '#ffd9a0',
-  pink: '#ff4fa3',
-  fire: '#ff7b2a'
-};
+export enum LightColor {
+  Green = 'Green',
+  Purple = 'Purple',
+  WarmWhite = 'WarmWhite',
+  Orange = 'Orange'
+}
 
+const BLACK_CLOTH_COLOR = '#1d1c21';
+const MOSS_CLOTH_COLOR = '#5d7438';
 const CLOTH_THICKNESS = 0.012;
 /** Spacing between the notches along a creepy cloth's ragged bottom edge. */
 const RAG_SPACING = 0.09;
 
 /**
  * Base class for the assets in the house decorated for the 2026 haunted
- * forest Halloween party. Adds builders for the cloth and cobweb shapes that
- * many of the decorations are made of.
+ * forest Halloween party. Adds the light and cobweb colors and the cloth
+ * shapes that many of the decorations share.
  */
 export default abstract class HalloweenHouseAsset extends ModelAsset {
+  /** The off-white of the fake cobwebs and spider threads. */
+  protected static readonly COBWEB_COLOR = '#e4e4e4';
+
+  /** The color a bulb or LED set to each light color glows in. */
+  protected static readonly LIGHT_COLORS: Record<LightColor, string> = {
+    [LightColor.Green]: '#3dff6e',
+    [LightColor.Purple]: '#a64dff',
+    [LightColor.WarmWhite]: '#ffd9a0',
+    [LightColor.Orange]: '#ff8a1f'
+  };
+
   /**
    * Creates the part for a piece of creepy cloth. Every piece of the same
    * color shares a name, so a scene combines them into one part.
    */
   protected creepyClothPart(color: CreepyClothColor, manifold: Manifold): ModelPart {
     return color === CreepyClothColor.Black
-      ? this.part('Black creepy cloth', HOUSE_PALETTE.blackCloth, manifold)
-      : this.part('Moss green creepy cloth', HOUSE_PALETTE.mossCloth, manifold);
+      ? this.part('Black creepy cloth', BLACK_CLOTH_COLOR, manifold)
+      : this.part('Moss green creepy cloth', MOSS_CLOTH_COLOR, manifold);
   }
 
   /**
@@ -120,33 +119,6 @@ export default abstract class HalloweenHouseAsset extends ModelAsset {
   }
 
   /**
-   * Creates a flat spider web of radial strands joined by two rings.
-   *
-   * @param across A unit vector along the web's plane.
-   * @param up A second unit vector along the web's plane, at a right angle to
-   * `across`.
-   */
-  protected cobweb(center: Vec3, radius: number, across: Vec3, up: Vec3): Manifold {
-    const spokes = 8;
-    const pointAt = (angle: number, distance: number): Vec3 => {
-      const offset = (axis: number) =>
-        distance * (Math.cos(angle) * across[axis] + Math.sin(angle) * up[axis]);
-      return [center[0] + offset(0), center[1] + offset(1), center[2] + offset(2)];
-    };
-    const angles = Array.from({ length: spokes }, (_, index) => (index / spokes) * 2 * Math.PI);
-    const strands = angles.flatMap((angle, index) => {
-      const next = angles[(index + 1) % spokes];
-      return [
-        this.capsule(center, pointAt(angle, radius), 0.004),
-        ...[0.45, 0.85].map((ring) =>
-          this.capsule(pointAt(angle, radius * ring), pointAt(next, radius * ring), 0.003)
-        )
-      ];
-    });
-    return this.union(strands);
-  }
-
-  /**
    * Creates a cutter of small diamond-shaped notches along each edge, for
    * giving cloth a torn bottom edge.
    */
@@ -162,7 +134,7 @@ export default abstract class HalloweenHouseAsset extends ModelAsset {
           start[2] + (end[2] - start[2]) * along
         ];
         const size = index % 2 === 0 ? 0.045 : 0.03;
-        return this.place(this.wasm.Manifold.sphere(size, 4), point);
+        return this.sphere(size, point, 4);
       });
     });
     return this.union(notches);

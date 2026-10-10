@@ -1,16 +1,15 @@
 import type { ManifoldToplevel, Vec3 } from 'manifold-3d';
 import Bed from '../../modelAssets/bedroom/Bed';
-import { BEDROOM_PALETTE } from '../../modelAssets/bedroom/bedroomPalette';
 import Dresser from '../../modelAssets/bedroom/Dresser';
 import Lamp from '../../modelAssets/bedroom/Lamp';
 import Nightstand from '../../modelAssets/bedroom/Nightstand';
 import Rug from '../../modelAssets/bedroom/Rug';
-import ManifoldScene, { GlowPoint, ScenePart } from '../../services/ManifoldScene';
+import ManifoldScene, { ScenePart } from '../../services/ManifoldScene';
 
 /**
  * A selectable object in the bedroom. One item is made of one or more parts.
  */
-export enum BedroomItem {
+enum BedroomItem {
   Room = 'Room',
   Window = 'Window',
   Door = 'Door',
@@ -33,7 +32,8 @@ const PALETTE = {
   wall: '#e8e1d5',
   trim: '#f7f4ee',
   glass: '#a9d4ef',
-  bulb: '#ffc77a'
+  door: '#7a5234',
+  doorKnob: '#c9a54a'
 };
 
 /**
@@ -46,9 +46,6 @@ const PALETTE = {
 export default class BedroomScene extends ManifoldScene<BedroomItem> {
   readonly items = Object.values(BedroomItem);
   readonly parts: ScenePart<BedroomItem>[];
-  override readonly glowPoints: GlowPoint[] = [
-    { position: [LAMP_POSITION[0], LAMP_POSITION[1], LAMP_POSITION[2] + 0.35], color: PALETTE.bulb }
-  ];
 
   constructor(wasm: ManifoldToplevel) {
     super(wasm);
@@ -100,8 +97,8 @@ export default class BedroomScene extends ManifoldScene<BedroomItem> {
       this.part(BedroomItem.Room, 'Walls', PALETTE.wall, this.union([backWall, leftWall])),
       this.part(BedroomItem.Window, 'Window frame', PALETTE.trim, windowFrame),
       { ...this.part(BedroomItem.Window, 'Window glass', PALETTE.glass, glass), transparent: true },
-      this.part(BedroomItem.Door, 'Door', BEDROOM_PALETTE.wood, door),
-      this.part(BedroomItem.Door, 'Door knob', BEDROOM_PALETTE.brass, doorKnob)
+      this.part(BedroomItem.Door, 'Door', PALETTE.door, door),
+      this.part(BedroomItem.Door, 'Door knob', PALETTE.doorKnob, doorKnob)
     ];
   }
 }

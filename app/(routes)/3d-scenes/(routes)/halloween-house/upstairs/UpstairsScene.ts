@@ -20,18 +20,18 @@ import ReclinerLoveseat from '../../../modelAssets/halloween-house/furniture/Rec
 import SideTable from '../../../modelAssets/halloween-house/furniture/SideTable';
 import TowerStand from '../../../modelAssets/halloween-house/furniture/TowerStand';
 import WoodChair from '../../../modelAssets/halloween-house/furniture/WoodChair';
-import { HOUSE_PALETTE } from '../../../modelAssets/halloween-house/HalloweenHouseAsset';
+import { LightColor } from '../../../modelAssets/halloween-house/HalloweenHouseAsset';
 import FloorLamp from '../../../modelAssets/halloween-house/lighting/FloorLamp';
 import HexagonLightPanels from '../../../modelAssets/halloween-house/lighting/HexagonLightPanels';
 import Uplight from '../../../modelAssets/halloween-house/lighting/Uplight';
-import type { GlowPoint, ScenePart } from '../../../services/ManifoldScene';
+import type { ScenePart } from '../../../services/ManifoldScene';
 import HalloweenHouseScene from '../HalloweenHouseScene';
 
 /**
  * A selectable object in the upstairs room. One item is made of one or more
  * parts.
  */
-export enum UpstairsItem {
+enum UpstairsItem {
   Room = 'Room',
   Wendigo = 'Wendigo',
   Desks = 'Desks',
@@ -92,7 +92,6 @@ const PALETTE = {
   wall: '#f1f1ee',
   concrete: '#bab5ab',
   oak: '#b8834f',
-  dimGreen: '#1f9a4a',
   glass: '#a9d4ef',
   metal: '#8b8e93'
 };
@@ -113,7 +112,6 @@ const PALETTE = {
 export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
   readonly items = Object.values(UpstairsItem);
   readonly parts: ScenePart<UpstairsItem>[];
-  override readonly glowPoints: GlowPoint[];
   override readonly north: Vec2 = [0, 1];
 
   constructor(wasm: ManifoldToplevel) {
@@ -124,7 +122,7 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
       // The hexagon LED panels hang above the right desk, glowing dim green,
       // with the diploma above them.
       ...this.placeAssets(UpstairsItem.Panels, [
-        new HexagonLightPanels(this.context, [3.65, ROOM_DEPTH, 1.45], PALETTE.dimGreen),
+        new HexagonLightPanels(this.context, [3.65, ROOM_DEPTH, 1.45]),
         new FramedDiploma(this.context, [3.9, ROOM_DEPTH - 0.025, 1.88])
       ]),
       ...this.placeAssets(UpstairsItem.Wendigo, [
@@ -137,22 +135,10 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
         new Fog(this.context, this.stairFog())
       ]),
       ...this.placeAssets(UpstairsItem.Uplight, [
-        new Uplight(this.context, UPLIGHT_POSITION, HOUSE_PALETTE.green)
+        new Uplight(this.context, UPLIGHT_POSITION, LightColor.Green)
       ]),
       ...this.buildLeaves(),
       ...this.buildFurniture()
-    ];
-    this.glowPoints = [
-      {
-        position: [WENDIGO_X, WENDIGO_Y - 0.2, Wendigo.EYE_HEIGHT],
-        color: HOUSE_PALETTE.red
-      },
-      { position: [4.15, 9.3, 1.55], color: PALETTE.dimGreen },
-      { position: [2.3, 1.48, 0.3], color: HOUSE_PALETTE.green },
-      {
-        position: [UPLIGHT_POSITION[0], UPLIGHT_POSITION[1], UPLIGHT_POSITION[2] + 0.3],
-        color: HOUSE_PALETTE.green
-      }
     ];
   }
 

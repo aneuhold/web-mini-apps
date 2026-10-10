@@ -3,10 +3,12 @@ import type { ManifoldContext, ModelPart } from '../../../services/BaseManifold'
 import HalloweenHouseAsset from '../HalloweenHouseAsset';
 
 const RADIUS = 0.085;
+const PANEL_COLOR = '#1f9a4a';
 
 /**
- * A set of eleven glowing hexagon LED light panels mounted on a wall that
- * faces -Y, in a honeycomb of eight columns.
+ * A set of eleven hexagon LED light panels mounted on a wall that faces -Y,
+ * in a honeycomb of eight columns, glowing dim green and lighting the wall
+ * around them.
  */
 export default class HexagonLightPanels extends HalloweenHouseAsset {
   readonly parts: ModelPart[];
@@ -15,7 +17,7 @@ export default class HexagonLightPanels extends HalloweenHouseAsset {
    * @param position The center of the lowest tile in the -X column, on the
    * wall's surface.
    */
-  constructor(context: ManifoldContext, position: Vec3, color: string) {
+  constructor(context: ManifoldContext, position: Vec3) {
     super(context);
     const [x, y, z] = position;
     const columnSpacing = 1.5 * RADIUS * 1.06;
@@ -37,8 +39,9 @@ export default class HexagonLightPanels extends HalloweenHouseAsset {
         [tileX, y, tileZ]
       )
     );
+    this.glowPoints.push({ position: [x + 0.5, y - 0.2, z + 0.1], color: PANEL_COLOR });
     this.parts = [
-      { ...this.part('Hexagon wall panels', color, this.union(hexagons)), glowing: true }
+      { ...this.part('Hexagon wall panels', PANEL_COLOR, this.union(hexagons)), glowing: true }
     ];
   }
 }

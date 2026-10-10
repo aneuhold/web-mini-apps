@@ -1,13 +1,13 @@
 import type { Vec3 } from 'manifold-3d';
 import type { ManifoldContext, ModelPart } from '../../../services/BaseManifold';
-import HalloweenHouseAsset, { HOUSE_PALETTE } from '../HalloweenHouseAsset';
+import HalloweenHouseAsset from '../HalloweenHouseAsset';
 
 const TABLE_COLOR = '#2b2724';
+const FLAME_COLOR = '#ff7b2a';
 
 /**
  * A 0.7 m square fire table, 0.5 m tall, with a lit flame rising from the
- * burner in the middle of its top. Pair it with a glow point about 0.8 m
- * above where it stands so it lights its surroundings.
+ * burner in the middle of its top that lights its surroundings.
  */
 export default class FireTable extends HalloweenHouseAsset {
   readonly parts: ModelPart[];
@@ -29,9 +29,10 @@ export default class FireTable extends HalloweenHouseAsset {
       this.ellipsoid([0.05, 0.05, 0.12], [x - 0.05, y + 0.03, top + 0.1]),
       this.ellipsoid([0.04, 0.04, 0.1], [x + 0.05, y - 0.03, top + 0.09])
     ]);
+    this.glowPoints.push({ position: [x, y, z + 0.8], color: FLAME_COLOR });
     this.parts = [
       this.part('Fire table', TABLE_COLOR, table),
-      { ...this.part('Flame', HOUSE_PALETTE.fire, flame), glowing: true }
+      { ...this.part('Flame', FLAME_COLOR, flame), glowing: true }
     ];
   }
 }

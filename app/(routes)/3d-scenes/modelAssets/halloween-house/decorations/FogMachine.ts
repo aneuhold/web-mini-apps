@@ -1,11 +1,16 @@
 import type { Manifold, Vec3 } from 'manifold-3d';
 import type { ManifoldContext, ModelPart } from '../../../services/BaseManifold';
-import HalloweenHouseAsset, { HOUSE_PALETTE } from '../HalloweenHouseAsset';
+import HalloweenHouseAsset, { LightColor } from '../HalloweenHouseAsset';
+
+const MACHINE_COLOR = '#2b2b2e';
+const COOLER_COLOR = '#f4f4f1';
+const VENT_TUBE_COLOR = '#b9b9b9';
 
 /**
  * A fog machine on the floor with a styrofoam cooler chiller in front of its
  * nozzle and a vent tube coming out the far side of the cooler. The chilled
- * fog leaves the tube about 1.2 m from where the machine stands.
+ * fog leaves the tube about 1.2 m from where the machine stands, and the
+ * machine's green lights cast a little light around it.
  */
 export default class FogMachine extends HalloweenHouseAsset {
   readonly parts: ModelPart[];
@@ -37,11 +42,22 @@ export default class FogMachine extends HalloweenHouseAsset {
     );
     const tube = orient(this.rodAlongX(0.3, 0.05, [0.92, 0, 0.12]));
 
+    this.glowPoints.push({
+      position: this.turnPoint([0.52, 0, 0.3], position, angle),
+      color: HalloweenHouseAsset.LIGHT_COLORS[LightColor.Green]
+    });
     this.parts = [
-      this.part('Fog machine', HOUSE_PALETTE.fogMachine, machine),
-      { ...this.part('Fog machine lights', HOUSE_PALETTE.green, lights), glowing: true },
-      this.part('Fog chiller', HOUSE_PALETTE.cooler, cooler),
-      this.part('Fog chiller vent', HOUSE_PALETTE.ventTube, tube)
+      this.part('Fog machine', MACHINE_COLOR, machine),
+      {
+        ...this.part(
+          'Fog machine lights',
+          HalloweenHouseAsset.LIGHT_COLORS[LightColor.Green],
+          lights
+        ),
+        glowing: true
+      },
+      this.part('Fog chiller', COOLER_COLOR, cooler),
+      this.part('Fog chiller vent', VENT_TUBE_COLOR, tube)
     ];
   }
 

@@ -1,13 +1,15 @@
 import type { Vec3 } from 'manifold-3d';
 import type { ManifoldContext, ModelPart } from '../../services/BaseManifold';
-import ModelAsset from '../ModelAsset';
-import { BEDROOM_PALETTE } from './bedroomPalette';
+import BedroomAsset from './BedroomAsset';
+
+const LINEN_COLOR = '#f3efe6';
+const BLANKET_COLOR = '#5b7c99';
 
 /**
  * A queen-sized bed with its headboard at the +Y end: frame, legs, headboard,
  * mattress, blanket, and two pillows.
  */
-export default class Bed extends ModelAsset {
+export default class Bed extends BedroomAsset {
   readonly parts: ModelPart[];
 
   /**
@@ -46,11 +48,11 @@ export default class Bed extends ModelAsset {
     );
 
     this.parts = [
-      this.part('Bed frame', BEDROOM_PALETTE.wood, frame),
-      this.part('Headboard', BEDROOM_PALETTE.darkWood, headboard),
-      this.part('Mattress', BEDROOM_PALETTE.linen, mattress),
-      this.part('Blanket', BEDROOM_PALETTE.blanket, blanket),
-      this.part('Pillows', BEDROOM_PALETTE.linen, this.union(pillows))
+      this.part('Bed frame', BedroomAsset.WOOD_COLOR, frame),
+      this.part('Headboard', BedroomAsset.DARK_WOOD_COLOR, headboard),
+      this.part('Mattress', LINEN_COLOR, mattress),
+      this.part('Blanket', BLANKET_COLOR, blanket),
+      this.part('Pillows', LINEN_COLOR, this.union(pillows))
     ];
   }
 }

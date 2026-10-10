@@ -1,13 +1,12 @@
 import type { Vec3 } from 'manifold-3d';
 import type { ManifoldContext, ModelPart } from '../../services/BaseManifold';
-import ModelAsset from '../ModelAsset';
-import { BEDROOM_PALETTE } from './bedroomPalette';
+import BedroomAsset from './BedroomAsset';
 
 /**
  * A 0.45 m square nightstand, 0.55 m tall, with a recessed drawer in its -Y
  * face.
  */
-export default class Nightstand extends ModelAsset {
+export default class Nightstand extends BedroomAsset {
   readonly parts: ModelPart[];
 
   /**
@@ -25,8 +24,8 @@ export default class Nightstand extends ModelAsset {
     const drawerPull = this.box([0.1, 0.03, 0.02], [x + 0.175, y - 0.015, z + 0.385]);
 
     this.parts = [
-      this.part('Nightstand', BEDROOM_PALETTE.darkWood, nightstand),
-      this.part('Nightstand pull', BEDROOM_PALETTE.brass, drawerPull)
+      this.part('Nightstand', BedroomAsset.DARK_WOOD_COLOR, nightstand),
+      this.part('Nightstand pull', BedroomAsset.BRASS_COLOR, drawerPull)
     ];
   }
 }

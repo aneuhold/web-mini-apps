@@ -1,13 +1,13 @@
 import type { Manifold, Vec3 } from 'manifold-3d';
 import type { ManifoldContext, ModelPart } from '../../../services/BaseManifold';
-import HalloweenHouseAsset from '../HalloweenHouseAsset';
+import HalloweenHouseAsset, { LightColor } from '../HalloweenHouseAsset';
 
 const HEIGHT = 1.83;
 const BRANCH_COLOR = '#141414';
 
 /**
  * A 6 ft lighted black tree: a trunk on crossed feet with tiers of forked
- * branches, and small bulbs along them.
+ * branches, and small bulbs along them that light its surroundings.
  */
 export default class LightedTree extends HalloweenHouseAsset {
   readonly parts: ModelPart[];
@@ -17,7 +17,7 @@ export default class LightedTree extends HalloweenHouseAsset {
    * @param seed Picks how the branches are turned, so they grow the same way
    * on every load.
    */
-  constructor(context: ManifoldContext, base: Vec3, lightColor: string, seed: number) {
+  constructor(context: ManifoldContext, base: Vec3, lightColor: LightColor, seed: number) {
     super(context);
     const random = this.random(seed);
     const [x, y, z] = base;
@@ -56,9 +56,11 @@ export default class LightedTree extends HalloweenHouseAsset {
       });
     });
 
+    const lightHex = HalloweenHouseAsset.LIGHT_COLORS[lightColor];
+    this.glowPoints.push({ position: [x, y, z + 1.2], color: lightHex });
     this.parts = [
       this.part('Lighted tree', BRANCH_COLOR, this.union([...feet, trunk, top, ...branches])),
-      { ...this.part('Tree lights', lightColor, this.union(bulbs)), glowing: true }
+      { ...this.part('Tree lights', lightHex, this.union(bulbs)), glowing: true }
     ];
   }
 
@@ -66,6 +68,6 @@ export default class LightedTree extends HalloweenHouseAsset {
    * Creates one low-detail bulb, since a tree carries dozens of them.
    */
   private bulb(radius: number, center: Vec3): Manifold {
-    return this.place(this.wasm.Manifold.sphere(radius, 8), center);
+    return this.sphere(radius, center, 8);
   }
 }

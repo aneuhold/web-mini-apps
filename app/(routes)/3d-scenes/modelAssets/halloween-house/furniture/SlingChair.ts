@@ -20,7 +20,7 @@ export default class SlingChair extends HalloweenHouseAsset {
    */
   constructor(context: ManifoldContext, position: Vec3, angle: number) {
     super(context);
-    const at = (point: Vec3) => SlingChair.turn(point, position, angle);
+    const at = (point: Vec3) => this.turnPoint(point, position, angle);
     const rod = (start: Vec3, end: Vec3) => this.capsule(at(start), at(end), 0.012);
     const sides = [-0.25, 0.25].flatMap((x) => [
       rod([x, -0.24, 0], [x, -0.22, 0.42]),
@@ -71,18 +71,6 @@ export default class SlingChair extends HalloweenHouseAsset {
     this.parts = [
       this.part('Chair frames', PALETTE.frame, frame),
       this.part('Chair slings', PALETTE.sling, sling)
-    ];
-  }
-
-  /**
-   * Turns a point around Z by `angle` degrees, then moves it by `origin`.
-   */
-  private static turn([x, y, z]: Vec3, origin: Vec3, angle: number): Vec3 {
-    const radians = (angle * Math.PI) / 180;
-    return [
-      origin[0] + x * Math.cos(radians) - y * Math.sin(radians),
-      origin[1] + x * Math.sin(radians) + y * Math.cos(radians),
-      origin[2] + z
     ];
   }
 }

@@ -1,15 +1,20 @@
 import type { Manifold, Vec3 } from 'manifold-3d';
 import type { ManifoldContext, ModelPart } from '../../../services/BaseManifold';
-import HalloweenHouseAsset, { HOUSE_PALETTE } from '../HalloweenHouseAsset';
+import HalloweenHouseAsset, { LightColor } from '../HalloweenHouseAsset';
 
 const WIRE_COLOR = '#2a2a2a';
+const PINK_BULB_COLOR = '#ff4fa3';
 /** How far apart the hooks holding up the wire are. */
 const LIGHT_SPAN = 0.7;
 const LIGHT_SAG = 0.07;
+/** How far apart, at most, the points the string lights its surroundings from are. */
+const GLOW_SPACING = 1.4;
 
 /**
  * A string of lights that sags between hooks spaced along a path, with bulbs
- * hanging from it that alternate pink and purple.
+ * hanging from it that alternate pink and purple. It lights its surroundings
+ * from a few points along each straight run, also alternating pink and
+ * purple.
  */
 export default class StringLights extends HalloweenHouseAsset {
   readonly parts: ModelPart[];
@@ -20,12 +25,21 @@ export default class StringLights extends HalloweenHouseAsset {
    */
   constructor(context: ManifoldContext, path: Vec3[]) {
     super(context);
+    const purple = HalloweenHouseAsset.LIGHT_COLORS[LightColor.Purple];
     const wires: Manifold[] = [];
     const bulbs: Manifold[][] = [[], []];
     path.slice(1).forEach((end, index) => {
       const start = path[index];
       const length = Math.hypot(end[0] - start[0], end[1] - start[1]);
       const spans = Math.ceil(length / LIGHT_SPAN);
+      const glows = Math.max(1, Math.round(length / GLOW_SPACING));
+      for (let glow = 0; glow < glows; glow++) {
+        const [x, y, glowZ] = StringLights.lerp(start, end, (glow + 0.5) / glows);
+        this.glowPoints.push({
+          position: [x, y, glowZ - 0.15],
+          color: this.glowPoints.length % 2 === 0 ? PINK_BULB_COLOR : purple
+        });
+      }
       for (let span = 0; span < spans; span++) {
         const hookA = StringLights.lerp(start, end, span / spans);
         const hookB = StringLights.lerp(start, end, (span + 1) / spans);
@@ -45,9 +59,9 @@ export default class StringLights extends HalloweenHouseAsset {
     });
     this.parts = [
       this.part('String light wire', WIRE_COLOR, this.union(wires)),
-      { ...this.part('Pink bulbs', HOUSE_PALETTE.pink, this.union(bulbs[0])), glowing: true },
+      { ...this.part('Pink bulbs', PINK_BULB_COLOR, this.union(bulbs[0])), glowing: true },
       {
-        ...this.part('Purple bulbs', HOUSE_PALETTE.purple, this.union(bulbs[1])),
+        ...this.part('Purple bulbs', purple, this.union(bulbs[1])),
         glowing: true
       }
     ];

@@ -30,7 +30,7 @@ import ManifoldScene, { ScenePart } from './ManifoldScene';
 /**
  * The page elements and callbacks a SceneRenderer draws into and reports to.
  */
-export type SceneRendererOptions<TItem extends string> = {
+type SceneRendererOptions<TItem extends string> = {
   canvas: HTMLCanvasElement;
   /** An element covering the canvas that holds the HTML measurement labels. */
   labelLayer: HTMLElement;

@@ -1,6 +1,6 @@
 import type { Vec3 } from 'manifold-3d';
 import type { ManifoldContext, ModelPart } from '../../../services/BaseManifold';
-import HalloweenHouseAsset, { HOUSE_PALETTE } from '../HalloweenHouseAsset';
+import HalloweenHouseAsset from '../HalloweenHouseAsset';
 
 const COLOR = '#121214';
 
@@ -32,7 +32,7 @@ export default class HangingSpider extends HalloweenHouseAsset {
     ]);
     this.parts = [
       this.part('Spiders', COLOR, spider),
-      { ...this.part('Cobwebs', HOUSE_PALETTE.cobweb, thread), transparent: true }
+      { ...this.part('Cobwebs', HalloweenHouseAsset.COBWEB_COLOR, thread), transparent: true }
     ];
   }
 }

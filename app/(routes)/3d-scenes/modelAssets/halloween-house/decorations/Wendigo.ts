@@ -1,9 +1,12 @@
 import type { Manifold, Vec3 } from 'manifold-3d';
 import type { ManifoldContext, ModelPart } from '../../../services/BaseManifold';
-import HalloweenHouseAsset, { CreepyClothColor, HOUSE_PALETTE } from '../HalloweenHouseAsset';
+import HalloweenHouseAsset, { CreepyClothColor } from '../HalloweenHouseAsset';
 
 const RACK_COLOR = '#3a3a3d';
 const BONE_COLOR = '#e6dcc5';
+const EYE_COLOR = '#ff2a1a';
+/** The height of the red LED eyes above where the wendigo stands. */
+const EYE_HEIGHT = 1.92;
 
 /**
  * A DIY wendigo: a coat rack draped in small black creepy cloth so it reads
@@ -12,9 +15,6 @@ const BONE_COLOR = '#e6dcc5';
  * so they stay under a 2.44 m ceiling.
  */
 export default class Wendigo extends HalloweenHouseAsset {
-  /** The height of the red LED eyes above where the wendigo stands. */
-  static readonly EYE_HEIGHT = 1.92;
-
   readonly parts: ModelPart[];
 
   /**
@@ -50,7 +50,7 @@ export default class Wendigo extends HalloweenHouseAsset {
     const eyePositions: Vec3[] = [-1, 1].map((side) => [
       x + side * 0.052,
       y - 0.07,
-      z + Wendigo.EYE_HEIGHT
+      z + EYE_HEIGHT
     ]);
     const skull = this.subtract(
       head,
@@ -69,6 +69,7 @@ export default class Wendigo extends HalloweenHouseAsset {
       )
     );
 
+    this.glowPoints.push({ position: [x, y - 0.2, z + EYE_HEIGHT], color: EYE_COLOR });
     this.parts = [
       this.part('Coat rack', RACK_COLOR, coatRack),
       this.part('Buck skull', BONE_COLOR, skull),
@@ -78,7 +79,7 @@ export default class Wendigo extends HalloweenHouseAsset {
         this.union([this.antler(position, -1), this.antler(position, 1)])
       ),
       this.creepyClothPart(CreepyClothColor.Black, this.union([body, ...arms])),
-      { ...this.part('Red LED eyes', HOUSE_PALETTE.red, eyes), glowing: true }
+      { ...this.part('Red LED eyes', EYE_COLOR, eyes), glowing: true }
     ];
   }
 

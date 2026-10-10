@@ -1,12 +1,12 @@
 import type { ManifoldToplevel } from 'manifold-3d';
 import Cat from '../../modelAssets/cat/Cat';
-import FoldingChair, { SEAT_TOP } from '../../modelAssets/cat/FoldingChair';
+import FoldingChair from '../../modelAssets/cat/FoldingChair';
 import ManifoldScene, { ScenePart } from '../../services/ManifoldScene';
 
 /**
  * A selectable object in the cat scene. One item is made of one or more parts.
  */
-export enum CatItem {
+enum CatItem {
   Cat = 'Cat',
   Chair = 'Chair'
 }
@@ -26,7 +26,7 @@ export default class CatScene extends ManifoldScene<CatItem> {
   constructor(wasm: ManifoldToplevel) {
     super(wasm);
     this.parts = [
-      ...this.placeAssets(CatItem.Cat, [new Cat(this.context, [0, 0, SEAT_TOP])]),
+      ...this.placeAssets(CatItem.Cat, [new Cat(this.context, [0, 0, FoldingChair.SEAT_TOP])]),
       ...this.placeAssets(CatItem.Chair, [new FoldingChair(this.context, [0, 0, 0])])
     ];
   }

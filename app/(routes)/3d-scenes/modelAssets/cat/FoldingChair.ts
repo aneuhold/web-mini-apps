@@ -2,8 +2,6 @@ import type { Manifold, Vec3 } from 'manifold-3d';
 import type { ManifoldContext, ModelPart } from '../../services/BaseManifold';
 import ModelAsset from '../ModelAsset';
 
-/** The height of the top of the seat cushion above the floor. */
-export const SEAT_TOP = 0.49;
 const TUBE_RADIUS = 0.012;
 
 const PALETTE = {
@@ -17,6 +15,9 @@ const PALETTE = {
  * backrest, and a tube frame. The seat's front faces -Y.
  */
 export default class FoldingChair extends ModelAsset {
+  /** The height of the top of the seat cushion above the floor. */
+  static readonly SEAT_TOP = 0.49;
+
   readonly parts: ModelPart[];
 
   /**
@@ -30,7 +31,11 @@ export default class FoldingChair extends ModelAsset {
     const trayOuter = this.roundedBox([0.44, 0.42, 0.045], [-0.22, -0.21, 0.42], 0.015);
     const trayInner = this.box([0.4, 0.38, 0.05], [-0.2, -0.19, 0.445]);
     const tray = this.subtract(trayOuter, trayInner);
-    const seatCushion = this.roundedBox([0.4, 0.38, 0.06], [-0.2, -0.19, SEAT_TOP - 0.06], 0.02);
+    const seatCushion = this.roundedBox(
+      [0.4, 0.38, 0.06],
+      [-0.2, -0.19, FoldingChair.SEAT_TOP - 0.06],
+      0.02
+    );
     const backCushion = this.roundedBox([0.42, 0.035, 0.17], [-0.21, 0.215, 0.66], 0.012);
 
     // Each side has a back upright running from the floor to above the

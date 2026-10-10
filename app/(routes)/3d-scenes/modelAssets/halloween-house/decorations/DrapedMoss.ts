@@ -23,7 +23,11 @@ export default class DrapedMoss extends HalloweenHouseAsset {
     const moss = this.union([
       this.ellipsoid([0.09, 0.06, 0.025], [x, edgeY + 0.05, top], 16),
       this.capsule([x + 0.03, edgeY - 0.03, top - 0.01], [x + 0.02, edgeY - 0.04, firstEnd], 0.008),
-      this.capsule([x - 0.03, edgeY - 0.03, top - 0.01], [x - 0.05, edgeY - 0.045, secondEnd], 0.008)
+      this.capsule(
+        [x - 0.03, edgeY - 0.03, top - 0.01],
+        [x - 0.05, edgeY - 0.045, secondEnd],
+        0.008
+      )
     ]);
     this.parts = [this.part('Spanish moss', COLOR, moss)];
   }

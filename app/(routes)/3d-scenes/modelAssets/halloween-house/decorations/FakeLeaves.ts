@@ -1,6 +1,8 @@
 import type { Vec2, Vec3 } from 'manifold-3d';
 import type { ManifoldContext, ModelPart } from '../../../services/BaseManifold';
-import HalloweenHouseAsset, { HOUSE_PALETTE } from '../HalloweenHouseAsset';
+import HalloweenHouseAsset from '../HalloweenHouseAsset';
+
+const LEAF_COLOR = '#1b1817';
 
 /**
  * Fake black maple leaves scattered on the floor along a walking path.
@@ -49,6 +51,6 @@ export default class FakeLeaves extends HalloweenHouseAsset {
       ];
       return this.place(leaf.rotate([0, 0, random() * 360]), position);
     });
-    this.parts = [this.part('Fake leaves', HOUSE_PALETTE.leaf, this.union(leaves))];
+    this.parts = [this.part('Fake leaves', LEAF_COLOR, this.union(leaves))];
   }
 }

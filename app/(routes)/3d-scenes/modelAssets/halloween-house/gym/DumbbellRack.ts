@@ -44,6 +44,6 @@ export default class DumbbellRack extends HalloweenHouseAsset {
    * dozen of them.
    */
   private head(center: Vec3): Manifold {
-    return this.place(this.wasm.Manifold.sphere(0.055, 8), center);
+    return this.sphere(0.055, center, 8);
   }
 }

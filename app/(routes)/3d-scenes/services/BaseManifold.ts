@@ -23,6 +23,15 @@ export type ModelPart = {
   glowing?: boolean;
 };
 
+/**
+ * A point that casts colored light onto the scene around it, such as a lamp
+ * bulb or an uplight.
+ */
+export type GlowPoint = {
+  position: Vec3;
+  color: string;
+};
+
 const CIRCULAR_SEGMENTS = 32;
 
 /**
@@ -66,9 +75,12 @@ export default abstract class BaseManifold {
 
   /**
    * Creates a sphere centered on `center`.
+   *
+   * @param segments Segments around the sphere. Lower it for small shapes
+   * repeated many times, where a smooth surface adds triangles nobody sees.
    */
-  protected sphere(radius: number, center: Vec3): Manifold {
-    return this.place(this.wasm.Manifold.sphere(radius, CIRCULAR_SEGMENTS), center);
+  protected sphere(radius: number, center: Vec3, segments = CIRCULAR_SEGMENTS): Manifold {
+    return this.place(this.wasm.Manifold.sphere(radius, segments), center);
   }
 
   /**
@@ -118,6 +130,20 @@ export default abstract class BaseManifold {
    */
   protected placeTurned(manifold: Manifold, position: Vec3, angle: number): Manifold {
     return this.place(this.track(manifold.rotate([0, 0, angle])), position);
+  }
+
+  /**
+   * Finds where a point laid out around the origin ends up once turned by
+   * `angle` degrees around Z and moved to `position`, the same way
+   * `placeTurned` moves a solid.
+   */
+  protected turnPoint([x, y, z]: Vec3, position: Vec3, angle: number): Vec3 {
+    const radians = (angle * Math.PI) / 180;
+    return [
+      position[0] + x * Math.cos(radians) - y * Math.sin(radians),
+      position[1] + x * Math.sin(radians) + y * Math.cos(radians),
+      position[2] + z
+    ];
   }
 
   /**

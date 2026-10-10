@@ -1,6 +1,6 @@
 import type { Box, Manifold, ManifoldToplevel, Vec2, Vec3 } from 'manifold-3d';
 import type ModelAsset from '../modelAssets/ModelAsset';
-import BaseManifold, { ModelPart } from './BaseManifold';
+import BaseManifold, { GlowPoint, ModelPart } from './BaseManifold';
 
 /**
  * A scene class that can be constructed from the loaded Manifold module.
@@ -17,15 +17,6 @@ export type ScenePart<TItem extends string> = ModelPart & {
 };
 
 /**
- * A point that casts colored light onto the scene around it, such as a lamp
- * bulb or an uplight.
- */
-export type GlowPoint = {
-  position: Vec3;
-  color: string;
-};
-
-/**
  * Base class for a scene: a place or arrangement built out of Manifold
  * solids and model assets, split into selectable items. Subclasses build
  * their `parts` in the constructor, from the shape helpers and from model
@@ -35,7 +26,7 @@ export default abstract class ManifoldScene<TItem extends string> extends BaseMa
   /** The selectable items, in the order they are listed. */
   abstract readonly items: TItem[];
   abstract readonly parts: ScenePart<TItem>[];
-  /** Points that cast colored light, such as lamp bulbs. */
+  /** Points that cast colored light, gathered from the placed assets. */
   readonly glowPoints: GlowPoint[] = [];
   /**
    * The direction of north on the XY plane, for scenes of real places. When
@@ -80,11 +71,13 @@ export default abstract class ManifoldScene<TItem extends string> extends BaseMa
   }
 
   /**
-   * Adds the parts of one or more assets to the scene under `item`. Parts
-   * with the same name are combined into one, so many copies of an asset
+   * Adds the parts of one or more assets to the scene under `item`, and
+   * their glow points to the scene's. Parts with the same name are combined
+   * into one and take the first one's color, so many copies of an asset
    * render as one part each.
    */
   protected placeAssets(item: TItem, assets: ModelAsset[]): ScenePart<TItem>[] {
+    this.glowPoints.push(...assets.flatMap((asset) => asset.glowPoints));
     const partsByName = new Map<string, ModelPart[]>();
     assets
       .flatMap((asset) => asset.parts)
