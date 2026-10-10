@@ -24,15 +24,18 @@ export default function ModelViewer<TItem extends string>({
 }: ModelViewerProps<TItem>) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const labelLayerRef = useRef<HTMLDivElement>(null);
+  const compassRef = useRef<HTMLElement>(null);
   const sceneRef = useRef<ModelScene<TItem> | null>(null);
   const [status, setStatus] = useState<string>('Loading Manifold…');
   const [items, setItems] = useState<TItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<TItem | null>(null);
+  const [showCompass, setShowCompass] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const labelLayer = labelLayerRef.current;
-    if (!canvas || !labelLayer) return;
+    const compass = compassRef.current;
+    if (!canvas || !labelLayer || !compass) return;
     let model: ManifoldModel<TItem> | undefined;
     let cancelled = false;
 
@@ -45,9 +48,11 @@ export default function ModelViewer<TItem extends string>({
           canvas,
           labelLayer,
           labelClassName: styles.dimensionLabel,
+          compass,
           onSelect: setSelectedItem
         });
         setItems(model.items);
+        setShowCompass(model.north !== null);
         setStatus('');
       } catch (error) {
         setStatus(`Failed to build the model: ${String(error)}`);
@@ -101,6 +106,17 @@ export default function ModelViewer<TItem extends string>({
       <div className={styles.viewport}>
         <canvas ref={canvasRef} />
         <div ref={labelLayerRef} />
+        <figure
+          ref={compassRef}
+          className={styles.compass}
+          aria-label="Compass"
+          hidden={!showCompass}
+        >
+          <span>N</span>
+          <span>E</span>
+          <span>S</span>
+          <span>W</span>
+        </figure>
       </div>
     </div>
   );

@@ -19,9 +19,9 @@ export default function ModelsPage() {
         </p>
       </header>
       <ul>
-        {Object.entries(modelsData).map(([slug, { title, description }]) => (
-          <li key={slug}>
-            <Link href={`/3d-models/${slug}`}>{title}</Link>: {description}
+        {Object.values(modelsData).map(({ path, title, description }) => (
+          <li key={path}>
+            <Link href={`/3d-models/${path}`}>{title}</Link>: {description}
           </li>
         ))}
       </ul>

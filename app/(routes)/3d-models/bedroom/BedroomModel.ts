@@ -1,5 +1,5 @@
 import type { ManifoldToplevel, Vec3 } from 'manifold-3d';
-import ManifoldModel, { ModelPart } from '../services/ManifoldModel';
+import ManifoldModel, { GlowPoint, ModelPart } from '../services/ManifoldModel';
 
 /**
  * A selectable object in the bedroom. One item is made of one or more parts.
@@ -31,7 +31,8 @@ const PALETTE = {
   rug: '#a4483d',
   brass: '#c9a54a',
   shade: '#f4dfb0',
-  glass: '#a9d4ef'
+  glass: '#a9d4ef',
+  bulb: '#ffc77a'
 };
 
 /**
@@ -44,7 +45,9 @@ const PALETTE = {
 export default class BedroomModel extends ManifoldModel<BedroomItem> {
   readonly items = Object.values(BedroomItem);
   readonly parts: ModelPart<BedroomItem>[];
-  override readonly glowPoints: Vec3[] = [[0.275, 3.225, 0.9]];
+  override readonly glowPoints: GlowPoint[] = [
+    { position: [0.275, 3.225, 0.9], color: PALETTE.bulb }
+  ];
 
   constructor(wasm: ManifoldToplevel) {
     super(wasm);
@@ -154,13 +157,9 @@ export default class BedroomModel extends ManifoldModel<BedroomItem> {
     const drawerPull = this.box([0.1, 0.03, 0.02], [x + 0.175, y - 0.015, 0.385]);
 
     const lampCenter: Vec3 = [x + 0.225, y + 0.225, height];
-    const lampBase = this.place(this.wasm.Manifold.cylinder(0.02, 0.08, 0.08, 32), lampCenter);
-    const lampStem = this.place(this.wasm.Manifold.cylinder(0.3, 0.012, 0.012, 16), lampCenter);
-    const lampShade = this.place(this.wasm.Manifold.cylinder(0.2, 0.15, 0.09, 32), [
-      lampCenter[0],
-      lampCenter[1],
-      height + 0.22
-    ]);
+    const lampBase = this.cylinder(0.02, 0.08, 0.08, lampCenter);
+    const lampStem = this.cylinder(0.3, 0.012, 0.012, lampCenter, 16);
+    const lampShade = this.cylinder(0.2, 0.15, 0.09, [lampCenter[0], lampCenter[1], height + 0.22]);
 
     return [
       this.part(BedroomItem.Nightstand, 'Nightstand', PALETTE.darkWood, nightstand),

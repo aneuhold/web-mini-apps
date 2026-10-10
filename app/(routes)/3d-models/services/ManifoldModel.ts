@@ -1,4 +1,4 @@
-import type { Box, Manifold, ManifoldToplevel, Vec3 } from 'manifold-3d';
+import type { Box, Manifold, ManifoldToplevel, Vec2, Vec3 } from 'manifold-3d';
 
 /**
  * A model class that can be constructed from the loaded Manifold module.
@@ -18,9 +18,20 @@ export type ModelPart<TItem extends string> = {
   manifold: Manifold;
   /** Renders the part semi-transparent (for example, window glass). */
   transparent?: boolean;
+  /** Renders the part lit by its own color (for example, an LED or a flame). */
+  glowing?: boolean;
 };
 
-const SPHERE_SEGMENTS = 32;
+/**
+ * A point that casts colored light onto the model around it, such as a lamp
+ * bulb or an uplight.
+ */
+export type GlowPoint = {
+  position: Vec3;
+  color: string;
+};
+
+const CIRCULAR_SEGMENTS = 32;
 
 /**
  * Base class for a model built out of Manifold solids. Subclasses build their
@@ -36,8 +47,13 @@ export default abstract class ManifoldModel<TItem extends string> {
   /** The selectable items, in the order they are listed. */
   abstract readonly items: TItem[];
   abstract readonly parts: ModelPart<TItem>[];
-  /** Points that glow with warm light, such as lamp bulbs. */
-  readonly glowPoints: Vec3[] = [];
+  /** Points that cast colored light, such as lamp bulbs. */
+  readonly glowPoints: GlowPoint[] = [];
+  /**
+   * The direction of north on the XY plane, for models of real places. When
+   * set, the viewer labels north, east, south, and west around the model.
+   */
+  readonly north: Vec2 | null = null;
 
   private readonly allocated = new Set<Manifold>();
 
@@ -90,14 +106,31 @@ export default abstract class ManifoldModel<TItem extends string> {
    * Creates a sphere centered on `center`.
    */
   protected sphere(radius: number, center: Vec3): Manifold {
-    return this.place(this.wasm.Manifold.sphere(radius, SPHERE_SEGMENTS), center);
+    return this.place(this.wasm.Manifold.sphere(radius, CIRCULAR_SEGMENTS), center);
+  }
+
+  /**
+   * Creates an upright cylinder or cone standing on `base`. A `radiusHigh`
+   * of 0 makes a cone.
+   */
+  protected cylinder(
+    height: number,
+    radiusLow: number,
+    radiusHigh: number,
+    base: Vec3,
+    segments = CIRCULAR_SEGMENTS
+  ): Manifold {
+    return this.place(this.wasm.Manifold.cylinder(height, radiusLow, radiusHigh, segments), base);
   }
 
   /**
    * Creates an ellipsoid with the given radius along each axis.
+   *
+   * @param segments Segments around the ellipsoid. Lower it for small shapes
+   * repeated many times, where a smooth surface adds triangles nobody sees.
    */
-  protected ellipsoid(radii: Vec3, center: Vec3): Manifold {
-    const unitSphere = this.track(this.wasm.Manifold.sphere(1, SPHERE_SEGMENTS * 1.5));
+  protected ellipsoid(radii: Vec3, center: Vec3, segments = CIRCULAR_SEGMENTS * 1.5): Manifold {
+    const unitSphere = this.track(this.wasm.Manifold.sphere(1, segments));
     return this.place(unitSphere.scale(radii), center);
   }
 
