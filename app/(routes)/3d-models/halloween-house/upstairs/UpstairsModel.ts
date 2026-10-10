@@ -102,6 +102,7 @@ export default class UpstairsModel extends HalloweenHouseModel<UpstairsItem> {
   readonly items = Object.values(UpstairsItem);
   readonly parts: ModelPart<UpstairsItem>[];
   override readonly glowPoints: GlowPoint[];
+  override readonly north: Vec2 = [0, 1];
 
   constructor(wasm: ManifoldToplevel) {
     super(wasm);

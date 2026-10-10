@@ -46,3 +46,47 @@
   background: var(--primary);
   border-radius: 4px;
 }
+
+.compass {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  width: 3.5rem;
+  aspect-ratio: 1;
+  margin: 0;
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  background: var(--main-background);
+  pointer-events: none;
+
+  /* Each letter is swung out from the center to its side of the compass,
+     turned by the scene's --heading, then turned back upright. */
+  span {
+    --turn: calc(var(--angle) + var(--heading, 0deg));
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 0.8rem;
+    line-height: 1;
+    translate: -50% -50%;
+    transform: rotate(var(--turn)) translateY(-1.1rem) rotate(calc(-1 * var(--turn)));
+  }
+
+  span:nth-child(1) {
+    --angle: 0deg;
+    font-weight: bold;
+    color: var(--danger);
+  }
+
+  span:nth-child(2) {
+    --angle: 90deg;
+  }
+
+  span:nth-child(3) {
+    --angle: 180deg;
+  }
+
+  span:nth-child(4) {
+    --angle: 270deg;
+  }
+}

@@ -35,6 +35,11 @@ export type ModelSceneOptions<TItem extends string> = {
   /** An element covering the canvas that holds the HTML measurement labels. */
   labelLayer: HTMLElement;
   labelClassName: string;
+  /**
+   * A compass over the canvas, kept turned so it points to the model's north.
+   * It is left alone for models without a north.
+   */
+  compass: HTMLElement;
   onSelect: (item: TItem | null) => void;
 };
 
@@ -61,6 +66,7 @@ const CLICK_TOLERANCE = 4;
  */
 export default class ModelScene<TItem extends string> {
   private readonly canvas: HTMLCanvasElement;
+  private readonly compass: HTMLElement;
   private readonly onSelect: (item: TItem | null) => void;
   private readonly renderer: WebGLRenderer;
   private readonly labelRenderer: CSS2DRenderer;
@@ -83,9 +89,10 @@ export default class ModelScene<TItem extends string> {
    */
   constructor(
     private readonly model: ManifoldModel<TItem>,
-    { canvas, labelLayer, labelClassName, onSelect }: ModelSceneOptions<TItem>
+    { canvas, labelLayer, labelClassName, compass, onSelect }: ModelSceneOptions<TItem>
   ) {
     this.canvas = canvas;
+    this.compass = compass;
     this.onSelect = onSelect;
     this.renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -120,6 +127,7 @@ export default class ModelScene<TItem extends string> {
 
     this.renderer.setAnimationLoop(() => {
       this.cameraMover.update();
+      this.turnCompass();
       this.renderer.render(this.scene, this.camera);
       this.labelRenderer.render(this.scene, this.camera);
     });
@@ -286,6 +294,22 @@ export default class ModelScene<TItem extends string> {
     ground.receiveShadow = true;
     this.scene.add(ground);
     return ground;
+  }
+
+  /**
+   * Turns the compass so it points to north as seen from the camera, by
+   * setting its `--heading` CSS variable to north's clockwise angle from the
+   * top of the screen.
+   */
+  private turnCompass() {
+    if (!this.model.north) return;
+    const [northX, northY] = this.model.north;
+    const forward = this.controls.target.clone().sub(this.camera.position);
+    // Seen from above, the screen's right is a quarter turn clockwise from forward.
+    const towardRight = northX * forward.y - northY * forward.x;
+    const towardForward = northX * forward.x + northY * forward.y;
+    const heading = (Math.atan2(towardRight, towardForward) * 180) / Math.PI;
+    this.compass.style.setProperty('--heading', `${heading.toFixed(1)}deg`);
   }
 
   /**

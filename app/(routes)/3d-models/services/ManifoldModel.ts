@@ -1,4 +1,4 @@
-import type { Box, Manifold, ManifoldToplevel, Vec3 } from 'manifold-3d';
+import type { Box, Manifold, ManifoldToplevel, Vec2, Vec3 } from 'manifold-3d';
 
 /**
  * A model class that can be constructed from the loaded Manifold module.
@@ -49,6 +49,11 @@ export default abstract class ManifoldModel<TItem extends string> {
   abstract readonly parts: ModelPart<TItem>[];
   /** Points that cast colored light, such as lamp bulbs. */
   readonly glowPoints: GlowPoint[] = [];
+  /**
+   * The direction of north on the XY plane, for models of real places. When
+   * set, the viewer labels north, east, south, and west around the model.
+   */
+  readonly north: Vec2 | null = null;
 
   private readonly allocated = new Set<Manifold>();
 

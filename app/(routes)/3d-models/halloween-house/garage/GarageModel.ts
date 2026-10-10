@@ -125,12 +125,14 @@ export default class GarageModel extends HalloweenHouseModel<GarageItem> {
   readonly items = Object.values(GarageItem);
   readonly parts: ModelPart<GarageItem>[];
   override readonly glowPoints: GlowPoint[];
+  override readonly north: Vec2 = [-1, 0];
 
   constructor(wasm: ManifoldToplevel) {
     super(wasm);
     const backdropLight: Vec3 = [0.45, 2.97, 0];
     const squatRackLight: Vec3 = [5.65, 3.25, 0.015];
-    const orangeTree: Vec3 = [6.4, 6.2, 0];
+    // The orange tree stands beside the stair door, on the back wall side of the path.
+    const orangeTree: Vec3 = [9.4, 6.2, 0];
     const purpleTree: Vec3 = [0.75, 1, 0];
 
     this.parts = [

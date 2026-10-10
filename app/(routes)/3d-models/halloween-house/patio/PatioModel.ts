@@ -1,4 +1,4 @@
-import type { Manifold, ManifoldToplevel, Vec3 } from 'manifold-3d';
+import type { Vec2, Manifold, ManifoldToplevel, Vec3 } from 'manifold-3d';
 import { GlowPoint, ModelPart } from '../../services/ManifoldModel';
 import HalloweenHouseModel, { HOUSE_PALETTE } from '../HalloweenHouseModel';
 
@@ -69,6 +69,7 @@ export default class PatioModel extends HalloweenHouseModel<PatioItem> {
     { position: [2.55, 1.8, 2.1], color: PALETTE.pink },
     { position: [1.0, 2.55, 2.15], color: HOUSE_PALETTE.purple }
   ];
+  override readonly north: Vec2 = [1, 0];
 
   constructor(wasm: ManifoldToplevel) {
     super(wasm);
