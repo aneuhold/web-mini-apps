@@ -2,15 +2,15 @@
 
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import type { ModelInfo } from '../modelsData';
-import ManifoldModel, { ManifoldModelClass } from '../services/ManifoldModel';
+import type { SceneInfo } from '../scenesData';
+import ManifoldScene, { ManifoldSceneClass } from '../services/ManifoldScene';
 import manifoldService from '../services/ManifoldService';
-import ModelScene from '../services/ModelScene';
-import styles from './ModelViewer.module.css';
+import SceneRenderer from '../services/SceneRenderer';
+import styles from './SceneViewer.module.css';
 
-type ModelViewerProps<TItem extends string> = {
-  info: ModelInfo;
-  modelClass: ManifoldModelClass<TItem>;
+type SceneViewerProps<TItem extends string> = {
+  info: SceneInfo;
+  sceneClass: ManifoldSceneClass<TItem>;
 };
 
 /**
@@ -18,14 +18,14 @@ type ModelViewerProps<TItem extends string> = {
  * an item (in the view or in the list) focuses the camera on it and shows its
  * dimensions.
  */
-export default function ModelViewer<TItem extends string>({
+export default function SceneViewer<TItem extends string>({
   info,
-  modelClass
-}: ModelViewerProps<TItem>) {
+  sceneClass
+}: SceneViewerProps<TItem>) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const labelLayerRef = useRef<HTMLDivElement>(null);
   const compassRef = useRef<HTMLElement>(null);
-  const sceneRef = useRef<ModelScene<TItem> | null>(null);
+  const sceneRef = useRef<SceneRenderer<TItem> | null>(null);
   const [status, setStatus] = useState<string>('Loading Manifold…');
   const [items, setItems] = useState<TItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<TItem | null>(null);
@@ -36,15 +36,15 @@ export default function ModelViewer<TItem extends string>({
     const labelLayer = labelLayerRef.current;
     const compass = compassRef.current;
     if (!canvas || !labelLayer || !compass) return;
-    let model: ManifoldModel<TItem> | undefined;
+    let model: ManifoldScene<TItem> | undefined;
     let cancelled = false;
 
     const start = async () => {
       try {
         const wasm = await manifoldService.load();
         if (cancelled) return;
-        model = new modelClass(wasm);
-        sceneRef.current = new ModelScene(model, {
+        model = new sceneClass(wasm);
+        sceneRef.current = new SceneRenderer(model, {
           canvas,
           labelLayer,
           labelClassName: styles.dimensionLabel,
@@ -66,7 +66,7 @@ export default function ModelViewer<TItem extends string>({
       sceneRef.current = null;
       model?.dispose();
     };
-  }, [modelClass]);
+  }, [sceneClass]);
 
   return (
     <div className={`papercss ${styles.container}`}>

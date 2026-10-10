@@ -1,5 +1,5 @@
 import type { Manifold, ManifoldToplevel, Vec3 } from 'manifold-3d';
-import ManifoldModel, { ModelPart } from '../services/ManifoldModel';
+import ManifoldScene, { ModelPart } from '../../services/ManifoldScene';
 
 /**
  * A selectable object in the cat scene. One item is made of one or more parts.
@@ -33,7 +33,7 @@ const PALETTE = {
  * lies on the seat with its head tucked at the front right and its tail
  * wrapped around the front of its body.
  */
-export default class CatModel extends ManifoldModel<CatItem> {
+export default class CatModel extends ManifoldScene<CatItem> {
   readonly items = Object.values(CatItem);
   readonly parts: ModelPart<CatItem>[];
 

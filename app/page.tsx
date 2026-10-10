@@ -10,7 +10,7 @@ const appLinks: { href: string; title: string }[] = [
   { href: '/nutrition', title: 'Nutrition Plans' },
   { href: '/presentations', title: 'Presentations' },
   { href: '/aurora-colony-pub-tech-explainer', title: 'Aurora Colony Pub Tech Explainer' },
-  { href: '/3d-models', title: '3D Models' }
+  { href: '/3d-scenes', title: '3D Scenes' }
 ];
 
 /**

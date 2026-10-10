@@ -25,12 +25,12 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import CameraMover, { CameraPose } from './CameraMover';
 import DimensionOverlay from './DimensionOverlay';
-import ManifoldModel, { ModelPart } from './ManifoldModel';
+import ManifoldScene, { ModelPart } from './ManifoldScene';
 
 /**
- * The page elements and callbacks a ModelScene draws into and reports to.
+ * The page elements and callbacks a SceneRenderer draws into and reports to.
  */
-export type ModelSceneOptions<TItem extends string> = {
+export type SceneRendererOptions<TItem extends string> = {
   canvas: HTMLCanvasElement;
   /** An element covering the canvas that holds the HTML measurement labels. */
   labelLayer: HTMLElement;
@@ -57,14 +57,14 @@ const NO_HIGHLIGHT_COLOR = '#000000';
 const CLICK_TOLERANCE = 4;
 
 /**
- * Renders a ManifoldModel with three.js inside a canvas. Dragging orbits the
+ * Renders a ManifoldScene with three.js inside a canvas. Dragging orbits the
  * camera, and clicking an item highlights it, moves the camera to frame it,
  * and shows its dimensions.
  *
  * Manifold uses a Z-up coordinate system, so the camera's up vector is set to
  * +Z instead of converting every mesh.
  */
-export default class ModelScene<TItem extends string> {
+export default class SceneRenderer<TItem extends string> {
   private readonly canvas: HTMLCanvasElement;
   private readonly compass: HTMLElement;
   private readonly onSelect: (item: TItem | null) => void;
@@ -88,8 +88,8 @@ export default class ModelScene<TItem extends string> {
    * background shows behind the model.
    */
   constructor(
-    private readonly model: ManifoldModel<TItem>,
-    { canvas, labelLayer, labelClassName, compass, onSelect }: ModelSceneOptions<TItem>
+    private readonly model: ManifoldScene<TItem>,
+    { canvas, labelLayer, labelClassName, compass, onSelect }: SceneRendererOptions<TItem>
   ) {
     this.canvas = canvas;
     this.compass = compass;
@@ -105,7 +105,7 @@ export default class ModelScene<TItem extends string> {
     this.cameraMover = new CameraMover(this.camera, this.controls);
     this.dimensions = new DimensionOverlay(this.scene, labelClassName);
 
-    const bounds = ModelScene.toBox3(model.getBounds());
+    const bounds = SceneRenderer.toBox3(model.getBounds());
     const center = bounds.getCenter(new Vector3());
     const radius = bounds.getSize(new Vector3()).length() / 2;
     this.addLights(center, radius);
@@ -144,7 +144,7 @@ export default class ModelScene<TItem extends string> {
         mesh.material.emissive.set(HIGHLIGHT_COLOR);
         mesh.material.emissiveIntensity = 0.25;
       } else {
-        ModelScene.applyGlow(mesh.material, part?.glowing ? part.color : null);
+        SceneRenderer.applyGlow(mesh.material, part?.glowing ? part.color : null);
       }
     });
     this.onSelect(item);
@@ -153,7 +153,7 @@ export default class ModelScene<TItem extends string> {
       this.dimensions.clear();
       return;
     }
-    const bounds = ModelScene.toBox3(this.model.getItemBounds(item));
+    const bounds = SceneRenderer.toBox3(this.model.getItemBounds(item));
     const pose = this.cameraMover.framePose(
       bounds.getCenter(new Vector3()),
       bounds.getSize(new Vector3()).length() / 2
@@ -322,8 +322,8 @@ export default class ModelScene<TItem extends string> {
       transparent: part.transparent ?? false,
       opacity: part.transparent ? 0.35 : 1
     });
-    ModelScene.applyGlow(material, part.glowing ? part.color : null);
-    const mesh = new Mesh(ModelScene.toGeometry(part.manifold), material);
+    SceneRenderer.applyGlow(material, part.glowing ? part.color : null);
+    const mesh = new Mesh(SceneRenderer.toGeometry(part.manifold), material);
     mesh.name = part.name;
     mesh.castShadow = !part.transparent;
     mesh.receiveShadow = true;

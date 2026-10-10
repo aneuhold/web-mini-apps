@@ -1,5 +1,5 @@
 import type { Manifold, Vec2, Vec3 } from 'manifold-3d';
-import ManifoldModel, { ModelPart } from '../services/ManifoldModel';
+import ManifoldScene, { ModelPart } from '../../services/ManifoldScene';
 
 /**
  * The size and finishes of one room's floor and walls.
@@ -65,7 +65,7 @@ const RAG_SPACING = 0.09;
  */
 export default abstract class HalloweenHouseModel<
   TItem extends string
-> extends ManifoldModel<TItem> {
+> extends ManifoldScene<TItem> {
   /**
    * Builds the floor and four walls of a room, with the front and right walls
    * cut down.

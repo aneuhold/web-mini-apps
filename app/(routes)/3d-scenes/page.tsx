@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { modelsData } from './modelsData';
+import { scenesData } from './scenesData';
 import styles from './page.module.css';
 
 /**
@@ -19,7 +19,7 @@ export default function ModelsPage() {
         </p>
       </header>
       <ul>
-        {Object.values(modelsData).map(({ path, title, description }) => (
+        {Object.values(scenesData).map(({ path, title, description }) => (
           <li key={path}>
             <Link href={`/3d-models/${path}`}>{title}</Link>: {description}
           </li>

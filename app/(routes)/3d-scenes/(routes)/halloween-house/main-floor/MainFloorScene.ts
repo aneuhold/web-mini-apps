@@ -1,5 +1,5 @@
 import type { Manifold, ManifoldToplevel, Vec2, Vec3 } from 'manifold-3d';
-import type { GlowPoint, ModelPart } from '../../services/ManifoldModel';
+import type { GlowPoint, ModelPart } from '../../../services/ManifoldScene';
 import HalloweenHouseModel, {
   CUTAWAY_HEIGHT,
   FogBlob,

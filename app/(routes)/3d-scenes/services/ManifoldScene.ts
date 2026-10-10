@@ -3,9 +3,9 @@ import type { Box, Manifold, ManifoldToplevel, Vec2, Vec3 } from 'manifold-3d';
 /**
  * A model class that can be constructed from the loaded Manifold module.
  */
-export type ManifoldModelClass<TItem extends string> = new (
+export type ManifoldSceneClass<TItem extends string> = new (
   wasm: ManifoldToplevel
-) => ManifoldModel<TItem>;
+) => ManifoldScene<TItem>;
 
 /**
  * One colored solid in a model. Each part is rendered with its own material,
@@ -43,7 +43,7 @@ const CIRCULAR_SEGMENTS = 32;
  * collect, so the helpers track each solid they create and `dispose` frees
  * them all.
  */
-export default abstract class ManifoldModel<TItem extends string> {
+export default abstract class ManifoldScene<TItem extends string> {
   /** The selectable items, in the order they are listed. */
   abstract readonly items: TItem[];
   abstract readonly parts: ModelPart<TItem>[];
@@ -63,14 +63,14 @@ export default abstract class ManifoldModel<TItem extends string> {
    * Computes the axis-aligned box that encloses every part of an item.
    */
   getItemBounds(item: TItem): Box {
-    return ManifoldModel.enclose(this.parts.filter((part) => part.item === item));
+    return ManifoldScene.enclose(this.parts.filter((part) => part.item === item));
   }
 
   /**
    * Computes the axis-aligned box that encloses the whole model.
    */
   getBounds(): Box {
-    return ManifoldModel.enclose(this.parts);
+    return ManifoldScene.enclose(this.parts);
   }
 
   /**
@@ -199,11 +199,11 @@ export default abstract class ManifoldModel<TItem extends string> {
   private static enclose(parts: ModelPart<string>[]): Box {
     const boxes = parts.map((part) => part.manifold.boundingBox());
     return {
-      min: ManifoldModel.combine(
+      min: ManifoldScene.combine(
         boxes.map((box) => box.min),
         Math.min
       ),
-      max: ManifoldModel.combine(
+      max: ManifoldScene.combine(
         boxes.map((box) => box.max),
         Math.max
       )

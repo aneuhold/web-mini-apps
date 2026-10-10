@@ -1,5 +1,5 @@
 import type { Manifold, ManifoldToplevel, Vec2, Vec3 } from 'manifold-3d';
-import type { GlowPoint, ModelPart } from '../../services/ManifoldModel';
+import type { GlowPoint, ModelPart } from '../../../services/ManifoldScene';
 import HalloweenHouseModel, { FogBlob, HOUSE_PALETTE } from '../HalloweenHouseModel';
 
 /**
@@ -35,10 +35,13 @@ const STAIR_RISE = STAIR_DROP / STAIR_RISERS;
 /** The x where the last tread meets the garage floor. */
 const STAIR_BOTTOM_X = STAIR_TOP_X + (STAIR_RISERS - 1) * STAIR_RUN;
 const HALF_WALL_HEIGHT = 0.95;
-/** The x of the newel post, where the half wall starts and the gate opening ends. */
+/**
+ * The x of the newel post, where the half wall starts. The gate opening runs
+ * from the right wall to here.
+ */
 const NEWEL_X = 1.36;
-/** The x of the full-height wall stub beside the gate. */
-const GATE_HINGE_X = 0.6;
+/** The gate spans the opening, less a small gap at the right wall. */
+const GATE_WIDTH = NEWEL_X - 0.04;
 /**
  * The y of the stair handrail, along the front wall side of the stairs (on
  * the left going up).
@@ -54,7 +57,7 @@ const WENDIGO_X = 2.75;
 const WENDIGO_Y = 9.2;
 const EYE_HEIGHT = 1.92;
 
-const FOG_MACHINE_POSITION: Vec3 = [2.82, 1.42, 0];
+const FOG_MACHINE_POSITION: Vec3 = [2.82, 1.48, 0];
 const UPLIGHT_POSITION: Vec3 = [5.15, 0.55, -STAIR_DROP];
 
 const PALETTE = {
@@ -122,7 +125,7 @@ export default class UpstairsModel extends HalloweenHouseModel<UpstairsItem> {
     this.glowPoints = [
       { position: [WENDIGO_X, WENDIGO_Y - 0.2, EYE_HEIGHT], color: HOUSE_PALETTE.red },
       { position: [4.15, 9.3, 1.55], color: PALETTE.dimGreen },
-      { position: [2.3, 1.42, 0.3], color: HOUSE_PALETTE.green },
+      { position: [2.3, 1.48, 0.3], color: HOUSE_PALETTE.green },
       {
         position: [UPLIGHT_POSITION[0], UPLIGHT_POSITION[1], UPLIGHT_POSITION[2] + 0.3],
         color: HOUSE_PALETTE.green
@@ -131,9 +134,9 @@ export default class UpstairsModel extends HalloweenHouseModel<UpstairsItem> {
   }
 
   /**
-   * Builds the floor (with the stairwell cut out of it), the walls, the wall
-   * stub beside the gate, the window, curtains, art, the mini-split, and the
-   * ceiling lights, which stay off for the party.
+   * Builds the floor (with the stairwell cut out of it), the walls, the
+   * window, curtains, art, the mini-split, and the ceiling lights, which stay
+   * off for the party.
    */
   private buildRoom(): ModelPart<UpstairsItem>[] {
     const stairwellHole = this.box(
@@ -148,7 +151,6 @@ export default class UpstairsModel extends HalloweenHouseModel<UpstairsItem> {
       openings: [windowHole, stairwellHole],
       floorOpenings: [stairwellHole]
     });
-    const wallStub = this.box([GATE_HINGE_X, STAIRWELL_DEPTH, CEILING_HEIGHT], [0, 0, 0]);
 
     // The frame is the window opening grown outward, minus the opening, plus
     // a divider down the middle.
@@ -203,7 +205,6 @@ export default class UpstairsModel extends HalloweenHouseModel<UpstairsItem> {
 
     return [
       ...shell,
-      this.part(UpstairsItem.Room, 'Wall beside the gate', PALETTE.wall, wallStub),
       this.part(UpstairsItem.Room, 'Window frame', PALETTE.wall, windowFrame),
       {
         ...this.part(UpstairsItem.Room, 'Window glass', PALETTE.glass, windowGlass),
@@ -452,7 +453,7 @@ export default class UpstairsModel extends HalloweenHouseModel<UpstairsItem> {
    * Builds the stairs down to the garage, the stairwell walls below the
    * floor, the half wall with its banister, the handrail along the front wall
    * side of the stairs, and the wooden gate at the top of the stairs, swung
-   * open into the room.
+   * open against the half wall behind the fog machine.
    */
   private buildStairs(): ModelPart<UpstairsItem>[] {
     const bottom = -STAIR_DROP - 0.1;
@@ -498,15 +499,21 @@ export default class UpstairsModel extends HalloweenHouseModel<UpstairsItem> {
       ...brackets
     ]);
 
-    // The open gate lies along the wall stub's line, hinged at the stub.
-    const gateY = STAIRWELL_DEPTH + 0.05;
+    // The gate is hinged at the newel post's room-side corner and swung all
+    // the way open, so it lies flat along the room side of the half wall.
+    const gateY = STAIRWELL_DEPTH + 0.12;
+    const slatCount = Math.round((GATE_WIDTH - 0.1) / 0.1);
+    const slatSpacing = (GATE_WIDTH - 0.1) / slatCount;
     const gate = this.union([
       this.subtract(
-        this.box([0.04, 0.8, 0.8], [GATE_HINGE_X + 0.02, gateY, 0.05]),
-        this.box([0.06, 0.7, 0.66], [GATE_HINGE_X + 0.01, gateY + 0.05, 0.12])
+        this.box([GATE_WIDTH, 0.04, 0.8], [NEWEL_X, gateY, 0.05]),
+        this.box([GATE_WIDTH - 0.1, 0.06, 0.66], [NEWEL_X + 0.05, gateY - 0.01, 0.12])
       ),
-      ...Array.from({ length: 7 }, (_, index) =>
-        this.box([0.03, 0.025, 0.66], [GATE_HINGE_X + 0.025, gateY + 0.08 + index * 0.1, 0.12])
+      ...Array.from({ length: slatCount }, (_, index) =>
+        this.box(
+          [0.025, 0.03, 0.66],
+          [NEWEL_X + 0.05 + (index + 0.5) * slatSpacing - 0.0125, gateY + 0.005, 0.12]
+        )
       )
     ]);
 

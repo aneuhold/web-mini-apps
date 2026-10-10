@@ -1,5 +1,5 @@
 import type { Vec2, Manifold, ManifoldToplevel, Vec3 } from 'manifold-3d';
-import { GlowPoint, ModelPart } from '../../services/ManifoldModel';
+import { GlowPoint, ModelPart } from '../../../services/ManifoldScene';
 import HalloweenHouseModel, { HOUSE_PALETTE } from '../HalloweenHouseModel';
 
 /**

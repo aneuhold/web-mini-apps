@@ -1,5 +1,5 @@
 import type { ManifoldToplevel, Vec3 } from 'manifold-3d';
-import ManifoldModel, { GlowPoint, ModelPart } from '../services/ManifoldModel';
+import ManifoldScene, { GlowPoint, ModelPart } from '../../services/ManifoldScene';
 
 /**
  * A selectable object in the bedroom. One item is made of one or more parts.
@@ -42,7 +42,7 @@ const PALETTE = {
  * plane. Only the back (+Y) and left (X = 0) walls are built so the camera can
  * look in from the open corner.
  */
-export default class BedroomModel extends ManifoldModel<BedroomItem> {
+export default class BedroomModel extends ManifoldScene<BedroomItem> {
   readonly items = Object.values(BedroomItem);
   readonly parts: ModelPart<BedroomItem>[];
   override readonly glowPoints: GlowPoint[] = [

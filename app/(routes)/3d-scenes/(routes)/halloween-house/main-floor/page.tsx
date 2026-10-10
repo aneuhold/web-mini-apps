@@ -1,7 +1,7 @@
 'use client';
 
-import ModelViewer from '../../components/ModelViewer';
-import { modelsData } from '../../modelsData';
+import SceneViewer from '../../../components/SceneViewer';
+import { scenesData } from '../../../scenesData';
 import MainFloorModel from './MainFloorModel';
 
 /**
@@ -9,5 +9,5 @@ import MainFloorModel from './MainFloorModel';
  * in the interactive viewer.
  */
 export default function MainFloorPage() {
-  return <ModelViewer info={modelsData.halloweenMainFloor} modelClass={MainFloorModel} />;
+  return <SceneViewer info={scenesData.halloweenMainFloor} sceneClass={MainFloorModel} />;
 }

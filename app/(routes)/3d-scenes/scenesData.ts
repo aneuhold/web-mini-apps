@@ -1,4 +1,4 @@
-export const modelsData = {
+export const scenesData = {
   bedroom: {
     path: 'bedroom',
     title: 'Bedroom',
@@ -35,12 +35,12 @@ export const modelsData = {
     description:
       'The covered back patio with its pink and purple string lights, the fire table, and the hot cider station kept clear of anything flammable.'
   }
-} satisfies Record<string, ModelInfo>;
+} satisfies Record<string, SceneInfo>;
 
 /**
  * Display details for one 3D model.
  */
-export type ModelInfo = {
+export type SceneInfo = {
   /** The sub-route the model lives at under `/3d-models`. */
   path: string;
   title: string;
