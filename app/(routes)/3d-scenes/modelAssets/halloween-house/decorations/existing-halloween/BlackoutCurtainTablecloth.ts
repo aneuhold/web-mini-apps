@@ -5,10 +5,10 @@ import HalloweenHouseAsset from '../../HalloweenHouseAsset';
 const COLOR = '#151518';
 
 /**
- * A plain black tablecloth lying over a rectangular table top and hanging a
- * short way down its sides.
+ * A black blackout curtain laid over a rectangular table top as a tablecloth,
+ * hanging a short way down its sides.
  */
-export default class Tablecloth extends HalloweenHouseAsset {
+export default class BlackoutCurtainTablecloth extends HalloweenHouseAsset {
   readonly parts: ModelPart[];
 
   /**
@@ -23,6 +23,6 @@ export default class Tablecloth extends HalloweenHouseAsset {
       this.box([depth + 0.04, width + 0.04, 0.17], [x - 0.02, y - 0.02, z - 0.15]),
       this.box([depth, width, 0.16], [x, y, z - 0.16])
     );
-    this.parts = [this.part('Tablecloth', COLOR, cloth)];
+    this.parts = [this.part('Blackout curtain', COLOR, cloth)];
   }
 }

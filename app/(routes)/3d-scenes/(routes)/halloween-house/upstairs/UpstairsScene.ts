@@ -3,6 +3,7 @@ import AirPurifier from '../../../modelAssets/halloween-house/appliances/AirPuri
 import MiniSplit from '../../../modelAssets/halloween-house/appliances/MiniSplit';
 import BlackCurtain from '../../../modelAssets/halloween-house/decorations/BlackCurtain';
 import CreepyCloth from '../../../modelAssets/halloween-house/decorations/purchased/CreepyCloth';
+import CreepyClothPanel from '../../../modelAssets/halloween-house/decorations/purchased/CreepyClothPanel';
 import FakeLeaves from '../../../modelAssets/halloween-house/decorations/purchased/FakeLeaves';
 import Fog, { FogBlob } from '../../../modelAssets/halloween-house/decorations/purchased/Fog';
 import FogMachine from '../../../modelAssets/halloween-house/decorations/purchased/FogMachine';
@@ -20,8 +21,10 @@ import ReclinerLoveseat from '../../../modelAssets/halloween-house/furniture/Rec
 import SideTable from '../../../modelAssets/halloween-house/furniture/SideTable';
 import TowerStand from '../../../modelAssets/halloween-house/furniture/TowerStand';
 import WoodChair from '../../../modelAssets/halloween-house/furniture/WoodChair';
-import { LightColor } from '../../../modelAssets/halloween-house/HalloweenHouseAsset';
-import FloorLamp from '../../../modelAssets/halloween-house/lighting/FloorLamp';
+import {
+  CreepyClothColor,
+  LightColor
+} from '../../../modelAssets/halloween-house/HalloweenHouseAsset';
 import HexagonLightPanels from '../../../modelAssets/halloween-house/lighting/HexagonLightPanels';
 import Uplight from '../../../modelAssets/halloween-house/decorations/purchased/Uplight';
 import HalloweenHouseScene, {
@@ -83,6 +86,27 @@ const WENDIGO_Y = 9.2;
 const FOG_MACHINE_POSITION: Vec3 = [2.82, 1.48, 0];
 const UPLIGHT_POSITION: Vec3 = [5.15, 0.55, -STAIR_DROP];
 
+/**
+ * The size of each strip torn from one 30 x 72 in sheet of moss green creepy
+ * cloth: six strips about 15 in wide and 24 in long, short enough to hang
+ * above head height from the 8 ft ceiling.
+ */
+const CLOTH_STRIP_WIDTH = 0.38;
+const CLOTH_STRIP_LENGTH = 0.61;
+/**
+ * Where each strip of moss green creepy cloth hangs from the ceiling, on
+ * alternating sides of the guests' path from the gate to the wendigo. Each
+ * strip's top edge runs along Y, centered on its point.
+ */
+const CLOTH_STRIPS: Vec2[] = [
+  [0.9, 2.2],
+  [2.15, 3.1],
+  [1.75, 4.2],
+  [2.97, 5.8],
+  [2.35, 6.9],
+  [3.15, 7.9]
+];
+
 const PALETTE = {
   carpet: '#868a90',
   stairCarpet: '#6f7378',
@@ -134,6 +158,7 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
         new Uplight(this.context, UPLIGHT_POSITION, LightColor.Green)
       ]),
       ...this.buildLeaves(),
+      ...this.hangClothStrips(),
       ...this.buildFurniture()
     ];
   }
@@ -373,6 +398,27 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
   }
 
   /**
+   * Builds the strips of moss green creepy cloth hanging from the ceiling
+   * along the guests' path to the wendigo.
+   */
+  private hangClothStrips(): HalloweenHousePart<UpstairsItem>[] {
+    const halfWidth = CLOTH_STRIP_WIDTH / 2;
+    return this.placeAssets(
+      HalloweenDecoration.MossGreenCreepyCloth,
+      CLOTH_STRIPS.map(
+        ([x, y]) =>
+          new CreepyClothPanel(
+            this.context,
+            [x, y - halfWidth, CEILING_HEIGHT],
+            [x, y + halfWidth, CEILING_HEIGHT],
+            CLOTH_STRIP_LENGTH,
+            CreepyClothColor.MossGreen
+          )
+      )
+    );
+  }
+
+  /**
    * Builds the fake black leaves scattered along the guests' path, from the
    * top of the stairs through the gate to the gap between the desks in front
    * of the wendigo, and in a ring around the wendigo's base.
@@ -400,8 +446,7 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
 
   /**
    * Builds the furniture already in the room: the recliner loveseat by the
-   * right wall; the gaming chair, wood chair, bookshelf, and floor lamp by the
-   * left wall; and the air purifier, moved out of the wendigo's spot into the
+   * right wall; the gaming chair, wood chair, and bookshelf by the left wall; and the air purifier, moved out of the wendigo's spot into the
    * back corner behind the right desk.
    */
   private buildFurniture(): HalloweenHousePart<UpstairsItem>[] {
@@ -410,7 +455,6 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
       new GamingChair(this.context, [5.0, 3.9, 0]),
       new WoodChair(this.context, [5.0, 3.1, 0]),
       new Bookshelf(this.context, [ROOM_WIDTH - 0.32, 1.35, 0]),
-      new FloorLamp(this.context, [ROOM_WIDTH - 0.2, 2.35, 0]),
       new AirPurifier(this.context, [5.1, 9.1, 0])
     ]);
   }

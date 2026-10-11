@@ -7,6 +7,7 @@ import Furnace from '../../../modelAssets/halloween-house/appliances/Furnace';
 import MiniFridge from '../../../modelAssets/halloween-house/appliances/MiniFridge';
 import Speaker from '../../../modelAssets/halloween-house/electronics/Speaker';
 import CreepyCloth from '../../../modelAssets/halloween-house/decorations/purchased/CreepyCloth';
+import CreepyClothPanel from '../../../modelAssets/halloween-house/decorations/purchased/CreepyClothPanel';
 import FabricCanopy from '../../../modelAssets/halloween-house/decorations/FabricCanopy';
 import FakeLeaves from '../../../modelAssets/halloween-house/decorations/purchased/FakeLeaves';
 import Fog, { FogBlob } from '../../../modelAssets/halloween-house/decorations/purchased/Fog';
@@ -18,7 +19,10 @@ import RubberFloorMats from '../../../modelAssets/halloween-house/gym/RubberFloo
 import SquatRack from '../../../modelAssets/halloween-house/gym/SquatRack';
 import WallPullUpBar from '../../../modelAssets/halloween-house/gym/WallPullUpBar';
 import WeightBench from '../../../modelAssets/halloween-house/gym/WeightBench';
-import { LightColor } from '../../../modelAssets/halloween-house/HalloweenHouseAsset';
+import {
+  CreepyClothColor,
+  LightColor
+} from '../../../modelAssets/halloween-house/HalloweenHouseAsset';
 import Uplight from '../../../modelAssets/halloween-house/decorations/purchased/Uplight';
 import HalloweenHouseScene, {
   HalloweenDecoration,
@@ -86,6 +90,14 @@ const STAIR_COUNT = 11;
 const STAIRS_TOP_Y = LANDING_Y - (STAIR_COUNT - 1) * STAIR_RUN;
 const CANOPY_CENTER: Vec3 = [STORAGE_WALL_X / 2, 3.4, 2.66];
 const CANOPY_RADII: Vec3 = [1.3, 0.8, 0.16];
+/** The length of one strand of the Spanish moss, 33 in. */
+const MOSS_STRAND_LENGTH = 0.84;
+/**
+ * The size of each strip torn from one 30 x 72 in sheet of moss green creepy
+ * cloth: about 14 in wide and 30 in long.
+ */
+const CLOTH_STRIP_WIDTH = 0.36;
+const CLOTH_STRIP_LENGTH = 0.76;
 
 /** The forest backdrop hangs on the end wall, ending just before the door into the house. */
 const BACKDROP_WIDTH = 3.05;
@@ -186,6 +198,7 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
         new LightedTree(this.context, purpleTree, LightColor.Purple, 11)
       ]),
       ...this.placeAssets(HalloweenDecoration.Moss, this.hangMoss()),
+      ...this.placeAssets(HalloweenDecoration.MossGreenCreepyCloth, this.hangClothStrips()),
       ...this.placeAssets(HalloweenDecoration.Leaves, [
         new FakeLeaves(this.context, PATH, 260, 1.1, 42)
       ]),
@@ -443,37 +456,49 @@ export default class GarageScene extends HalloweenHouseScene<GarageItem> {
   }
 
   /**
-   * Creates clumps of Spanish moss hanging from the ceiling on alternating
-   * sides of the path and from the edge of the purple fabric around the
-   * garage door opener.
+   * Creates the four 33 in strands of Spanish moss hanging from the ceiling,
+   * spread along the path on alternating sides of it.
    */
   private hangMoss(): MossClump[] {
-    const random = this.random(23);
-    // The path's points run toward -X, so each X falls between one pair of them.
-    const pathYAt = (x: number) => {
-      const index = Math.max(
-        PATH.findIndex(([pathX], pointIndex) => pointIndex > 0 && pathX <= x),
-        1
+    return [8.8, 6.3, 3.8, 1.3].map(
+      (x, index) => new MossClump(this.context, this.besidePath(x, index), MOSS_STRAND_LENGTH)
+    );
+  }
+
+  /**
+   * Creates the five strips torn from one sheet of moss green creepy cloth,
+   * hanging from the ceiling along the path between the strands of moss, each
+   * on the other side of the path from the moss before it.
+   */
+  private hangClothStrips(): CreepyClothPanel[] {
+    return [9.6, 7.55, 5.05, 2.55, 0.6].map((x, index) => {
+      const [, y, z] = this.besidePath(x, index + 1);
+      const halfWidth = CLOTH_STRIP_WIDTH / 2;
+      return new CreepyClothPanel(
+        this.context,
+        [x - halfWidth, y, z],
+        [x + halfWidth, y, z],
+        CLOTH_STRIP_LENGTH,
+        CreepyClothColor.MossGreen
       );
-      const [startX, startY] = PATH[index - 1];
-      const [endX, endY] = PATH[index];
-      return startY + ((x - startX) / (endX - startX)) * (endY - startY);
-    };
-    const alongPath: Vec3[] = [9.5, 8.7, 7.9, 7.3, 6.1, 5.2, 4.3, 3.4, 2.5, 1.6, 0.8].map(
-      (x, index) => [x, pathYAt(x) + (index % 2 === 0 ? -0.4 : 0.4), CEILING_HEIGHT]
-    );
-    const [canopyX, canopyY] = CANOPY_CENTER;
-    const aroundCanopy: Vec3[] = Array.from({ length: 7 }, (_, index) => {
-      const angle = (index / 7) * 2 * Math.PI + 0.3;
-      return [
-        canopyX + Math.cos(angle) * CANOPY_RADII[0] * 0.85,
-        canopyY + Math.sin(angle) * CANOPY_RADII[1] * 0.85,
-        2.6
-      ];
     });
-    return [...alongPath, ...aroundCanopy].map(
-      (point) => new MossClump(this.context, point, 0.45 + random() * 0.3)
+  }
+
+  /**
+   * Finds the point on the ceiling 0.4 m to one side of the path at `x`: the
+   * -Y side for an even `side` and the +Y side for an odd one, so things hung
+   * in order alternate sides.
+   */
+  private besidePath(x: number, side: number): Vec3 {
+    // The path's points run toward -X, so each X falls between one pair of them.
+    const index = Math.max(
+      PATH.findIndex(([pathX], pointIndex) => pointIndex > 0 && pathX <= x),
+      1
     );
+    const [startX, startY] = PATH[index - 1];
+    const [endX, endY] = PATH[index];
+    const pathY = startY + ((x - startX) / (endX - startX)) * (endY - startY);
+    return [x, pathY + (side % 2 === 0 ? -0.4 : 0.4), CEILING_HEIGHT];
   }
 
   /**

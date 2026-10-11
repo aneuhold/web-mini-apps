@@ -13,12 +13,13 @@ import FogMachine from '../../../modelAssets/halloween-house/decorations/purchas
 import HangingSpider from '../../../modelAssets/halloween-house/decorations/purchased/HangingSpider';
 import LabelCard from '../../../modelAssets/halloween-house/food/LabelCard';
 import LedDrinkShelf from '../../../modelAssets/halloween-house/decorations/existing-halloween/LedDrinkShelf';
+import MothDecal from '../../../modelAssets/halloween-house/decorations/existing-halloween/MothDecal';
 import PotionBottle, {
   PotionColor
 } from '../../../modelAssets/halloween-house/decorations/existing-halloween/PotionBottle';
 import PottedPlant from '../../../modelAssets/halloween-house/decorations/PottedPlant';
 import StretchyCobweb from '../../../modelAssets/halloween-house/decorations/purchased/StretchyCobweb';
-import Tablecloth from '../../../modelAssets/halloween-house/decorations/existing-halloween/Tablecloth';
+import BlackoutCurtainTablecloth from '../../../modelAssets/halloween-house/decorations/existing-halloween/BlackoutCurtainTablecloth';
 import Tv from '../../../modelAssets/halloween-house/electronics/Tv';
 import BreadBowlDip from '../../../modelAssets/halloween-house/food/BreadBowlDip';
 import CapreseBites from '../../../modelAssets/halloween-house/food/CapreseBites';
@@ -34,11 +35,11 @@ import PretzelRods from '../../../modelAssets/halloween-house/food/PretzelRods';
 import PunchDispenser from '../../../modelAssets/halloween-house/food/PunchDispenser';
 import SliderStation from '../../../modelAssets/halloween-house/food/SliderStation';
 import CoffeeTable from '../../../modelAssets/halloween-house/furniture/CoffeeTable';
-import DogBed from '../../../modelAssets/halloween-house/furniture/DogBed';
 import ReclinerSofa from '../../../modelAssets/halloween-house/furniture/ReclinerSofa';
 import TvCabinet from '../../../modelAssets/halloween-house/furniture/TvCabinet';
 import WallCatRamp from '../../../modelAssets/halloween-house/furniture/WallCatRamp';
 import WhiteDesk from '../../../modelAssets/halloween-house/furniture/WhiteDesk';
+import WingbackRecliner from '../../../modelAssets/halloween-house/furniture/WingbackRecliner';
 import {
   CreepyClothColor,
   LightColor
@@ -119,7 +120,7 @@ const COUNTER_TOP = 0.91;
 const BAR_TOP = COUNTER_TOP + 0.012;
 /** The top surface of the white desk. */
 const DESK_HEIGHT = 0.75;
-/** The top of the black tablecloth on the white desk. */
+/** The top of the blackout curtain laid over the white desk. */
 const TABLE_TOP = 0.77;
 const SILL_HEIGHT = 0.8;
 
@@ -129,7 +130,8 @@ const SILL_HEIGHT = 0.8;
  */
 const TV_ORIGIN: Vec3 = [DIVIDER_X + WALL_THICKNESS / 2, 8, 0];
 const TV_ANGLE = -90;
-const UPLIGHT_POSITION: Vec3 = [1.85, -1.5, 0];
+/** In the north east corner of the small area behind the bar, beside the sliding door. */
+const UPLIGHT_POSITION: Vec3 = [2.0, -2.0, 0];
 const FOG_MACHINE_POSITION: Vec3 = [KITCHEN_INNER_X + 0.05, -1.95, 0];
 
 const PALETTE = {
@@ -147,10 +149,42 @@ const PALETTE = {
   steel: '#a9adb2'
 };
 
-const LIGHT_BAR_POSITION: Vec3 = [5.3, 0.25, 0];
+/** In the north east corner of the living and dining room. */
+const LIGHT_BAR_POSITION: Vec3 = [6.0, 0.18, 0];
+/** At the east end of the sofa. The lamp is 0.3 m square. */
+const SHELF_LAMP_CORNER: Vec3 = [5.8, 4.25, 0];
 const TORCHIERE_POSITION: Vec3 = [5.7, 7.7, 0];
+/** The white desk's depth (X) and width (Y). */
+const DESSERT_TABLE_SIZE: Vec2 = [0.7, 1.4];
+/**
+ * The white desk stands against the north wall, centered between the light
+ * bar and the shelf lamp.
+ */
+const DESSERT_TABLE_CORNER: Vec3 = [
+  5.4,
+  (LIGHT_BAR_POSITION[1] + SHELF_LAMP_CORNER[1] + 0.15) / 2 - DESSERT_TABLE_SIZE[1] / 2,
+  0
+];
 /** The tea light on the kitchen counter that lights the kitchen. */
 const KITCHEN_CANDLE: Vec2 = [1.88, 1.65];
+/**
+ * The moth decals on the dining side of the wall beside the kitchen doorway,
+ * above the top of the cat ramp. Each is [Y, height, tilt in degrees].
+ */
+const MOTHS: Vec3[] = [
+  [1.05, 1.97, -15],
+  [1.36, 2.0, 20],
+  [1.64, 1.96, -5],
+  [1.95, 2.01, 25],
+  [1.2, 2.16, 30],
+  [1.5, 2.19, -25],
+  [1.8, 2.15, 10],
+  [2.1, 2.18, -30],
+  [1.04, 2.33, 5],
+  [1.35, 2.35, -10],
+  [1.66, 2.32, 35],
+  [1.96, 2.34, -20]
+];
 
 /**
  * The main floor decorated for the haunted forest party: the entry, the
@@ -179,6 +213,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
     super(wasm);
     this.parts = [
       ...this.buildRooms(),
+      ...this.buildMoths(),
       ...this.buildCurtainWall(),
       ...this.buildTvCabinet(),
       ...this.buildLounge(),
@@ -296,6 +331,20 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
   }
 
   /**
+   * Builds the moth decals stuck on the wall above the cat ramp, scattered
+   * as if flying up toward the ceiling.
+   */
+  private buildMoths(): HalloweenHousePart<MainFloorItem>[] {
+    return this.placeAssets(
+      HalloweenDecoration.MothDecals,
+      MOTHS.map(
+        ([y, height, tilt], index) =>
+          new MothDecal(this.context, [DIVIDER_X + WALL_THICKNESS / 2, y, height], 0, tilt, index)
+      )
+    );
+  }
+
+  /**
    * Builds the gray curtains around the bay at the west end and the small
    * black creepy cloth hanging from the curtain rods in front of them.
    */
@@ -389,15 +438,15 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
   }
 
   /**
-   * Builds the recliner sofa along the north wall facing south, the low coffee
-   * table in front of it, and the large round dog bed in front of the TV
-   * cabinet.
+   * Builds the recliner sofa along the north wall facing south, the low
+   * coffee table in front of it, and the wingback recliner in the bay at the
+   * west end, facing east with its back to the curtains.
    */
   private buildLounge(): HalloweenHousePart<MainFloorItem>[] {
     return this.placeAssets(MainFloorItem.Lounge, [
       new ReclinerSofa(this.context, [5.2, 4.7, 0]),
       new CoffeeTable(this.context, [4.2, 5.1, 0]),
-      new DogBed(this.context, [3.4, 7.1, 0])
+      new WingbackRecliner(this.context, [(BAY_SOUTH_X + BAY_NORTH_X) / 2, BAY_WEST_Y - 0.7, 0], 90)
     ]);
   }
 
@@ -408,11 +457,11 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * green). Their cobwebs stay below the shades, away from the bulbs.
    */
   private buildLamps(): HalloweenHousePart<MainFloorItem>[] {
-    const [lampX, lampY] = [5.8, 4.25];
+    const [lampX, lampY] = SHELF_LAMP_CORNER;
     const [torchX, torchY] = TORCHIERE_POSITION;
     return [
       ...this.placeAssets(MainFloorItem.Lamps, [
-        new ShelfLamp(this.context, [lampX, lampY, 0], LightColor.WarmWhite),
+        new ShelfLamp(this.context, SHELF_LAMP_CORNER, LightColor.WarmWhite),
         new Torchiere(this.context, TORCHIERE_POSITION, LightColor.Green)
       ]),
       ...this.placeAssets(HalloweenDecoration.Cobwebs, [
@@ -450,7 +499,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
 
   /**
    * Builds the sill of the window onto the patio with tea lights on it, and
-   * the purple LED light bar beside the window. The window's gray curtains
+   * the purple LED light bar in the north east corner. The window's gray curtains
    * are left out, since the wall they hang on is cut down.
    */
   private buildDiningWindow(): HalloweenHousePart<MainFloorItem>[] {
@@ -470,20 +519,20 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
   }
 
   /**
-   * Builds the white desk along the north wall of the dining area, used as
-   * the dessert table: covered with a plain black tablecloth, with small
-   * black creepy cloth hanging off its front (south) edge under the
-   * tablecloth.
+   * Builds the white desk along the north wall between the light bar and the
+   * shelf lamp, used as the dessert table: covered with a black blackout
+   * curtain as a tablecloth, with small black creepy cloth hanging off its
+   * front (south) edge under the curtain.
    */
   private buildDessertTable(): HalloweenHousePart<MainFloorItem>[] {
-    const [x, y] = [5.4, 0.5];
-    const [depth, width] = [0.7, 1.4];
+    const [x, y] = DESSERT_TABLE_CORNER;
+    const [depth, width] = DESSERT_TABLE_SIZE;
     return [
       ...this.placeAssets(MainFloorItem.DessertTable, [
         new WhiteDesk(this.context, [x, y, 0], [depth, width, DESK_HEIGHT])
       ]),
-      ...this.placeAssets(HalloweenDecoration.BlackTablecloth, [
-        new Tablecloth(this.context, [x, y, DESK_HEIGHT], [depth, width])
+      ...this.placeAssets(HalloweenDecoration.BlackBlackoutCurtain, [
+        new BlackoutCurtainTablecloth(this.context, [x, y, DESK_HEIGHT], [depth, width])
       ]),
       ...this.placeAssets(HalloweenDecoration.SmallBlackCreepyCloth, [
         new CreepyClothPanel(
@@ -501,10 +550,11 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * three, each with a label card and a tea light beside it.
    */
   private buildDesserts(): HalloweenHousePart<MainFloorItem>[] {
+    const [tableX, tableY] = DESSERT_TABLE_CORNER;
     const z = TABLE_TOP;
-    const rows = [1.6, 1.2, 0.8];
-    const [backColumn, frontColumn] = [5.88, 5.6];
-    const dishes: Vec3[] = [backColumn, frontColumn].flatMap((columnX) =>
+    const rows = [1.1, 0.7, 0.3].map((offset) => tableY + offset);
+    const columns = [0.48, 0.2].map((offset) => tableX + offset);
+    const dishes: Vec3[] = columns.flatMap((columnX) =>
       rows.map((rowY): Vec3 => [columnX, rowY, z])
     );
     const [board, logCake, pretzelJar, caprese, dirtCups, cupcakes] = dishes;
@@ -630,14 +680,14 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
   }
 
   /**
-   * Builds the bar on the east face of the peninsula: the moss green creepy
-   * cloth along its top, hanging longer over the edge in front of the fog
-   * machine, Spanish moss along its edge, and the LED drink shelf at its
+   * Builds the bar on the east face of the peninsula: one sheet of moss green
+   * creepy cloth over its top, hanging about 0.2 m (8 in) down its sides, two
+   * strands of Spanish moss along its edge, and the LED drink shelf at its
    * north end with the handmade potion bottles in a row on its top step.
    */
   private buildBar(): HalloweenHousePart<MainFloorItem>[] {
     const edgeY = -0.41;
-    const mossSpots = [1.1, 0.75, 0.4, 0.05];
+    const mossSpots = [1.0, 0.3];
     const shelf = new LedDrinkShelf(this.context, [0.18, -0.34, BAR_TOP], 1, LightColor.Purple);
     const potions: Potion[] = [
       { color: PotionColor.Red, round: false },
@@ -660,15 +710,8 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       ...this.placeAssets(HalloweenDecoration.MossGreenCreepyCloth, [
         new CreepyCloth(
           this.context,
-          [KITCHEN_INNER_X - 0.01, edgeY, 0.6],
+          [KITCHEN_INNER_X - 0.01, edgeY, COUNTER_TOP - 0.2],
           [PENINSULA_NORTH_X + 0.01, -0.08, COUNTER_TOP],
-          CreepyClothColor.MossGreen
-        ),
-        new CreepyClothPanel(
-          this.context,
-          [KITCHEN_INNER_X, edgeY - 0.025, COUNTER_TOP],
-          [0.55, edgeY - 0.025, COUNTER_TOP],
-          0.75,
           CreepyClothColor.MossGreen
         )
       ]),
@@ -703,7 +746,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
    * Builds fog machine 2 tucked against the east wall of the small area
    * behind the bar, blowing north through its chiller toward the sliding
    * door, the fog spreading toward the door and along the floor behind the
-   * bar, and the green uplight.
+   * bar, and the green uplight in the corner beside the sliding door.
    */
   private buildFogMachine(): HalloweenHousePart<MainFloorItem>[] {
     const blobs: FogBlob[] = [
