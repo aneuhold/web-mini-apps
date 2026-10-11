@@ -2,58 +2,31 @@ import Footer from '$components/Footer';
 import Link from 'next/link';
 import styles from './page.module.css';
 
+const appLinks: { href: string; title: string }[] = [
+  { href: '/image-printer', title: 'Image Printer App' },
+  { href: '/css-height-tester', title: 'CSS Height Tester' },
+  { href: '/md', title: 'Markdown Pages App' },
+  { href: '/design-patterns', title: 'Design Patterns Flash Cards' },
+  { href: '/nutrition', title: 'Nutrition Plans' },
+  { href: '/presentations', title: 'Presentations' },
+  { href: '/aurora-colony-pub-tech-explainer', title: 'Aurora Colony Pub Tech Explainer' },
+  { href: '/3d-scenes', title: '3D Scenes' }
+];
+
 /**
  * Main page component that renders the web mini apps layout.
- * Combines the Hero section, Projects section, and Footer into a cohesive homepage.
+ * Shows a button for each app followed by the Footer.
  */
 export default function Page() {
   return (
     <div className="papercss">
-      <ul className={styles.appList}>
-        <li>
-          <Link href="/image-printer" aria-label="Image printer app link">
-            Image Printer App
+      <nav className={styles.appList} aria-label="Apps">
+        {appLinks.map(({ href, title }) => (
+          <Link key={href} href={href} className="paper-btn">
+            {title}
           </Link>
-        </li>
-        <li>
-          <Link href="/css-height-tester" aria-label="CSS height tester app link">
-            CSS Height Tester
-          </Link>
-        </li>
-        <li>
-          <Link href="/md" aria-label="Markdown pages app link">
-            Markdown Pages App
-          </Link>
-        </li>
-        <li>
-          <Link href="/design-patterns" aria-label="Design patterns flash cards app link">
-            Design Patterns Flash Cards
-          </Link>
-        </li>
-        <li>
-          <Link href="/nutrition" aria-label="Nutrition plans app link">
-            Nutrition Plans
-          </Link>
-        </li>
-        <li>
-          <Link href="/presentations" aria-label="Presentations app link">
-            Presentations
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/aurora-colony-pub-tech-explainer"
-            aria-label="Aurora Colony Pub tech explainer link"
-          >
-            Aurora Colony Pub Tech Explainer
-          </Link>
-        </li>
-        <li>
-          <Link href="/3d-models" aria-label="3D models app link">
-            3D Models
-          </Link>
-        </li>
-      </ul>
+        ))}
+      </nav>
       <Footer />
     </div>
   );
