@@ -2,6 +2,7 @@ import type { ManifoldToplevel, Vec2, Vec3 } from 'manifold-3d';
 import AirPurifier from '../../../modelAssets/halloween-house/appliances/AirPurifier';
 import MiniSplit from '../../../modelAssets/halloween-house/appliances/MiniSplit';
 import BlackCurtain from '../../../modelAssets/halloween-house/decorations/BlackCurtain';
+import BranchTree from '../../../modelAssets/halloween-house/decorations/existing-halloween/BranchTree';
 import CreepyCloth from '../../../modelAssets/halloween-house/decorations/purchased/CreepyCloth';
 import CreepyClothPanel from '../../../modelAssets/halloween-house/decorations/purchased/CreepyClothPanel';
 import FakeLeaves from '../../../modelAssets/halloween-house/decorations/purchased/FakeLeaves';
@@ -147,6 +148,11 @@ export default class UpstairsScene extends HalloweenHouseScene<UpstairsItem> {
       ]),
       ...this.placeAssets(HalloweenDecoration.Wendigo, [
         new Wendigo(this.context, [WENDIGO_X, WENDIGO_Y, 0])
+      ]),
+      // The branch tree stands against the east wall between the gaming
+      // chair and the right desk, and reaches up to the smooth ceiling.
+      ...this.placeAssets(HalloweenDecoration.Branches, [
+        new BranchTree(this.context, [ROOM_WIDTH - 0.3, 5.9, 0], CEILING_HEIGHT - 0.01, 180, 2)
       ]),
       ...this.buildStairs(),
       ...this.buildGarland(),

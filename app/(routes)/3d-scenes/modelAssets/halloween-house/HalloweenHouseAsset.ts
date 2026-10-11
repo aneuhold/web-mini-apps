@@ -1,4 +1,4 @@
-import type { Manifold, Vec3 } from 'manifold-3d';
+import type { Manifold, Vec2, Vec3 } from 'manifold-3d';
 import type { ModelPart } from '../../baseClasses/BaseManifold';
 import ModelAsset from '../ModelAsset';
 
@@ -20,6 +20,19 @@ export enum LightColor {
   Orange = 'Orange'
 }
 
+/**
+ * One bare branch, with twigs growing from its upper part.
+ */
+export type BareBranch = {
+  start: Vec3;
+  end: Vec3;
+  /** The radius at `start` and at `end`. */
+  radii: [number, number];
+  twigs: number;
+  /** The horizontal direction the twigs bend toward, on alternating sides. */
+  side: Vec2;
+};
+
 const BLACK_CLOTH_COLOR = '#1d1c21';
 const MOSS_CLOTH_COLOR = '#5d7438';
 const CLOTH_THICKNESS = 0.012;
@@ -34,6 +47,8 @@ const RAG_SPACING = 0.09;
 export default abstract class HalloweenHouseAsset extends ModelAsset {
   /** The off-white of the fake cobwebs and spider threads. */
   protected static readonly COBWEB_COLOR = '#e4e4e4';
+  /** The gray-brown bark of the bare branches we gather. */
+  protected static readonly BARK_COLOR = '#4a3f35';
 
   /** The color a bulb or LED set to each light color glows in. */
   protected static readonly LIGHT_COLORS: Record<LightColor, string> = {
@@ -116,6 +131,51 @@ export default abstract class HalloweenHouseAsset extends ModelAsset {
         ]
       ])
     );
+  }
+
+  /**
+   * Creates a bare branch tapering from `start` to `end`, with its twigs
+   * growing from its upper part, bending upward and to alternating sides.
+   * A twig whose end `fits` rejects bends to the other side instead, and no
+   * twig reaches above `ceiling`.
+   */
+  protected bareBranch(
+    { start, end, radii, twigs, side }: BareBranch,
+    ceiling: number,
+    random: () => number,
+    fits: (point: Vec3) => boolean = () => true
+  ): Manifold[] {
+    const direction = end.map((value, axis) => value - start[axis]);
+    const length = Math.hypot(...direction);
+    const level = Math.hypot(direction[0], direction[1]);
+    const [outX, outY] = level > 0 ? [direction[0] / level, direction[1] / level] : [0, 0];
+    const twigRods = Array.from({ length: twigs }, (_, index) => {
+      const along = 0.55 + index * 0.2 + random() * 0.1;
+      const from: Vec3 = [
+        start[0] + direction[0] * along,
+        start[1] + direction[1] * along,
+        start[2] + direction[2] * along
+      ];
+      const twigLength = length * (0.25 + random() * 0.1);
+      const toward = (sign: number): Vec3 => [
+        from[0] + twigLength * (0.2 * outX + 0.55 * sign * side[0]),
+        from[1] + twigLength * (0.2 * outY + 0.55 * sign * side[1]),
+        Math.min(from[2] + twigLength * 0.8, ceiling)
+      ];
+      const sign = index % 2 === 0 ? 1 : -1;
+      const preferred = toward(sign);
+      const to = fits(preferred) ? preferred : toward(-sign);
+      return this.taperedRod(from, to, [radii[1] + 0.002, 0.003]);
+    });
+    return [this.taperedRod(start, end, radii), ...twigRods];
+  }
+
+  /**
+   * Creates a rod tapering from `radii[0]` at `start` to `radii[1]` at
+   * `end`, in low detail since a decoration can have dozens of them.
+   */
+  private taperedRod(start: Vec3, end: Vec3, [startRadius, endRadius]: [number, number]): Manifold {
+    return this.hull([this.sphere(startRadius, start, 8), this.sphere(endRadius, end, 8)]);
   }
 
   /**

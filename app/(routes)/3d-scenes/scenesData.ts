@@ -27,7 +27,7 @@ export const scenesData = {
     path: 'halloween-house/main-floor',
     title: 'Haunted House: Main Floor',
     description:
-      'The entry, living and dining room, and kitchen as one connected space: cobwebs and creepy cloth in the living room, the dessert table on the white desk, hot food on the kitchen counters, and the bar with fog machine 2 behind it.'
+      'The entry, hallway, living and dining room, and kitchen as one connected space: cobwebs and creepy cloth in the living room, the dessert table on the white desk, hot food on the kitchen counters, the bar with fog machine 2 behind it, a branch tree at the end of the hallway, branches around the purple light bar, and leaves from the garage door into the living room.'
   },
   halloweenPatio: {
     path: 'halloween-house/patio',

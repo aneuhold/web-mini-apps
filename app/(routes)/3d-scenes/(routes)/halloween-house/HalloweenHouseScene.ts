@@ -27,7 +27,8 @@ export enum HalloweenDecoration {
   LedDrinkShelf = 'E1 LED drink shelf',
   MothDecals = 'E2 Moth decals',
   PotionBottles = 'E3 Potion bottles',
-  BlackBlackoutCurtain = 'E4 Black blackout curtain'
+  BlackBlackoutCurtain = 'E4 Black blackout curtain',
+  Branches = 'E6 Branches'
 }
 
 /**

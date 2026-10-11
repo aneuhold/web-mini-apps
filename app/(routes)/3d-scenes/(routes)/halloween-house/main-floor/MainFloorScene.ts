@@ -6,8 +6,11 @@ import Stove from '../../../modelAssets/halloween-house/appliances/Stove';
 import Cobweb from '../../../modelAssets/halloween-house/decorations/purchased/Cobweb';
 import CreepyCloth from '../../../modelAssets/halloween-house/decorations/purchased/CreepyCloth';
 import CreepyClothPanel from '../../../modelAssets/halloween-house/decorations/purchased/CreepyClothPanel';
+import BranchTree from '../../../modelAssets/halloween-house/decorations/existing-halloween/BranchTree';
+import PoleBranches from '../../../modelAssets/halloween-house/decorations/existing-halloween/PoleBranches';
 import Crow from '../../../modelAssets/halloween-house/decorations/Crow';
 import DrapedMoss from '../../../modelAssets/halloween-house/decorations/purchased/DrapedMoss';
+import FakeLeaves from '../../../modelAssets/halloween-house/decorations/purchased/FakeLeaves';
 import Fog, { FogBlob } from '../../../modelAssets/halloween-house/decorations/purchased/Fog';
 import FogMachine from '../../../modelAssets/halloween-house/decorations/purchased/FogMachine';
 import HangingSpider from '../../../modelAssets/halloween-house/decorations/purchased/HangingSpider';
@@ -45,6 +48,7 @@ import {
   LightColor
 } from '../../../modelAssets/halloween-house/HalloweenHouseAsset';
 import Chandelier from '../../../modelAssets/halloween-house/lighting/Chandelier';
+import LedStrip from '../../../modelAssets/halloween-house/lighting/LedStrip';
 import LightBar from '../../../modelAssets/halloween-house/lighting/LightBar';
 import ShelfLamp from '../../../modelAssets/halloween-house/lighting/ShelfLamp';
 import TeaLight from '../../../modelAssets/halloween-house/decorations/purchased/TeaLight';
@@ -96,7 +100,16 @@ const BAY_NORTH_X = 5;
 const ENTRY_EAST_Y = 4;
 const ENTRY_WEST_Y = 6.3;
 const HALLWAY_WEST_Y = 5.3;
-const HALLWAY_SOUTH_X = -1.5;
+/** X of the wall at the south end of the hallway, which also runs along the south side of the turn. */
+const HALLWAY_SOUTH_X = -3.5;
+/** The hallway turns east toward the bedrooms between here and its south end. */
+const HALLWAY_TURN_X = -2.5;
+/** The hallway east of the turn is drawn only this far, short of the bedrooms. */
+const BEDROOM_HALL_EAST_Y = 2.5;
+/** The south edge of the garage door in the hallway's west wall, a standard 32 in (0.81 m) door. */
+const GARAGE_DOOR_SOUTH_X = -2.45;
+const GARAGE_DOOR_WIDTH = 0.81;
+const DOOR_HEIGHT = 2.05;
 /** X of the south wall of the kitchen and the small area behind the bar. */
 const KITCHEN_SOUTH_X = -0.55;
 /** The inside face of the kitchen's south wall, where the south run starts. */
@@ -194,7 +207,9 @@ const MOTHS: Vec3[] = [
  * West is +Y. The living and dining room runs west to east on the north
  * side, from the bay of floor-to-ceiling curtains (west) to the window onto
  * the back patio (east). South of its west half is the entry, with the
- * front door in its west wall and a hallway leading south. The kitchen
+ * front door in its west wall and a hallway leading south past the garage
+ * door in its west wall, then turning east at its south end toward the
+ * bedrooms. The kitchen
  * galley runs east from the entry to a peninsula with the stove on its
  * west face and the bar on its east face. East of the peninsula is the
  * small area behind the bar, with the sliding door to the patio on its north
@@ -214,6 +229,8 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
     this.parts = [
       ...this.buildRooms(),
       ...this.buildMoths(),
+      ...this.buildHallway(),
+      ...this.buildLeaves(),
       ...this.buildCurtainWall(),
       ...this.buildTvCabinet(),
       ...this.buildLounge(),
@@ -232,7 +249,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
   }
 
   /**
-   * Builds the floors, the walls, the front door, and the cat ramp mounted
+   * Builds the floors, the walls, the front door, the garage door, and the cat ramp mounted
    * on the dining side of the wall beside the doorway into the kitchen,
    * climbing toward the doorway.
    */
@@ -249,23 +266,38 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       [DIVIDER_X - KITCHEN_SOUTH_X, ENTRY_EAST_Y - BACK_AREA_EAST_Y, WALL_THICKNESS],
       [KITCHEN_SOUTH_X, BACK_AREA_EAST_Y, -WALL_THICKNESS]
     );
-    const entryFloor = this.union([
-      this.box(
-        [DIVIDER_X, ENTRY_WEST_Y - ENTRY_EAST_Y, WALL_THICKNESS],
-        [0, ENTRY_EAST_Y, -WALL_THICKNESS]
-      ),
+    const entryFloor = this.box(
+      [DIVIDER_X, ENTRY_WEST_Y - ENTRY_EAST_Y, WALL_THICKNESS],
+      [0, ENTRY_EAST_Y, -WALL_THICKNESS]
+    );
+    const hallwayFloor = this.union([
       this.box(
         [-HALLWAY_SOUTH_X, HALLWAY_WEST_Y - ENTRY_EAST_Y, WALL_THICKNESS],
         [HALLWAY_SOUTH_X, ENTRY_EAST_Y, -WALL_THICKNESS]
+      ),
+      this.box(
+        [HALLWAY_TURN_X - HALLWAY_SOUTH_X, ENTRY_EAST_Y - BEDROOM_HALL_EAST_Y, WALL_THICKNESS],
+        [HALLWAY_SOUTH_X, BEDROOM_HALL_EAST_Y, -WALL_THICKNESS]
       )
     ]);
 
-    const frontDoorHole = this.box([0.9, 0.4, 2.05], [0.65, ENTRY_WEST_Y - 0.2, 0]);
+    const doorHoles = this.union([
+      this.box([0.9, 0.4, DOOR_HEIGHT], [0.65, ENTRY_WEST_Y - 0.2, 0]),
+      this.box(
+        [GARAGE_DOOR_WIDTH, 0.4, DOOR_HEIGHT],
+        [GARAGE_DOOR_SOUTH_X, HALLWAY_WEST_Y - 0.2, 0]
+      )
+    ]);
     const fullWalls = this.subtract(
       this.union([
         this.wall(
           [KITCHEN_SOUTH_X, BACK_AREA_EAST_Y],
           [KITCHEN_SOUTH_X, ENTRY_EAST_Y],
+          CEILING_HEIGHT
+        ),
+        this.wall(
+          [HALLWAY_SOUTH_X, BEDROOM_HALL_EAST_Y],
+          [HALLWAY_SOUTH_X, HALLWAY_WEST_Y],
           CEILING_HEIGHT
         ),
         this.wall([HALLWAY_SOUTH_X, HALLWAY_WEST_Y], [0, HALLWAY_WEST_Y], CEILING_HEIGHT),
@@ -276,7 +308,7 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
         this.wall([BAY_SOUTH_X, BAY_WEST_Y], [BAY_NORTH_X, BAY_WEST_Y], CEILING_HEIGHT),
         this.wall([BAY_NORTH_X, BAY_WEST_Y], [LIVING_NORTH_X, BAY_START_Y], CEILING_HEIGHT)
       ]),
-      frontDoorHole
+      doorHoles
     );
     // The patio sliding door leaves a gap in the small area's north wall.
     const lowWalls = this.union([
@@ -291,7 +323,12 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
         HalloweenHouseScene.CUTAWAY_HEIGHT
       ),
       this.wall(
-        [HALLWAY_SOUTH_X, ENTRY_EAST_Y],
+        [HALLWAY_TURN_X, BEDROOM_HALL_EAST_Y],
+        [HALLWAY_TURN_X, ENTRY_EAST_Y],
+        HalloweenHouseScene.CUTAWAY_HEIGHT
+      ),
+      this.wall(
+        [HALLWAY_TURN_X, ENTRY_EAST_Y],
         [0, ENTRY_EAST_Y],
         HalloweenHouseScene.CUTAWAY_HEIGHT
       ),
@@ -307,18 +344,29 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
     ]);
     const sliderTrack = this.box([0.08, 1.4, 0.02], [DIVIDER_X - 0.04, -2, 0]);
 
-    const frontDoor = this.box([0.9, 0.04, 2.05], [0.65, ENTRY_WEST_Y - 0.02, 0]);
-    const doorKnob = this.sphere(0.03, [1.45, ENTRY_WEST_Y - 0.07, 1]);
+    const doors = this.union([
+      this.box([0.9, 0.04, DOOR_HEIGHT], [0.65, ENTRY_WEST_Y - 0.02, 0]),
+      this.box(
+        [GARAGE_DOOR_WIDTH, 0.04, DOOR_HEIGHT],
+        [GARAGE_DOOR_SOUTH_X, HALLWAY_WEST_Y - 0.02, 0]
+      )
+    ]);
+    // The garage door is hinged at its south edge, so its knob is at the north edge.
+    const doorKnobs = this.union([
+      this.sphere(0.03, [1.45, ENTRY_WEST_Y - 0.07, 1]),
+      this.sphere(0.03, [GARAGE_DOOR_SOUTH_X + GARAGE_DOOR_WIDTH - 0.08, HALLWAY_WEST_Y - 0.07, 1])
+    ]);
 
     const item = MainFloorItem.Rooms;
     return [
       this.part(item, 'Living room carpet', PALETTE.carpet, livingFloor),
       this.part(item, 'Kitchen tile', PALETTE.tile, tileFloor),
       this.part(item, 'Entry floor', PALETTE.entryFloor, entryFloor),
+      this.part(item, 'Hallway carpet', PALETTE.carpet, hallwayFloor),
       this.part(item, 'Walls', PALETTE.wall, this.union([fullWalls, lowWalls])),
       this.part(item, 'Patio door track', PALETTE.steel, sliderTrack),
-      this.part(item, 'Front door', PALETTE.door, frontDoor),
-      this.part(item, 'Front door knob', PALETTE.brass, doorKnob),
+      this.part(item, 'Doors', PALETTE.door, doors),
+      this.part(item, 'Door knobs', PALETTE.brass, doorKnobs),
       ...this.placeAssets(item, [
         new WallCatRamp(this.context, [DIVIDER_X + WALL_THICKNESS / 2, 0, 0], 0, [
           [2.85, 0.15],
@@ -328,6 +376,71 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
         ])
       ])
     ];
+  }
+
+  /**
+   * Builds the purple LED strip along the top of the walls at the south end
+   * of the hallway, from the turn to the garage door, and the branch tree
+   * in the hallway's south west corner, leaning out across the corner and
+   * stopping short of the textured ceiling so it doesn't knock texture
+   * loose.
+   */
+  private buildHallway(): HalloweenHousePart<MainFloorItem>[] {
+    const stripHeight = CEILING_HEIGHT - 0.02;
+    const southFace = HALLWAY_SOUTH_X + WALL_THICKNESS / 2 + 0.01;
+    const westFace = HALLWAY_WEST_Y - WALL_THICKNESS / 2 - 0.01;
+    return [
+      ...this.placeAssets(MainFloorItem.Rooms, [
+        new LedStrip(
+          this.context,
+          [
+            [southFace, ENTRY_EAST_Y, stripHeight],
+            [southFace, westFace, stripHeight],
+            [GARAGE_DOOR_SOUTH_X, westFace, stripHeight]
+          ],
+          LightColor.Purple
+        )
+      ]),
+      ...this.placeAssets(HalloweenDecoration.Branches, [
+        new BranchTree(
+          this.context,
+          [HALLWAY_SOUTH_X + 0.25, HALLWAY_WEST_Y - 0.25, 0],
+          CEILING_HEIGHT - 0.04,
+          -45,
+          1
+        )
+      ])
+    ];
+  }
+
+  /**
+   * Builds the fake black leaves scattered along the guests' path in from
+   * the garage: from the garage door up the hallway, across the entry, and
+   * out through the opening into the living room, plus a wider scatter
+   * across the living room's open floor between the TV cabinet, the coffee
+   * table, and the sofa.
+   */
+  private buildLeaves(): HalloweenHousePart<MainFloorItem>[] {
+    const hallwayMiddleY = (ENTRY_EAST_Y + HALLWAY_WEST_Y) / 2;
+    const path: Vec2[] = [
+      [GARAGE_DOOR_SOUTH_X + GARAGE_DOOR_WIDTH / 2, HALLWAY_WEST_Y - 0.2],
+      [-1.2, hallwayMiddleY],
+      [0, hallwayMiddleY],
+      [1.1, 5.0],
+      [DIVIDER_X, 5.1],
+      [3.3, 5.5]
+    ];
+    const livingRoom: Vec2[] = [
+      [2.7, 7.0],
+      [3.3, 5.5],
+      [3.7, 6.5],
+      [3.6, 4.2],
+      [4.6, 3.8]
+    ];
+    return this.placeAssets(HalloweenDecoration.Leaves, [
+      new FakeLeaves(this.context, path, 120, 0.8, 13),
+      new FakeLeaves(this.context, livingRoom, 160, 1.2, 14)
+    ]);
   }
 
   /**
@@ -406,8 +519,9 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
 
   /**
    * Builds the tall wood TV cabinet against the south wall, facing north, with
-   * its purple LED lighting, the crow on top wrapped in cobwebs, and tea
-   * lights on the open shelves.
+   * its purple LED lighting, two crows on top wrapped in cobwebs (the one
+   * already there on the right end, seen from the front, and a second on the
+   * left end), and tea lights on the open shelves.
    */
   private buildTvCabinet(): HalloweenHousePart<MainFloorItem>[] {
     // The TV wall's furniture is laid out facing +Y from TV_ORIGIN, then turned
@@ -424,7 +538,8 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       ...this.placeAssets(MainFloorItem.TvCabinet, [
         new TvCabinet(this.context, at([0.2, 0, 0]), TV_ANGLE),
         new Tv(this.context, at([0.9, 0.08, 1]), TV_ANGLE),
-        new Crow(this.context, at([0.5, 0.25, 2.012]), TV_ANGLE)
+        new Crow(this.context, at([0.5, 0.25, 2.012]), TV_ANGLE),
+        new Crow(this.context, at([1.3, 0.25, 2.012]), TV_ANGLE + 25)
       ]),
       ...this.placeAssets(HalloweenDecoration.Cobwebs, [
         new StretchyCobweb(this.context, at([1.6, 0, 1.85]), at([0.2, 0.5, 2])),
@@ -499,8 +614,10 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
 
   /**
    * Builds the sill of the window onto the patio with tea lights on it, and
-   * the purple LED light bar in the north east corner. The window's gray curtains
-   * are left out, since the wall they hang on is cut down.
+   * the purple LED light bar in the north east corner with very tall bare
+   * branches zip-tied around it, leaning out of the corner and stopping
+   * short of the textured ceiling. The window's gray
+   * curtains are left out, since the wall they hang on is cut down.
    */
   private buildDiningWindow(): HalloweenHousePart<MainFloorItem>[] {
     const sill = this.box([1.6, 0.22, 0.03], [3.4, -0.08, SILL_HEIGHT]);
@@ -510,6 +627,9 @@ export default class MainFloorScene extends HalloweenHouseScene<MainFloorItem> {
       this.part(item, 'Window sill', PALETTE.trim, sill),
       ...this.placeAssets(item, [
         new LightBar(this.context, LIGHT_BAR_POSITION, LightColor.Purple)
+      ]),
+      ...this.placeAssets(HalloweenDecoration.Branches, [
+        new PoleBranches(this.context, LIGHT_BAR_POSITION, 0.12, CEILING_HEIGHT - 0.04, 135, 3)
       ]),
       ...this.placeAssets(
         HalloweenDecoration.TeaLights,
