@@ -25,7 +25,7 @@ export const weightHistory: WeightEntry[] = [
   { date: '2026-10-29', weightLb: 179.6 },
   { date: '2026-10-28', weightLb: 178.7 },
   { date: '2026-10-27', weightLb: 179.2 },
-  { date: '2026-10-26', weightLb: 179.8 },
+  { date: '2026-10-26', weightLb: 179.8, note: 'Maintenance (resensitization) start (Sun 10/25)' },
   { date: '2026-10-23', weightLb: 177.4 },
   { date: '2026-10-22', weightLb: 178.3 },
   { date: '2026-10-21', weightLb: 177.9 },
