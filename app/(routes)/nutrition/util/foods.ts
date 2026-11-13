@@ -111,6 +111,20 @@ export const kindThinsPBDarkChocolate: Food = {
   allowedStepServingAmountPerMeal: 1
 };
 
+export const kindThinsMiniPBDarkChocolate: Food = {
+  id: 'kindThinsMiniPBDarkChocolate',
+  name: 'Thins Mini (PB Dark Chocolate)',
+  serving: { amount: 1, unitLabel: 'bar', calories: 100, protein: 3, carbs: 8, fat: 7 },
+  allowedStepServingAmountPerMeal: 1
+};
+
+export const kindThinsMiniDarkChocolateCherryCashew: Food = {
+  id: 'kindThinsMiniDarkChocolateCherryCashew',
+  name: 'Thins Mini (Dark Chocolate Cherry Cashew)',
+  serving: { amount: 1, unitLabel: 'bar', calories: 80, protein: 2, carbs: 11, fat: 5 },
+  allowedStepServingAmountPerMeal: 1
+};
+
 export const clifBuildersMiniChocMint: Food = {
   id: 'clifBuildersMiniChocMint',
   name: 'Clif Builders Mini (Chocolate Mint)',
@@ -279,6 +293,8 @@ export const allFoods: Food[] = [
   riceCakeAppleCinnamon,
   banana,
   kindThinsPBDarkChocolate,
+  kindThinsMiniPBDarkChocolate,
+  kindThinsMiniDarkChocolateCherryCashew,
   clifBuildersMiniChocMint,
   krogerChunkyPB,
   jifChunkyPB,
